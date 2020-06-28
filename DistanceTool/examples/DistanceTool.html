@@ -1,0 +1,46 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+通过按钮控制工具的开启和关闭</title>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
+
+</head>
+<body>
+<div style="width:520px;height:340px;border:1px solid gray" id="container">
+</div>
+<input type="button" value="开启" onclick="myDis.open();" />
+<input type="button" value="关闭" onclick="myDis.close()" />
+</body>
+</html>
+<script type="text/javascript">
+
+var map = new BMap.Map("container");
+map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+var myDis = new BMapLib.DistanceTool(map);
+
+// 如果要调试事件接口，请打开下方屏蔽代码，
+// 在firefox或者chrome下查看调试信息
+
+/*myDis.addEventListener("drawend", function(e) {
+	console.log("drawend");
+	console.log(e.points);
+	console.log(e.overlays);
+	console.log(e.distance);
+});
+
+myDis.addEventListener("addpoint", function(e) {
+	console.log("addpoint");
+	console.log(e.point);
+	console.log(e.pixel);
+	console.log(e.index);
+	console.log(e.distance);
+});
+
+myDis.addEventListener("removepolyline", function(e) {
+	console.log("removepolyline");
+	console.log(e);
+});
+*/
+</script>
