@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./src/DrawingManager.css">
+    <style>
+        html,body,#map {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        .selectbox_Drawing {
+            position: relative;
+            width: 400px;
+            top: 20px;
+            left: 50px;
+        }
+    </style>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
+    <script src="../GeoUtils/GeoUtils.js"></script>
+    <!-- <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=49a6b40a5317c53bf50fe94976b928b4"></script> -->
+    <title>DrawingManager Example</title>
+</head>
+<body>
+    <div id="selectbox_Drawing" class="selectbox_Drawing"></div>
+    <div id="map"></div>
+
+    <script src="./src/gpc.js"></script>
+    <script src="./src/DrawingManager.js"></script>
+    <script>
+        var map = new BMapGL.Map('map',{enableMapClick:false});
+        map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 11);
+        var styleOptions = {
+            strokeColor: '#5E87DB', // 边线颜色。
+            fillColor: '#5E87DB', // 填充颜色。当参数为空时，圆形将没有填充效果。
+            strokeWeight: 2, // 边线的宽度，以像素为单位。
+            strokeOpacity: 1, // 边线透明度，取值范围0 - 1。
+            fillOpacity: 0.2 // 填充的透明度，取值范围0 - 1。
+        };
+        var labelOptions = {
+            borderRadius: '2px',
+            background: '#FFFBCC',
+            border: '1px solid #E1E1E1',
+            color: '#703A04',
+            fontSize: '12px',
+            letterSpacing: '0',
+            padding: '5px'
+        };
+
+        // 实例化鼠标绘制工具
+        var drawingManager = new BMapLib.DrawingManager(map, {
+            // isOpen: true, //是否开启绘制模式
+            enableDrawingTool: true, // 是否显示工具栏
+            enableCalculate: true, // 绘制是否进行测距(画线时候)、测面(画圆、多边形、矩形) 
+            enableSorption: true,
+            drawingToolOptions: {
+                enableTips: true,
+                customContainer: 'selectbox_Drawing',
+                hasCustomStyle: true,
+                offset: new BMapGL.Size(5, 5), // 偏离值
+                scale: 0.8, // 工具栏缩放比例
+                drawingModes: [
+                    BMAP_DRAWING_MARKER,
+                    BMAP_DRAWING_POLYLINE,
+                    BMAP_DRAWING_RECTANGLE
+                    , BMAP_DRAWING_POLYGON
+                    , BMAP_DRAWING_CIRCLE,
+
+                ]
+            },
+            enableSorption: true, // 是否开启边界吸附功能
+            sorptionDistance: 20, // 边界吸附距离
+            enableGpc: true, // 是否开启延边裁剪功能
+            enbaleLimit: true,  // 是否开启超限提示
+            limitOptions: {
+                area: 50000000 // 面积超限值
+            },
+            circleOptions: styleOptions, // 圆的样式
+            polylineOptions: styleOptions, // 线的样式
+            polygonOptions: styleOptions, // 多边形的样式
+            rectangleOptions: styleOptions, // 矩形的样式
+            labelOptions: labelOptions // label的样式
+        });
+        let zoomControl=new BMapGL.ZoomControl();
+        map.addControl(zoomControl);
+    </script>
+</body>
+</html>

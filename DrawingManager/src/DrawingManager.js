@@ -1111,7 +1111,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          */
         var clickAction = function (e) {
             // 往地图上添加marker
-            var marker = new BMap.Marker(e.point, me.markerOptions);
+            var marker = new BMapGL.Marker(e.point, me.markerOptions);
             map.addOverlay(marker);
             me._dispatchOverlayComplete(marker);
         };
@@ -1143,8 +1143,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             strokeWeight: 2 // 边线的宽度，以像素为单位。
         };
 
-        var centerIcon = new BMap.Icon('./images/circenter.png', new BMap.Size(20, 20));
-        var shadow = new BMap.Icon('./images/maker-shadow.png', new BMap.Size(21, 33));
+        var centerIcon = new BMapGL.Icon('./images/circenter.png', new BMapGL.Size(20, 20));
+        var shadow = new BMapGL.Icon('./images/maker-shadow.png', new BMapGL.Size(21, 33));
 
         /**
          * 开始绘制圆形
@@ -1157,10 +1157,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             centerPoint = e.point;
 
-            var centerMarker = new BMap.Marker(centerPoint);
-            centerIcon.setImageSize(new BMap.Size(20, 20));
+            var centerMarker = new BMapGL.Marker(centerPoint);
+            centerIcon.setImageSize(new BMapGL.Size(20, 20));
             centerMarker.setIcon(centerIcon);
-            centerMarker.setShadow(shadow);
             centerMarker.enableDragging();
             centerMarker.addEventListener('dragstart', centerDragstart);
             centerMarker.addEventListener('dragging', centerDragging);
@@ -1169,7 +1168,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             overlays.push(centerMarker);
 
-            circle = new BMap.Circle(centerPoint, 0, me.circleOptions);
+            circle = new BMapGL.Circle(centerPoint, 0, me.circleOptions);
             map.addOverlay(circle);
             mask.enableEdgeMove();
             mask.addEventListener('mousemove', moveAction);
@@ -1185,9 +1184,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             map.removeOverlay(tip_label);
 
-            tip_label = new BMap.Label('半径：' + radius + '米<br>松开完成绘制', {
+            tip_label = new BMapGL.Label('半径：' + radius + '米<br>松开完成绘制', {
                 position: e.point, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(10, 10) // 设置文本偏移量
+                offset: new BMapGL.Size(10, 10) // 设置文本偏移量
             });
             tip_label.setStyle(me.labelOptions);
             map.addOverlay(tip_label);
@@ -1202,20 +1201,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.setViewport(cz);
             map.removeOverlay(tip_label);
 
-            var endPoint = new BMap.Point(circle.getBounds().getNorthEast().lng, centerPoint.lat);
+            var endPoint = new BMapGL.Point(circle.getBounds().getNorthEast().lng, centerPoint.lat);
             mask.hide();
 
-            moveMarker = new BMap.Marker(endPoint);
-            var moveIcon = new BMap.Icon('./images/nbsearch2.png', new BMap.Size(40, 20));
-            moveIcon.setImageSize(new BMap.Size(40, 40));
-            moveIcon.setImageOffset(new BMap.Size(0, -10));
+            moveMarker = new BMapGL.Marker(endPoint);
+            var moveIcon = new BMapGL.Icon('./images/nbsearch2.png', new BMapGL.Size(40, 20));
+            moveIcon.setImageSize(new BMapGL.Size(40, 40));
+            moveIcon.setImageOffset(new BMapGL.Size(0, -10));
             moveMarker.setIcon(moveIcon);
-            moveMarker.setShadow(shadow);
             moveMarker.enableDragging();
+            // console.log('endPoint', endPoint);
+            polyline = new BMapGL.Polyline([centerPoint, endPoint], lineStyel);
 
-            polyline = new BMap.Polyline([centerPoint, endPoint], lineStyel);
-
-            var midPoint = new BMap.Point((circle.getBounds().getNorthEast().lng + centerPoint.lng) / 2, centerPoint.lat);
+            var midPoint = new BMapGL.Point((circle.getBounds().getNorthEast().lng + centerPoint.lng) / 2, centerPoint.lat);
             radiusWindow = new Screenshot('circle', midPoint, radius, circle, me);
             
             overlays = overlays.concat([moveMarker, polyline, radiusWindow]);
@@ -1242,9 +1240,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 var radius = e.radius;
                 circle.setRadius(radius);
                 var ePoint = getPointByDistance(centerPoint, radius, 'east');
-                var dragLeftPoint = new BMap.Point(ePoint.lng, centerPoint.lat);
+                var dragLeftPoint = new BMapGL.Point(ePoint.lng, centerPoint.lat);
                 var halflng = ePoint.lng > centerPoint.lng ? (circle.getBounds().getNorthEast().lng + centerPoint.lng) / 2 : (circle.getBounds().getSouthWest().lng + centerPoint.lng) / 2;
-                var halfLeftPoint = new BMap.Point(halflng, centerPoint.lat);
+                var halfLeftPoint = new BMapGL.Point(halflng, centerPoint.lat);
                 moveMarker.setPosition(dragLeftPoint);
                 radiusWindow.setInfo(halfLeftPoint, radius);
                 operateWindow.setPosition(dragLeftPoint, true);
@@ -1257,10 +1255,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             });
 
             moveMarker.addEventListener('dragging', function (e) {
-                var dragLeftPoint = new BMap.Point(e.point.lng, centerPoint.lat);
+                var dragLeftPoint = new BMapGL.Point(e.point.lng, centerPoint.lat);
                 var halflng = e.point.lng > centerPoint.lng ? (circle.getBounds().getNorthEast().lng + centerPoint.lng) / 2 : (circle.getBounds().getSouthWest().lng + centerPoint.lng) / 2;
                 var isright = e.point.lng > centerPoint.lng ? true : false;
-                var halfLeftPoint = new BMap.Point(halflng, centerPoint.lat);
+                var halfLeftPoint = new BMapGL.Point(halflng, centerPoint.lat);
 
                 e.target.setPosition(dragLeftPoint);
                 radiusWindow.setInfo(halfLeftPoint, me._map.getDistance(centerPoint, e.point).toFixed(0));
@@ -1309,9 +1307,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             map.removeOverlay(tip_label);
 
-            tip_label = new BMap.Label('按下确认中心点，拖拽确认半径', {
+            tip_label = new BMapGL.Label('按下确认中心点，拖拽确认半径', {
                 position: e.point, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(10, 10) // 设置文本偏移量
+                offset: new BMapGL.Size(10, 10) // 设置文本偏移量
             });
             tip_label.setStyle(me.labelOptions);
             map.addOverlay(tip_label);
@@ -1379,13 +1377,18 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 point = match;
             }
             points.push(point);
-            drawPoint = points.concat(points[points.length - 1]);
+            // console.log('points.length ', points.length )
+            // console.log('points', points);
+            // drawPoint = points.concat(points[points.length - 1]);
+            drawPoint=[];
+            drawPoint =drawPoint.concat(points);
+            // console.log('drawPoint[0]', drawPoint[0])
             if (points.length == 1) {
                 if (me._drawingType == BMAP_DRAWING_POLYLINE) {
-
-                    overlay = new BMap.Polyline(drawPoint, me.polylineOptions);
+                    
+                    overlay = new BMapGL.Polyline(drawPoint, me.polylineOptions);
                 } else if (me._drawingType == BMAP_DRAWING_POLYGON) {
-                    overlay = new BMap.Polygon(drawPoint, me.polygonOptions);
+                    overlay = new BMapGL.Polygon(drawPoint, me.polygonOptions);
                 }
 
                 map.addOverlay(overlay);
@@ -1411,19 +1414,20 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 var matchs = me.getSorptionMatch(point, me.overlays, me._sorptionDistance);
                 if (matchs && matchs.length > 0) {
                     match = matchs[0].point;
-                    overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
+                    overlay.setPointAt(drawPoint.length, matchs[0].point);
                     return;
                 }
             }
             match = null;
-
-            overlay.setPositionAt(drawPoint.length - 1, e.point);
+            // console.log('e.point', e.point);
+            // console.log('drawPoint', drawPoint);
+            overlay.setPointAt(drawPoint.length  , e.point);
 
             map.removeOverlay(tip_label);
 
-            tip_label = new BMap.Label('单击绘制下一个点，双击完成绘制', {
+            tip_label = new BMapGL.Label('单击绘制下一个点，双击完成绘制', {
                 position: e.point, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(10, 10) // 设置文本偏移量
+                offset: new BMapGL.Size(10, 10) // 设置文本偏移量
             });
             tip_label.setStyle(me.labelOptions);
             map.addOverlay(tip_label);
@@ -1466,7 +1470,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                         var newPoints = diff.getPoints();
                         var outPoints = [];
                         for (var i = 0; i < newPoints.length; i++) {
-                            outPoints.push(new BMap.Point(newPoints[i].x, newPoints[i].y));
+                            outPoints.push(new BMapGL.Point(newPoints[i].x, newPoints[i].y));
                         }
                         res = new gpcas.geometry.PolyDefault();
                         for (var i = 0; i < newPoints.length; i++) {
@@ -1483,7 +1487,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             cz.zoom -= 1;
             map.setViewport(cz);
 
-            var mar = new BMap.Marker(e.point);
+            var mar = new BMapGL.Marker(e.point);
             overlay.enableEditing();
             var limit = null;
             if (me.limit) {
@@ -1522,9 +1526,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             map.removeOverlay(tip_label);
 
-            tip_label = new BMap.Label('单击确认起点', {
+            tip_label = new BMapGL.Label('单击确认起点', {
                 position: e.point, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(10, 10) // 设置文本偏移量
+                offset: new BMapGL.Size(10, 10) // 设置文本偏移量
             });
             tip_label.setStyle(me.labelOptions);
             map.addOverlay(tip_label);
@@ -1556,15 +1560,15 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         // 获取4个顶点和4条边中点的坐标
         function getRectAllPoints(pointA, pointB) {
-            var pointLT = new BMap.Point(pointA.lng, pointA.lat); // 左上角
-            var pointRT = new BMap.Point(pointB.lng, pointA.lat); // 右上角
-            var pointRB = new BMap.Point(pointB.lng, pointB.lat); // 右下角
-            var pointLB = new BMap.Point(pointA.lng, pointB.lat); // 左上角
+            var pointLT = new BMapGL.Point(pointA.lng, pointA.lat); // 左上角
+            var pointRT = new BMapGL.Point(pointB.lng, pointA.lat); // 右上角
+            var pointRB = new BMapGL.Point(pointB.lng, pointB.lat); // 右下角
+            var pointLB = new BMapGL.Point(pointA.lng, pointB.lat); // 左上角
 
-            var pointTC = new BMap.Point((pointA.lng + pointB.lng) / 2, pointA.lat);
-            var pointRC = new BMap.Point(pointB.lng, (pointA.lat + pointB.lat) / 2);
-            var pointBC = new BMap.Point((pointA.lng + pointB.lng) / 2, pointB.lat);
-            var pointLC = new BMap.Point(pointA.lng, (pointA.lat + pointB.lat) / 2);
+            var pointTC = new BMapGL.Point((pointA.lng + pointB.lng) / 2, pointA.lat);
+            var pointRC = new BMapGL.Point(pointB.lng, (pointA.lat + pointB.lat) / 2);
+            var pointBC = new BMapGL.Point((pointA.lng + pointB.lng) / 2, pointB.lat);
+            var pointLC = new BMapGL.Point(pointA.lng, (pointA.lat + pointB.lat) / 2);
 
             return [pointLT, pointTC, pointRT, pointRC, pointRB, pointBC, pointLB, pointLC];
         }
@@ -1581,9 +1585,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             return output;
         }
 
-        var moveIcon = new BMap.Icon('./images/bullet2.png', new BMap.Size(10, 10));
-        var shadow = new BMap.Icon('./images/maker-shadow.png', new BMap.Size(20, 20));
-        moveIcon.setImageSize(new BMap.Size(10, 10));
+        var moveIcon = new BMapGL.Icon('./images/bullet2.png', new BMapGL.Size(10, 10));
+        var shadow = new BMapGL.Icon('./images/maker-shadow.png', new BMapGL.Size(20, 20));
+        moveIcon.setImageSize(new BMapGL.Size(10, 10));
 
         /**
          * 开始绘制矩形
@@ -1599,7 +1603,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             startPoint = e.point;
 
             var endPoint = startPoint;
-            polygon = new BMap.Polygon(me._getRectanglePoint(startPoint, endPoint), me.rectangleOptions);
+            polygon = new BMapGL.Polygon(me._getRectanglePoint(startPoint, endPoint), me.rectangleOptions);
             map.addOverlay(polygon);
             mask.enableEdgeMove();
             mask.addEventListener('mousemove', moveAction);
@@ -1616,9 +1620,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             var points = getRectAllPoints(startPoint, e.point);
             var width = me._map.getDistance(startPoint, points[2]).toFixed(0);
             var height = me._map.getDistance(startPoint, points[6]).toFixed(0);
-            tip_label = new BMap.Label('尺寸：' + width + '米 x ' + height + '米<br>松开结束绘制', {
+            tip_label = new BMapGL.Label('尺寸：' + width + '米 x ' + height + '米<br>松开结束绘制', {
                 position: e.point, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(10, 10) // 设置文本偏移量
+                offset: new BMapGL.Size(10, 10) // 设置文本偏移量
             });
             tip_label.setStyle(me.labelOptions);
             map.addOverlay(tip_label);
@@ -1639,17 +1643,17 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             var width = me._map.getDistance(startPoint, points[2]).toFixed(0);
             var height = me._map.getDistance(startPoint, points[6]).toFixed(0);
+            console.log('width * height', width * height);
             var rectInfo = new Screenshot('rectangle', points[0], {
                 width: width,
                 height: height
             }, polygon, me);
 
             for (var i = 0; i < points.length; i++) {
-                var marker = new BMap.Marker(points[i]);
+                var marker = new BMapGL.Marker(points[i]);
                 marker.point = points[i];
                 marker.enableDragging();
                 marker.setIcon(moveIcon);
-                marker.setShadow(shadow);
                 markers.push(marker);
                 map.addOverlay(marker);
 
@@ -1749,9 +1753,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             map.removeOverlay(tip_label);
 
-            tip_label = new BMap.Label('按住确认起点，拖拽进行绘制', {
+            tip_label = new BMapGL.Label('按住确认起点，拖拽进行绘制', {
                 position: e.point, // 指定文本标注所在的地理位置
-                offset: new BMap.Size(10, 10) // 设置文本偏移量
+                offset: new BMapGL.Size(10, 10) // 设置文本偏移量
             });
             tip_label.setStyle(me.labelOptions);
             map.addOverlay(tip_label);
@@ -1773,19 +1777,21 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         };
         if (this._enableCalculate && BMapLib.GeoUtils) {
             var type = overlay.toString();
+            console.log("计算不同覆盖物的面积 type : ",type)
             // 不同覆盖物调用不同的计算方法
             switch (type) {
-                case '[object Polyline]':
+                case 'Polyline': //[object Polyline]==>在3D版本中已经转为了Polyline
                     result.data = BMapLib.GeoUtils.getPolylineDistance(overlay);
                     break;
-                case '[object Polygon]':
+                case 'Polygon':
                     result.data = BMapLib.GeoUtils.getPolygonArea(overlay);
                     break;
-                case '[object Circle]':
+                case 'Circle':
                     var radius = overlay.getRadius();
                     result.data = Math.PI * radius * radius;
                     break;
             }
+            console.log('result.data', result.data);
             // 异常情况处理
             if (!result.data || result.data < 0) {
                 result.data = 0;
@@ -1811,7 +1817,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (!BMapLib.GeoUtils) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', '//huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
+            // script.setAttribute('src', '//huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
+            script.setAttribute('src','../../GeoUtils/GeoUtils.js');
             document.body.appendChild(script);
         }
 
@@ -1823,7 +1830,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * @param {String} 所以显示的内容
      */
     DrawingManager.prototype._addLabel = function (point, content) {
-        var label = new BMap.Label(content, {
+        var label = new BMapGL.Label(content, {
             position: point
         });
         this._map.addOverlay(label);
@@ -1837,10 +1844,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      */
     DrawingManager.prototype._getRectanglePoint = function (startPoint, endPoint) {
         return [
-            new BMap.Point(startPoint.lng, startPoint.lat),
-            new BMap.Point(endPoint.lng, startPoint.lat),
-            new BMap.Point(endPoint.lng, endPoint.lat),
-            new BMap.Point(startPoint.lng, endPoint.lat)
+            new BMapGL.Point(startPoint.lng, startPoint.lat),
+            new BMapGL.Point(endPoint.lng, startPoint.lat),
+            new BMapGL.Point(endPoint.lng, endPoint.lat),
+            new BMapGL.Point(startPoint.lng, endPoint.lat)
         ];
     };
 
@@ -1922,7 +1929,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.DrawingManager = DrawingManager;
     }
 
-    Operate.prototype = new BMap.Overlay();
+    Operate.prototype = new BMapGL.Overlay();
     Operate.prototype.dispatchEvent = baidu.lang.Class.prototype.dispatchEvent;
     Operate.prototype.addEventListener = baidu.lang.Class.prototype.addEventListener;
     Operate.prototype.removeEventListener = baidu.lang.Class.prototype.removeEventListener;
@@ -1958,6 +1965,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 var calculate = that.DrawingManager._calculate(overlay, that.point);
             }
             else if (that.type == 'polygon') {
+                var calculate = that.DrawingManager._calculate(overlay, (overlay.getPath()));
+                that.DrawingManager.overlays.push(overlay);
+                overlay.disableEditing();
+            }
+            else if (that.type == 'polyline') {
                 var calculate = that.DrawingManager._calculate(overlay, (overlay.getPath()));
                 that.DrawingManager.overlays.push(overlay);
                 overlay.disableEditing();
@@ -1999,7 +2011,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var limit = this.limit;
         var calculate;
         if (this.type == 'rectangle') {
+            console.log('overlay', overlay)
             calculate = this.DrawingManager._calculate(overlay, overlay.getPath());
+            console.log('calculate', calculate);
         }
         else if (this.type == 'circle') {
             calculate = this.DrawingManager._calculate(overlay, this.point);
@@ -2049,7 +2063,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.DrawingManager = DrawingManager;
     }
 
-    Screenshot.prototype = new BMap.Overlay();
+    Screenshot.prototype = new BMapGL.Overlay();
 
     Screenshot.prototype.dispatchEvent = baidu.lang.Class.prototype.dispatchEvent;
     Screenshot.prototype.addEventListener = baidu.lang.Class.prototype.addEventListener;
@@ -2263,7 +2277,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this._enableEdgeMove = false;
     }
 
-    Mask.prototype = new BMap.Overlay();
+    Mask.prototype = new BMapGL.Overlay();
 
     /**
      * 这里不使用api中的自定义事件，是为了更灵活使用
@@ -2288,7 +2302,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
     Mask.prototype.draw = function () {
         var map = this._map,
-            point = map.pixelToPoint(new BMap.Pixel(0, 0)),
+            point = map.pixelToPoint(new BMapGL.Pixel(0, 0)),
             pixel = map.pointToOverlayPixel(point);
         this.container.style.left = pixel.x + 'px';
         this.container.style.top = pixel.y + 'px';
@@ -2391,7 +2405,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 clientY = e.changedTouches[0].clientY;
             }
 
-            return new BMap.Pixel(clientX, clientY);
+            return new BMapGL.Pixel(clientX, clientY);
         }
 
         var map = this._map,
@@ -2400,7 +2414,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             clientPos = getClientPosition(e),
             offsetX = clientPos.x - pixel.x,
             offsetY = clientPos.y - pixel.y;
-        pixel = new BMap.Pixel((clientPos.x - offsetX), (clientPos.y - offsetY));
+        pixel = new BMapGL.Pixel((clientPos.x - offsetX), (clientPos.y - offsetY));
         this._draggingMovePixel = pixel;
         var point = map.pixelToPoint(pixel),
             eventObj = {
@@ -2475,7 +2489,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             trigger = trigger.offsetParent;
         }
-        var pixel = new BMap.Pixel(x, y);
+        var pixel = new BMapGL.Pixel(x, y);
         var point = map.pixelToPoint(pixel);
         return point;
 
@@ -2491,7 +2505,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         // 默认停靠位置和偏移量
         if (!drawingToolOptions.hasCustomStyle) {
             this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
-            this.defaultOffset = new BMap.Size(10, 10);
+            this.defaultOffset = new BMapGL.Size(10, 10);
         }
 
         // 默认所有工具栏都显示
@@ -2522,7 +2536,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     }
 
     // 通过JavaScript的prototype属性继承于BMap.Control
-    DrawingTool.prototype = new BMap.Control();
+    DrawingTool.prototype = new BMapGL.Control();
 
     // 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
     // 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
@@ -2740,12 +2754,12 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 y = Math.asin(Math.sin(lat1) * Math.cos(d) + Math.cos(lat1) * Math.sin(d) * Math.cos(tc)),
                 dlng = Math.atan2(Math.sin(tc) * Math.sin(d) * Math.cos(lat1), Math.cos(d) - Math.sin(lat1) * Math.sin(y)),
                 x = ((lng1 - dlng + Math.PI) % (2 * Math.PI)) - Math.PI,
-                point = new BMap.Point(x * (180 / Math.PI), y * (180 / Math.PI));
+                point = new BMapGL.Point(x * (180 / Math.PI), y * (180 / Math.PI));
             points.push(point);
         }
 
         var fstPoint = points[0];
-        points.push(new BMap.Point(fstPoint["lng"], fstPoint["lat"]));
+        points.push(new BMapGL.Point(fstPoint["lng"], fstPoint["lat"]));
         return points;
     }
 
@@ -2793,7 +2807,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             y = Math.asin(Math.sin(lat1) * Math.cos(d) + Math.cos(lat1) * Math.sin(d) * Math.cos(tc)),
             dlng = Math.atan2(Math.sin(tc) * Math.sin(d) * Math.cos(lat1), Math.cos(d) - Math.sin(lat1) * Math.sin(y)),
             x = ((lng1 - dlng + Math.PI) % (2 * Math.PI)) - Math.PI,
-            point = new BMap.Point(tmplng || x * (180 / Math.PI), tmplat || y * (180 / Math.PI));
+            point = new BMapGL.Point(tmplng || x * (180 / Math.PI), tmplat || y * (180 / Math.PI));
         point.lng = parseFloat(point.lng.toFixed(6));
         point.lat = parseFloat(point.lat.toFixed(6));
         return point;
