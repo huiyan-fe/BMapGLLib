@@ -1581,7 +1581,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         }
 
         var moveIcon = new BMapGL.Icon('./images/bullet2.png', new BMapGL.Size(10, 10));
-        var shadow = new BMapGL.Icon('./images/maker-shadow.png', new BMapGL.Size(20, 20));
         moveIcon.setImageSize(new BMapGL.Size(10, 10));
 
         /**
@@ -1631,7 +1630,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             var endPoint = null;
             var markers = [];
             var points = getRectAllPoints(startPoint, e.point);
-            var pointsTmp = copy(points);
+            var pointsTmp = [];
             var cz = map.getViewport(points);
             cz.zoom -= 1;
             map.setViewport(cz);
@@ -1645,24 +1644,24 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             for (var i = 0; i < points.length; i++) {
                 var marker = new BMapGL.Marker(points[i]);
-                marker.point = points[i];
-                marker.enableDragging();
                 marker.setIcon(moveIcon);
+                marker.enableDragging();
                 markers.push(marker);
                 map.addOverlay(marker);
+                pointsTmp[i] = me.mc2ll(marker.point);
 
                 marker.addEventListener('mousedown', function (e) {
-                    endPoint = e.target.point;
+                    endPoint = me.mc2ll(e.target.point);
                 });
                 marker.addEventListener('dragging', function (e) {
-                    var point = e.point;
-                    for (var i = 0; i < pointsTmp.length; i++) {
-                        if (endPoint.lng == pointsTmp[i].lng) {
-                            points[i].lng = point.lng;
+                    var point = me.mc2ll(e.point);
+                    for (var j = 0; j < pointsTmp.length; j++) {
+                        if (endPoint.lng == pointsTmp[j].lng) {
+                            points[j].lng = point.lng;
                         }
 
-                        if (endPoint.lat == pointsTmp[i].lat) {
-                            points[i].lat = point.lat;
+                        if (endPoint.lat == pointsTmp[j].lat) {
+                            points[j].lat = point.lat;
                         }
 
                     }
@@ -1680,7 +1679,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     polygon.setPath(points);
                 });
                 marker.addEventListener('dragend', function (e) {
-                    pointsTmp = copy(points);
+                    for (var i = 0; i < markers.length; i++) {
+                        var marker = markers[i];
+                        pointsTmp[i] = me.mc2ll(marker.point);
+                    }
                     operateWindow.updateWindow();
                     var cz = map.getViewport(points);
                     cz.zoom -= 1;
@@ -1911,6 +1913,20 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         return ret;
     }
 
+    // 墨卡托坐标转经纬度
+    DrawingManager.prototype.mc2ll = function (point) {
+        var map = this._map;
+        var ll = map.mercatorToLnglat(point.lng, point.lat);
+        return new BMapGL.Point(ll[0], ll[1]);
+    };
+
+    // 经纬度坐标转墨卡托
+    DrawingManager.prototype.ll2mc = function (point) {
+        var map = this._map;
+        var mc = map.lnglatToMercator(point.lng, point.lat);
+        return new BMapGL.Point(mc[0], mc[1]);
+    };
+
     // 确认,取消操作覆盖物
     function Operate(data, DrawingManager) {
         this.limit = data.limit;
@@ -1998,8 +2014,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     };
 
     Operate.prototype.updateWindow = function () {
+        if (!this.domElement) {
+            return;
+        }
         var overlay = this.overlay;
-        var overlays = this.overlays;
         var limit = this.limit;
         var calculate;
         if (this.type == 'rectangle') {
