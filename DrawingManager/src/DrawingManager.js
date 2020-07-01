@@ -1210,7 +1210,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             moveIcon.setImageOffset(new BMapGL.Size(0, -10));
             moveMarker.setIcon(moveIcon);
             moveMarker.enableDragging();
-            // console.log('endPoint', endPoint);
             polyline = new BMapGL.Polyline([centerPoint, endPoint], lineStyel);
 
             var midPoint = new BMapGL.Point((circle.getBounds().getNorthEast().lng + centerPoint.lng) / 2, centerPoint.lat);
@@ -1377,12 +1376,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 point = match;
             }
             points.push(point);
-            // console.log('points.length ', points.length )
-            // console.log('points', points);
-            // drawPoint = points.concat(points[points.length - 1]);
+
             drawPoint=[];
             drawPoint =drawPoint.concat(points);
-            // console.log('drawPoint[0]', drawPoint[0])
             if (points.length == 1) {
                 if (me._drawingType == BMAP_DRAWING_POLYLINE) {
                     
@@ -1419,8 +1415,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 }
             }
             match = null;
-            // console.log('e.point', e.point);
-            // console.log('drawPoint', drawPoint);
+            
             overlay.setPointAt(drawPoint.length  , e.point);
 
             map.removeOverlay(tip_label);
@@ -1643,7 +1638,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             var width = me._map.getDistance(startPoint, points[2]).toFixed(0);
             var height = me._map.getDistance(startPoint, points[6]).toFixed(0);
-            console.log('width * height', width * height);
             var rectInfo = new Screenshot('rectangle', points[0], {
                 width: width,
                 height: height
@@ -1777,7 +1771,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         };
         if (this._enableCalculate && BMapLib.GeoUtils) {
             var type = overlay.toString();
-            console.log("计算不同覆盖物的面积 type : ",type)
             // 不同覆盖物调用不同的计算方法
             switch (type) {
                 case 'Polyline': //[object Polyline]==>在3D版本中已经转为了Polyline
@@ -1791,7 +1784,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     result.data = Math.PI * radius * radius;
                     break;
             }
-            console.log('result.data', result.data);
             // 异常情况处理
             if (!result.data || result.data < 0) {
                 result.data = 0;
@@ -2011,9 +2003,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var limit = this.limit;
         var calculate;
         if (this.type == 'rectangle') {
-            console.log('overlay', overlay)
             calculate = this.DrawingManager._calculate(overlay, overlay.getPath());
-            console.log('calculate', calculate);
         }
         else if (this.type == 'circle') {
             calculate = this.DrawingManager._calculate(overlay, this.point);

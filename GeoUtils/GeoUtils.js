@@ -252,14 +252,15 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @returns {Number} 两点之间距离，单位为米
      */
     GeoUtils.getDistance = function(point1, point2){
-        console.log('point1',point1.toString());
         //判断类型
-        if(!(point1 instanceof BMapGL.Point) ||
-            !(point2 instanceof BMapGL.Point)){
+        if (
+            point1.toString() === "Point" ||
+            point1.toString() === "LatLng" ||
+            point2.toString() === "Point" ||
+            point2.toString() === "LatLng"
+        ) {
             return 0;
         }
-
-        console.log("通过了BMapGL.Point类型判断");
 
         point1.lng = _getLoop(point1.lng, -180, 180);
         point1.lat = _getRange(point1.lat, -74, 74);
@@ -271,7 +272,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
         y1 = GeoUtils.degreeToRad(point1.lat);
         x2 = GeoUtils.degreeToRad(point2.lng);
         y2 = GeoUtils.degreeToRad(point2.lat);
-        console.log('[x1, x2, y1, y2]', [x1, x2, y1, y2]);
         return EARTHRADIUS * Math.acos((Math.sin(y1) * Math.sin(y2) + Math.cos(y1) * Math.cos(y2) * Math.cos(x2 - x1)));    
     }
     
@@ -281,7 +281,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @returns {Number} 折线或点数组对应的长度
      */
     GeoUtils.getPolylineDistance = function(polyline){
-        console.log('getPolylineDistance run');
         //检查类型
         if(polyline instanceof BMapGL.Polyline || 
             polyline instanceof Array){
@@ -292,7 +291,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
             } else {
                 pts = polyline;
             }
-            console.log('pts', pts);
             if(pts.length < 2){//小于2个点，返回0
                 return 0;
             }
@@ -302,10 +300,8 @@ var BMapLib = window.BMapLib = BMapLib || {};
             for(var i =0; i < pts.length - 1; i++){
                 var curPt = pts[i];
                 var nextPt = pts[i + 1]
-                // console.log('curPt, nextPt',[curPt, nextPt]);
                 var dis = GeoUtils.getDistance(curPt, nextPt);
                 totalDis += dis;
-                // console.log('totalDis', totalDis);
             }
 
             return totalDis;
@@ -321,7 +317,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @returns {Number} 多边形面或点数组构成图形的面积
      */
     GeoUtils.getPolygonArea = function(polygon){
-        console.log('polygon', polygon)
         //检查类型
         if(!(polygon instanceof BMapGL.Polygon) &&
             !(polygon instanceof Array)){
@@ -453,8 +448,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
                 Sum = tempSum1;
         }
         totalArea = (Sum - (Count - 2) * Math.PI) * Radius * Radius;
-        console.log('totalArea', totalArea)
         return totalArea; //返回总面积
     }
-   
 })();//闭包结束
