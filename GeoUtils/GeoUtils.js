@@ -254,10 +254,10 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     GeoUtils.getDistance = function(point1, point2){
         //判断类型
         if (
-            point1.toString() === "Point" ||
+            !(point1.toString() === "Point" ||
             point1.toString() === "LatLng" ||
             point2.toString() === "Point" ||
-            point2.toString() === "LatLng"
+            point2.toString() === "LatLng" )
         ) {
             return 0;
         }
@@ -281,7 +281,6 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      * @returns {Number} 折线或点数组对应的长度
      */
     GeoUtils.getPolylineDistance = function(polyline){
-        console.log('计算折线或者点数组的长度');
         //检查类型
         if(polyline instanceof BMapGL.Polyline || 
             polyline instanceof Array){
@@ -295,7 +294,6 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             if(pts.length < 2){//小于2个点，返回0
                 return 0;
             }
-            console.log('pts', pts);
             //遍历所有线段将其相加，计算整条线段的长度
             var totalDis = 0;
             for(var i =0; i < pts.length - 1; i++){
@@ -304,7 +302,6 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                 var dis = GeoUtils.getDistance(curPt, nextPt);
                 totalDis += dis;
             }
-            console.log('totalDis', totalDis)
             return totalDis;
             
         } else {
