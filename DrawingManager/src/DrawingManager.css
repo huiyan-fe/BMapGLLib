@@ -72,7 +72,7 @@
 /*使用提示框*/
 .BMapGLLib_tip {
     position: absolute;
-    top: 40px;
+    top: 50px;
     display: none;
     overflow: hidden;
     width: 162px;
@@ -83,19 +83,24 @@
     background-color: #fff;
     text-align: center;
     font-size: 12px;
+    
 }
 .BMapGLLib_tip_text {
     font-size: 12px;
     color: #999;
 }
+.BMapGLLib_tip.polyline {
+    right: 135px;
+}
 .BMapGLLib_tip.rectangle {
-    left: -65px;
+    right: 65px;
 }
 .BMapGLLib_tip.polygon {
-    left: -25px;
+    right: 5px;
+
 }
 .BMapGLLib_tip.circle {
-    left: 10px;
+    right: -45px;
 }
 .BMapGLLib_tip p {
     margin: 0;
