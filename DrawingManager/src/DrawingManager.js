@@ -1377,8 +1377,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             }
             points.push(point);
 
-            drawPoint=[];
-            drawPoint =drawPoint.concat(points);
+            drawPoint = points.concat(points[points.length - 1]);
+
             if (points.length == 1) {
                 if (me._drawingType == BMAP_DRAWING_POLYLINE) {
                     
@@ -1410,13 +1410,13 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 var matchs = me.getSorptionMatch(point, me.overlays, me._sorptionDistance);
                 if (matchs && matchs.length > 0) {
                     match = matchs[0].point;
-                    overlay.setPointAt(drawPoint.length, matchs[0].point);
+                    overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
                     return;
                 }
             }
             match = null;
-            
-            overlay.setPointAt(drawPoint.length  , e.point);
+
+            overlay.setPositionAt(drawPoint.length - 1, e.point);
 
             map.removeOverlay(tip_label);
 
@@ -1567,18 +1567,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             return [pointLT, pointTC, pointRT, pointRC, pointRB, pointBC, pointLB, pointLC];
         }
-        // 对象深拷贝
-        function copy(o) {
-            var output,
-                v,
-                key;
-            output = Array.isArray(o) ? [] : {};
-            for (key in o) {
-                v = o[key];
-                output[key] = (typeof v === 'object') ? copy(v) : v;
-            }
-            return output;
-        }
 
         var moveIcon = new BMapGL.Icon('./images/bullet2.png', new BMapGL.Size(10, 10));
         moveIcon.setImageSize(new BMapGL.Size(10, 10));
@@ -1684,9 +1672,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                         pointsTmp[i] = me.mc2ll(marker.point);
                     }
                     operateWindow.updateWindow();
-                    var cz = map.getViewport(points);
-                    cz.zoom -= 1;
-                    map.setViewport(cz);
                 });
             }
 
@@ -1707,12 +1692,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 });
                 operateWindow.setPosition(points[3], true);
                 polygon.setPath(points);
-                pointsTmp = copy(points);
+                for (var i = 0; i < markers.length; i++) {
+                    var marker = markers[i];
+                    pointsTmp[i] = me.mc2ll(marker.point);
+                }
                 operateWindow.updateWindow();
-
-                var cz = map.getViewport(points);
-                cz.zoom -= 1;
-                map.setViewport(cz);
             });
 
             var overlays = [markers, rectInfo];
@@ -2299,7 +2283,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this._map = map;
         var div = this.container = document.createElement('div');
         var size = this._map.getSize();
-        div.style.cssText = 'position:absolute;background:url(about:blank);cursor:crosshair;width:' + size.width + 'px;height:' + size.height + 'px';
+        div.style.cssText = 'position:absolute;background:transparent;cursor:crosshair;width:' + size.width + 'px;height:' + size.height + 'px';
         this._map.addEventListener('resize', function (e) {
             me._adjustSize(e.size);
         });
