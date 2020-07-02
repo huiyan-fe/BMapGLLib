@@ -1105,7 +1105,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var me = this,
             map = this._map,
             mask = this._mask;
-
+        
         /**
          * 鼠标点击的事件
          */
@@ -1131,7 +1131,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             circle = null,
             overlays = [],
             centerPoint = null; // 圆的中心点
-
+        
         var radius = null;
         var moveMarker = null;
         var polyline = null;
@@ -1340,7 +1340,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * 画线和画多边形相似性比较大，公用一个方法
      */
     DrawingManager.prototype._bindPolylineOrPolygon = function () {
-
+        
         var me = this,
             map = this._map,
             mask = this._mask,
@@ -1349,7 +1349,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             overlay = null,
             match = null,
             isBinded = false;
-
         function getNorthEast() {
             var bound = arguments[0];
             var maxlng = 0;
@@ -1432,6 +1431,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 鼠标双击的事件
          */
         var dblclickAction = function (e) {
+            console.log('鼠标双击事件');
             baidu.stopBubble(e);
             isBinded = false;
             map.removeOverlay(tip_label);
@@ -1440,6 +1440,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
             mask.removeEventListener('dblclick', dblclickAction);
+            console.log('me.controlButton', me.controlButton);
             if (me.controlButton == 'right') {
                 points.push(e.point);
             } else if (baidu.ie <= 8) {
@@ -1488,13 +1489,15 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             if (me.limit) {
                 limit = me.limit.area;
             }
+
             var targetOverlay = {
-                limit: limit,
-                type: 'polygon',
+                limit: 'polygon'===me._drawingType?limit:me.limit.distance,
+                type: 'polygon'===me._drawingType?'polygon':'polyline',
                 point: getNorthEast(points),
                 overlay: overlay,
                 overlays: []
             };
+            console.log('targetOverlay', targetOverlay);
 
             var operateWindow = new Operate(targetOverlay, me);
             map.addOverlay(operateWindow);
@@ -1552,6 +1555,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             polygon = null,
             startPoint = null;
 
+        
         // 获取4个顶点和4条边中点的坐标
         function getRectAllPoints(pointA, pointB) {
             var pointLT = new BMapGL.Point(pointA.lng, pointA.lat); // 左上角
@@ -1712,10 +1716,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 overlays: overlays
             };
 
+            console.log('rectInfo', rectInfo);
             var operateWindow = new Operate(overlay, me);
             map.addOverlay(operateWindow);
             map.addOverlay(rectInfo);
-            map.removeOverlay(tip_label);
 
             mask.disableEdgeMove();
             mask.removeEventListener('mousemove', moveAction);
@@ -1754,9 +1758,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             data: 0, // 计算出来的长度或面积
             label: null // 显示长度或面积的label对象
         };
-        console.log('计算函数_calculate被调用');
-        console.log('this._enableCalculate', this._enableCalculate);
-        console.log('BMapGLLib.GeoUtils', BMapGLLib.GeoUtils);
+
         if (this._enableCalculate && BMapGLLib.GeoUtils) {
             var type = overlay.toString();
             console.log('type', type);
@@ -1933,20 +1935,23 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     Operate.prototype.initialize = function (map) {
         var me = this;
         this._map = map;
+        this.overlyTypeText="面积"
         var div = this.div = document.createElement('div');
         div.className = 'operateWindow';
-        var html = '<div><span id="confirmOperate"></span><span id="cancelOperate"></span><span id="warnOperate">面积不超过' + this.limit / 10000 + '万平方米！</span></div>';
+        var html = '<div><span id="confirmOperate"></span><span id="cancelOperate"></span><span id="warnOperate">'+this.overlyTypeText+'不超过' + this.limit / 10000 + '万平方米！</span></div>';
         div.innerHTML = html;
         this._map.addEventListener('resize', function (e) {
             me._adjustSize(e.size);
         });
         this._map.getPanes().markerPane.appendChild(div);
+        console.log('initialize');
         this.updateWindow();
         this._bind();
         return div;
     };
 
     Operate.prototype._bind = function () {
+        console.log('operate bind this', this.overlyTypeText);
         var that = this;
         var map = this._map;
         var overlay = this.overlay;
@@ -1970,6 +1975,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 that.DrawingManager.overlays.push(overlay);
                 overlay.disableEditing();
             }
+            console.log('calculate', calculate);
 
             that.DrawingManager._dispatchOverlayComplete(overlay, calculate);
 
@@ -2017,7 +2023,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         else if (this.type == 'polygon') {
             calculate = this.DrawingManager._calculate(overlay, (overlay.getPath()));
         }
-
+        else if (this.type == 'polyline') {
+            calculate = this.DrawingManager._calculate(overlay, (overlay.getPath()));
+        }
+        console.log('Object.prototype.toString.call(limit) === [object Number] && calculate.data > limit', Object.prototype.toString.call(limit) === '[object Number]' && calculate.data > limit);
+        console.log(limit);
         if (Object.prototype.toString.call(limit) === '[object Number]' && calculate.data > limit) {
             document.getElementById('confirmOperate').style.display = 'none';
             document.getElementById('warnOperate').style.display = 'block';
