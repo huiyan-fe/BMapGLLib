@@ -1,6 +1,6 @@
-.BMapLib_Drawing{
+.BMapGLLib_Drawing{
 }
-.BMapLib_Drawing_panel{
+.BMapGLLib_Drawing_panel{
     height:47px; 
     border:1px solid #666;
     border-radius:5px;
@@ -8,7 +8,7 @@
     box-shadow:1px 1px 3px rgba(0, 0, 0, 0.3);
     float:left;
 }
-.BMapLib_Drawing .BMapLib_box{
+.BMapGLLib_Drawing .BMapGLLib_box{
     border-right:1px solid #d2d2d2;
     float:left;
     height:100%;
@@ -17,60 +17,60 @@
     background-image:url(//api.map.baidu.com/library/DrawingManager/1.4/src/bg_drawing_tool.png);
     cursor:pointer;
 }
-.BMapLib_Drawing .BMapLib_last{
+.BMapGLLib_Drawing .BMapGLLib_last{
     border-right:none;
 }
 
 /*拖动地图图标*/
-.BMapLib_Drawing .BMapLib_hander{
+.BMapGLLib_Drawing .BMapGLLib_hander{
     background-position:0 0;
 }
-.BMapLib_Drawing .BMapLib_hander_hover{
+.BMapGLLib_Drawing .BMapGLLib_hander_hover{
     background-position:0 -52px;
 }
 
 /*画点图标*/
-.BMapLib_Drawing .BMapLib_marker{
+.BMapGLLib_Drawing .BMapGLLib_marker{
     background-position:-65px 0;
 }
-.BMapLib_Drawing .BMapLib_marker_hover{
+.BMapGLLib_Drawing .BMapGLLib_marker_hover{
     background-position:-65px -52px;
 }
 
 /*画圆图标*/
-.BMapLib_Drawing .BMapLib_circle{
+.BMapGLLib_Drawing .BMapGLLib_circle{
     background-position:-130px 0;
 }
-.BMapLib_Drawing .BMapLib_circle_hover{
+.BMapGLLib_Drawing .BMapGLLib_circle_hover{
     background-position:-130px -52px;
 }
 
 /*画线图标*/
-.BMapLib_Drawing .BMapLib_polyline{
+.BMapGLLib_Drawing .BMapGLLib_polyline{
     background-position:-195px 0;
 }
-.BMapLib_Drawing .BMapLib_polyline_hover{
+.BMapGLLib_Drawing .BMapGLLib_polyline_hover{
     background-position:-195px -52px;
 }
 
 /*画多边形图标*/
-.BMapLib_Drawing .BMapLib_polygon{
+.BMapGLLib_Drawing .BMapGLLib_polygon{
     background-position:-260px 0;
 }
-.BMapLib_Drawing .BMapLib_polygon_hover{
+.BMapGLLib_Drawing .BMapGLLib_polygon_hover{
     background-position:-260px -52px;
 }
 
 /*画矩形图标*/
-.BMapLib_Drawing .BMapLib_rectangle{
+.BMapGLLib_Drawing .BMapGLLib_rectangle{
     background-position:-325px 0;
 }
-.BMapLib_Drawing .BMapLib_rectangle_hover{
+.BMapGLLib_Drawing .BMapGLLib_rectangle_hover{
     background-position:-325px -52px;
 }
 
 /*使用提示框*/
-.BMapLib_tip {
+.BMapGLLib_tip {
     position: absolute;
     top: 40px;
     display: none;
@@ -84,20 +84,20 @@
     text-align: center;
     font-size: 12px;
 }
-.BMapLib_tip_text {
+.BMapGLLib_tip_text {
     font-size: 12px;
     color: #999;
 }
-.BMapLib_tip.rectangle {
+.BMapGLLib_tip.rectangle {
     left: -65px;
 }
-.BMapLib_tip.polygon {
+.BMapGLLib_tip.polygon {
     left: -25px;
 }
-.BMapLib_tip.circle {
+.BMapGLLib_tip.circle {
     left: 10px;
 }
-.BMapLib_tip p {
+.BMapGLLib_tip p {
     margin: 0;
 }
 

@@ -1,7 +1,7 @@
 /**
  * @fileoverview GeoUtils类提供若干几何算法，用来帮助用户判断点与矩形、
  * 圆形、多边形线、多边形面的关系,并提供计算折线长度和多边形的面积的公式。 
- * 主入口类是<a href="symbols/BMapLib.GeoUtils.html">GeoUtils</a>，
+ * 主入口类是<a href="symbols/BMapGLLib.GeoUtils.html">GeoUtils</a>，
  * 基于Baidu Map API 1.2。
  *
  * @author Baidu Map Api Group 
@@ -9,9 +9,9 @@
  */
 
 /** 
- * @namespace BMap的所有library类均放在BMapLib命名空间下
+ * @namespace BMap的所有library类均放在BMapGLLib命名空间下
  */
-var BMapLib = window.BMapLib = BMapLib || {};
+var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 (function() { 
     
     /**
@@ -20,7 +20,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
     var EARTHRADIUS = 6370996.81; 
 
     /** 
-     * @exports GeoUtils as BMapLib.GeoUtils 
+     * @exports GeoUtils as BMapGLLib.GeoUtils 
      */
     var GeoUtils =
     /**
@@ -28,7 +28,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @class GeoUtils类的<b>入口</b>。
      * 该类提供的都是静态方法，勿需实例化即可使用。     
      */
-    BMapLib.GeoUtils = function(){
+    BMapGLLib.GeoUtils = function(){
         
     }
     
@@ -281,6 +281,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
      * @returns {Number} 折线或点数组对应的长度
      */
     GeoUtils.getPolylineDistance = function(polyline){
+        console.log('计算折线或者点数组的长度');
         //检查类型
         if(polyline instanceof BMapGL.Polyline || 
             polyline instanceof Array){
@@ -294,7 +295,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
             if(pts.length < 2){//小于2个点，返回0
                 return 0;
             }
-
+            console.log('pts', pts);
             //遍历所有线段将其相加，计算整条线段的长度
             var totalDis = 0;
             for(var i =0; i < pts.length - 1; i++){
@@ -303,7 +304,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
                 var dis = GeoUtils.getDistance(curPt, nextPt);
                 totalDis += dis;
             }
-
+            console.log('totalDis', totalDis)
             return totalDis;
             
         } else {

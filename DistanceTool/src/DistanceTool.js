@@ -2,7 +2,7 @@
  * @fileoverview 百度地图的测距工具类，对外开放。
  * 允许用户在地图上点击完成距离的测量。
  * 使用者可以自定义测距线段的相关样式，例如线宽、颜色、测距结果所用的单位制等等。
- * 主入口类是<a href="symbols/BMapLib.DistanceTool.html">DistanceTool</a>，
+ * 主入口类是<a href="symbols/BMapGLLib.DistanceTool.html">DistanceTool</a>，
  * 基于Baidu Map API 1.2。
  *
  * @author Baidu Map Api Group 
@@ -10,9 +10,9 @@
  */
 
 /** 
- * @namespace BMap的所有library类均放在BMapLib命名空间下
+ * @namespace BMap的所有library类均放在BMapGLLib命名空间下
  */
-var BMapLib = window.BMapLib = BMapLib || {};
+var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
 (function() {
     /**
@@ -517,7 +517,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
     })();
 
     /** 
-     * @exports DistanceTool as BMapLib.DistanceTool 
+     * @exports DistanceTool as BMapGLLib.DistanceTool 
      */
     var DistanceTool =
         /**
@@ -540,9 +540,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
          * <br />"<b>cursor</b>" : {String} 跟随的鼠标样式}
          *
          * @example <b>参考示例：</b><br />
-         * var map = new BMap.Map("container");<br />map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);<br />var myDistanceToolObject = new BMapLib.DistanceTool(map, {lineStroke : 2});
+         * var map = new BMap.Map("container");<br />map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);<br />var myDistanceToolObject = new BMapGLLib.DistanceTool(map, {lineStroke : 2});
          */
-        BMapLib.DistanceTool = function(map, opts){
+        BMapGLLib.DistanceTool = function(map, opts){
             if (!map) {
                 return;
             }
@@ -760,9 +760,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
              * @type {Json}
              */
              this._styles = {
-                 "BMapLib_diso" : "height:17px;width:5px;position:absolute;background:url(http://api.map.baidu.com/images/dis_box_01.gif) no-repeat left top"
-                 ,"BMapLib_disi" : "color:#7a7a7a;position:absolute;left:5px;padding:0 4px 1px 0;line-height:17px;background:url(http://api.map.baidu.com/images/dis_box_01.gif) no-repeat right top" 
-                 ,"BMapLib_disBoxDis" : "color:#ff6319;font-weight:bold"
+                 "BMapGLLib_diso" : "height:17px;width:5px;position:absolute;background:url(http://api.map.baidu.com/images/dis_box_01.gif) no-repeat left top"
+                 ,"BMapGLLib_disi" : "color:#7a7a7a;position:absolute;left:5px;padding:0 4px 1px 0;line-height:17px;background:url(http://api.map.baidu.com/images/dis_box_01.gif) no-repeat right top" 
+                 ,"BMapGLLib_disBoxDis" : "color:#ff6319;font-weight:bold"
              };
 
             if (this._opts.lineStroke <= 0) {
@@ -837,11 +837,11 @@ var BMapLib = window.BMapLib = BMapLib || {};
             return true;
         }
         // 已有其他地图上的鼠标操作工具开启
-        if (!!BMapLib._toolInUse) {
+        if (!!BMapGLLib._toolInUse) {
             return;
         }
         this._isOpen = true;
-        BMapLib._toolInUse = true;
+        BMapGLLib._toolInUse = true;
 
         // 判断是否是否在移动过程中
         if (this._mapMoving){
@@ -1213,7 +1213,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
             return;
         }
         this._isOpen = false;
-        BMapLib._toolInUse = false;
+        BMapGLLib._toolInUse = false;
 
         if (this._mapMoving){
             delete this._mapMoving;
@@ -1400,7 +1400,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
      */
     DistanceTool.prototype._formatSegLabel = function(label, text){
         label.setStyle({"border" : "none", "padding" : "0"});
-        label.setContent("<span style='" + this._styles.BMapLib_diso + "'><span style='" + this._styles.BMapLib_disi + "'>" + text + "</span></span>");
+        label.setContent("<span style='" + this._styles.BMapGLLib_diso + "'><span style='" + this._styles.BMapGLLib_disi + "'>" + text + "</span></span>");
     };
 
     /**
@@ -1534,7 +1534,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
             } else {
                 dis = dis.toFixed(0);
             }
-            htmls.push("<span>总长：<span style='" + this._styles.BMapLib_disBoxDis+"'>" + dis + "</span>" + unit + "</span><br />");
+            htmls.push("<span>总长：<span style='" + this._styles.BMapGLLib_disBoxDis+"'>" + dis + "</span>" + unit + "</span><br />");
             htmls.push("<span style='color:#7a7a7a'>" + text + "</span>");
         } else if (type == 2) {
             // 结束时的总距离展示
@@ -1548,7 +1548,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
             } else{
                 dis = dis.toFixed(0);
             }
-            htmls.push("总长：<span style='" + this._styles.BMapLib_disBoxDis + "'>" + dis + "</span>" + unit);
+            htmls.push("总长：<span style='" + this._styles.BMapGLLib_disBoxDis + "'>" + dis + "</span>" + unit);
         } else {
             title.setOffset(0, 25);
             htmls.push(t);
@@ -1575,7 +1575,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
         // 修改Label的内容
         if (label) {
             var htmls = [];
-            htmls.push("<span>总长：<span style='" + this._styles.BMapLib_disBoxDis + "'>" + dis + "</span>" + unit + "</span><br />");
+            htmls.push("<span>总长：<span style='" + this._styles.BMapGLLib_disBoxDis + "'>" + dis + "</span>" + unit + "</span><br />");
             htmls.push("<span style='color:#7a7a7a'>" + this._opts.followText + "</span>");
             label.setContent(htmls.join(""));
         }

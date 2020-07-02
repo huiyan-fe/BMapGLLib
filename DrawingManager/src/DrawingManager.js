@@ -3,7 +3,7 @@
  * @fileoverview 百度地图的鼠标绘制工具，对外开放。
  * 允许用户在地图上点击完成鼠标绘制的功能。
  * 使用者可以自定义所绘制结果的相关样式，例如线宽、颜色、测线段距离、面积等等。
- * 主入口类是<a href="symbols/BMapLib.DrawingManager.html">DrawingManager</a>，
+ * 主入口类是<a href="symbols/BMapGLLib.DrawingManager.html">DrawingManager</a>，
  * 基于Baidu Map API 1.4。
  *
  * @author Baidu Map Api Group
@@ -11,9 +11,9 @@
  */
 
 /**
- * @namespace BMap的所有library类均放在BMapLib命名空间下
+ * @namespace BMap的所有library类均放在BMapGLLib命名空间下
  */
-var BMapLib = window.BMapLib = BMapLib || {};
+var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
 /**
  * 定义常量, 绘制的模式
@@ -582,7 +582,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     })();
 
     /**
-     * @exports DrawingManager as BMapLib.DrawingManager
+     * @exports DrawingManager as BMapGLLib.DrawingManager
      */
     var DrawingManager =
 
@@ -612,7 +612,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      *
      * @example <b>参考示例：</b><br />
      * var map = new BMap.Map("container");<br />map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);<br />
-     * var myDrawingManagerObject = new BMapLib.DrawingManager(map, {isOpen: true,
+     * var myDrawingManagerObject = new BMapGLLib.DrawingManager(map, {isOpen: true,
      *     drawingType: BMAP_DRAWING_MARKER, enableDrawingTool: true,
      *     enableCalculate: false,
      *     drawingToolOptions: {
@@ -630,7 +630,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      *         strokeColor: "#333"
      *     });
      */
-    BMapLib.DrawingManager = function (map, opts) {
+    BMapGLLib.DrawingManager = function (map, opts) {
         if (!map) {
             return;
         }
@@ -1488,7 +1488,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             if (me.limit) {
                 limit = me.limit.area;
             }
-
             var targetOverlay = {
                 limit: limit,
                 type: 'polygon',
@@ -1755,15 +1754,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             data: 0, // 计算出来的长度或面积
             label: null // 显示长度或面积的label对象
         };
-        if (this._enableCalculate && BMapLib.GeoUtils) {
+        console.log('计算函数_calculate被调用');
+        console.log('this._enableCalculate', this._enableCalculate);
+        console.log('BMapGLLib.GeoUtils', BMapGLLib.GeoUtils);
+        if (this._enableCalculate && BMapGLLib.GeoUtils) {
             var type = overlay.toString();
+            console.log('type', type);
             // 不同覆盖物调用不同的计算方法
             switch (type) {
                 case 'Polyline': //[object Polyline]==>在3D版本中已经转为了Polyline
-                    result.data = BMapLib.GeoUtils.getPolylineDistance(overlay);
+                    result.data = BMapGLLib.GeoUtils.getPolylineDistance(overlay);
                     break;
                 case 'Polygon':
-                    result.data = BMapLib.GeoUtils.getPolygonArea(overlay);
+                    result.data = BMapGLLib.GeoUtils.getPolygonArea(overlay);
                     break;
                 case 'Circle':
                     var radius = overlay.getRadius();
@@ -1773,6 +1776,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             // 异常情况处理
             if (!result.data || result.data < 0) {
                 result.data = 0;
+                console.log('计算函数异常处理')
             } else {
                 // 保留2位小数位
                 result.data = result.data.toFixed(2);
@@ -1783,7 +1787,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
              */
             // result.label = this._addLabel(point, result.data);
         }
-
+        console.log('result.data', result.data);
         return result;
     };
 
@@ -1792,7 +1796,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * 所以这里判断用户是否已经加载,若未加载则用js动态加载
      */
     DrawingManager.prototype._addGeoUtilsLibrary = function () {
-        if (!BMapLib.GeoUtils) {
+        if (!BMapGLLib.GeoUtils) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
             // script.setAttribute('src', '//huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
@@ -2535,10 +2539,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     DrawingTool.prototype.initialize = function (map) {
         // 创建一个DOM元素
         var container = this.container = document.createElement('div');
-        container.className = 'BMapLib_Drawing';
+        container.className = 'BMapGLLib_Drawing';
         // 用来设置外层边框阴影
         var panel = this.panel = document.createElement('div');
-        panel.className = 'BMapLib_Drawing_panel';
+        panel.className = 'BMapGLLib_Drawing_panel';
         if (this.drawingToolOptions && !this.drawingToolOptions.hasCustomStyle && this.drawingToolOptions.scale) {
             this._setScale(this.drawingToolOptions.scale);
         }
@@ -2549,8 +2553,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         panel.appendChild(content);
         // 添加tip
         var tip = this.tip = document.createElement('div');
-        tip.className = 'BMapLib_tip';
-        tip.innerHTML = '<p class="BMapLib_tip_title"></p><p class="BMapLib_tip_text"></p>';
+        tip.className = 'BMapGLLib_tip';
+        tip.innerHTML = '<p class="BMapGLLib_tip_title"></p><p class="BMapGLLib_tip_text"></p>';
         if (this.drawingToolOptions.enableTips === true) {
             panel.appendChild(tip);
         }
@@ -2614,11 +2618,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         // 生成工具
         var fragment = document.createDocumentFragment();
         // 取消hander工具的展示，交互改为再次点击tool取消active功能
-        // fragment.appendChild(getItem('BMapLib_box BMapLib_hander', 'hander'));
+        // fragment.appendChild(getItem('BMapGLLib_box BMapGLLib_hander', 'hander'));
         for (var i = 0, len = this.drawingModes.length; i < len; i++) {
-            var classStr = 'BMapLib_box BMapLib_' + this.drawingModes[i];
+            var classStr = 'BMapGLLib_box BMapGLLib_' + this.drawingModes[i];
             if (i == len - 1) {
-                classStr += ' BMapLib_last';
+                classStr += ' BMapGLLib_last';
             }
 
             fragment.appendChild(getItem(classStr, this.drawingModes[i]));
@@ -2677,9 +2681,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         for (var i = 0, len = boxs.length; i < len; i++) {
             var box = boxs[i];
             if (box.getAttribute('drawingType') == drawingType) {
-                var classStr = 'BMapLib_box BMapLib_' + drawingType + '_hover';
+                var classStr = 'BMapGLLib_box BMapGLLib_' + drawingType + '_hover';
                 if (i == len - 1) {
-                    classStr += ' BMapLib_last';
+                    classStr += ' BMapGLLib_last';
                 }
 
                 box.className = classStr;

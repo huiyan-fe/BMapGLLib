@@ -53,7 +53,7 @@
         };
 
         // 实例化鼠标绘制工具
-        var drawingManager = new BMapLib.DrawingManager(map, {
+        var drawingManager = new BMapGLLib.DrawingManager(map, {
             // isOpen: true, //是否开启绘制模式
             enableDrawingTool: true, // 是否显示工具栏
             enableCalculate: true, // 绘制是否进行测距(画线时候)、测面(画圆、多边形、矩形) 
@@ -78,7 +78,8 @@
             enableGpc: true, // 是否开启延边裁剪功能
             enbaleLimit: true,  // 是否开启超限提示
             limitOptions: {
-                area: 50000000 // 面积超限值
+                area: 50000000, // 面积超限值
+                distance: 50000
             },
             circleOptions: styleOptions, // 圆的样式
             polylineOptions: styleOptions, // 线的样式

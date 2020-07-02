@@ -6,7 +6,7 @@ gpcas.util = {};
 gpcas.geometry = {};
 
 //////////
- 
+
 //Object.prototype.equals = function(x) {
 function equals(x1, x) {
 	
