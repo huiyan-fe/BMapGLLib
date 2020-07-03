@@ -9,7 +9,7 @@
  */
 
 /** 
- * @namespace BMap的所有library类均放在BMapGLLib命名空间下
+ * @namespace BMapGL的所有library类均放在BMapGLLib命名空间下
  */
 var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 (function() { 
@@ -411,6 +411,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             CHtangent = CoefficientH * CH - CM;
             AngleCos = (AHtangent * ALtangent + BHtangent * BLtangent + CHtangent * CLtangent) / (Math.sqrt(AHtangent * AHtangent + BHtangent * BHtangent + CHtangent * CHtangent) * Math.sqrt(ALtangent * ALtangent + BLtangent * BLtangent + CLtangent * CLtangent));
             if (AngleCos < -1.0) AngleCos = -1.0;
+            if (AngleCos > 1.0) AngleCos = 1.0;
             AngleCos = Math.acos(AngleCos);            
             ANormalLine = BHtangent * CLtangent - CHtangent * BLtangent;
             BNormalLine = 0 - (AHtangent * CLtangent - CHtangent * ALtangent);

@@ -10,7 +10,7 @@
  */
 
 /** 
- * @namespace BMap的所有library类均放在BMapGLLib命名空间下
+ * @namespace BMapGL的所有library类均放在BMapGLLib命名空间下
  */
 var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 

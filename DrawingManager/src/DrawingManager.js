@@ -11,7 +11,7 @@
  */
 
 /**
- * @namespace BMap的所有library类均放在BMapGLLib命名空间下
+ * @namespace BMapGL的所有library类均放在BMapGLLib命名空间下
  */
 var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
@@ -1487,12 +1487,12 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             overlay.enableEditing();
             var limit = null;
             if (me.limit) {
-                limit = me.limit.area;
+                limit = 'polygon' === me._drawingType ? me.limit.area : me.limit.distance;
             }
 
             var targetOverlay = {
-                limit: 'polygon'===me._drawingType?limit:me.limit.distance,
-                type: 'polygon'===me._drawingType?'polygon':'polyline',
+                limit: limit,
+                type: me._drawingType,
                 point: getNorthEast(points),
                 overlay: overlay,
                 overlays: []
@@ -1933,18 +1933,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     Operate.prototype.removeEventListener = baidu.lang.Class.prototype.removeEventListener;
 
     Operate.prototype.initialize = function (map) {
+        console.log('initialize', this);
         var me = this;
         this._map = map;
-        this.overlyTypeText="面积"
+        var overlyTypeText = (this.type === 'polygon' ? '面积' : '长度');
+        var unit = (this.type === 'polygon' ? '万平方米' : '万米');
         var div = this.div = document.createElement('div');
         div.className = 'operateWindow';
-        var html = '<div><span id="confirmOperate"></span><span id="cancelOperate"></span><span id="warnOperate">'+this.overlyTypeText+'不超过' + this.limit / 10000 + '万平方米！</span></div>';
+        var html = '<div><span id="confirmOperate"></span><span id="cancelOperate"></span><span id="warnOperate">' + overlyTypeText + '不超过' + this.limit / 10000 + unit + '！</span></div>';
         div.innerHTML = html;
         this._map.addEventListener('resize', function (e) {
             me._adjustSize(e.size);
         });
         this._map.getPanes().markerPane.appendChild(div);
-        console.log('initialize');
         this.updateWindow();
         this._bind();
         return div;
@@ -2008,7 +2009,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     };
 
     Operate.prototype.updateWindow = function () {
-        if (!this.domElement) {
+        if (this.domElement === null) {
             return;
         }
         var overlay = this.overlay;
