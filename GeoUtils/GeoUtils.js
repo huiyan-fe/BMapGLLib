@@ -40,7 +40,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      */
     GeoUtils.isPointInRect = function(point, bounds){
         //检查类型是否正确
-        if (!(point instanceof BMapGL.Point) || 
+        if (!(point.toString()=== 'Point') || 
             !(bounds instanceof BMapGL.Bounds)) {
             return false;
         }
@@ -57,7 +57,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      */
     GeoUtils.isPointInCircle = function(point, circle){
         //检查类型是否正确
-        if (!(point instanceof BMapGL.Point) || 
+        if (!(point.toString()=== 'Point') || 
             !(circle instanceof BMapGL.Circle)) {
             return false;
         }
@@ -82,7 +82,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      */
     GeoUtils.isPointOnPolyline = function(point, polyline){
         //检查类型
-        if(!(point instanceof BMapGL.Point) ||
+        if(!(point.toString()=== 'Point') ||
             !(polyline instanceof BMapGL.Polyline)){
             return false;
         }
@@ -122,7 +122,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      */
     GeoUtils.isPointInPolygon = function(point, polygon){
         //检查类型
-        if(!(point instanceof BMapGL.Point) ||
+        if(!(point.toString()=== 'Point') ||
             !(polygon instanceof BMapGL.Polygon)){
             return false;
         }
