@@ -759,6 +759,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      */
     DrawingManager.prototype.enableGpc = function() {
         this._enableGpc = true;
+        this._addGPCLibrary();  // 异步调用gpc
     };
 
     /**
@@ -1132,7 +1133,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             overlays = [],
             centerPoint = null; // 圆的中心点
         
-        var radius = null;
+        var radius = 1;
         var moveMarker = null;
         var polyline = null;
         var radiusWindow = null;
@@ -1170,7 +1171,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             overlays.push(centerMarker);
 
-            circle = new BMapGL.Circle(centerPoint, 1, me.circleOptions);
+            circle = new BMapGL.Circle(centerPoint, radius, me.circleOptions);
             map.addOverlay(circle);
             mask.enableEdgeMove();
             mask.addEventListener('mousemove', moveAction);
@@ -1182,7 +1183,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          */
         var moveAction = function (e) {
             radius = me._map.getDistance(centerPoint, e.point).toFixed(0);
-            circle.setRadius(me._map.getDistance(centerPoint, e.point));
+            circle.setRadius(radius);
 
             map.removeOverlay(tip_label);
 
@@ -1788,7 +1789,21 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
             // script.setAttribute('src', '//huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
-            script.setAttribute('src','../../GeoUtils/GeoUtils.js');
+            script.setAttribute('src', '../GeoUtils/GeoUtils.js');
+            document.body.appendChild(script);
+        }
+
+    };
+
+    /**
+     * 开启裁剪功能需要依赖于gpc库
+     * 所以这里判断用户是否已经加载,若未加载则用js动态加载
+     */
+    DrawingManager.prototype._addGPCLibrary = function () {
+        if (!window.gpcas) {
+            var script = document.createElement('script');
+            script.setAttribute('type', 'text/javascript');
+            script.setAttribute('src', './src/gpc.js');
             document.body.appendChild(script);
         }
 
