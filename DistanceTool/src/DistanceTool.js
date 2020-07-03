@@ -535,12 +535,12 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
          * <br />"<b>lineStroke</b>" : {Number} 折线宽度,
          * <br />"<b>opacity</b>" : {Number} 透明度,
          * <br />"<b>lineStyle</b>" : {String} 折线的样式，只可设置solid和dashed,
-         * <br />"<b>secIcon</b>" : {BMap.Icon} 转折点的Icon,
-         * <br />"<b>closeIcon</b>" : {BMap.Icon} 关闭按钮的Icon,
+         * <br />"<b>secIcon</b>" : {BMapGL.Icon} 转折点的Icon,
+         * <br />"<b>closeIcon</b>" : {BMapGL.Icon} 关闭按钮的Icon,
          * <br />"<b>cursor</b>" : {String} 跟随的鼠标样式}
          *
          * @example <b>参考示例：</b><br />
-         * var map = new BMap.Map("container");<br />map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);<br />var myDistanceToolObject = new BMapGLLib.DistanceTool(map, {lineStroke : 2});
+         * var map = new BMapGL.Map("container");<br />map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 15);<br />var myDistanceToolObject = new BMapGLLib.DistanceTool(map, {lineStroke : 2});
          */
         BMapGLLib.DistanceTool = function(map, opts){
             if (!map) {
@@ -623,14 +623,14 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                     /**
                      * 转折点的ICON样式
                      * @private
-                     * @type {BMap.Icon}
+                     * @type {BMapGL.Icon}
                      */
                      secIcon : null,
                       
                     /**
                      * 转折点的ICON样式
                      * @private
-                     * @type {BMap.Icon}
+                     * @type {BMapGL.Icon}
                      */
                      closeIcon : null
                 })
@@ -639,7 +639,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             /**
              * 跟随的title覆盖物
              * @private
-             * @type {BMap.Label}
+             * @type {BMapGL.Label}
              */
             this._followTitle = null;
 
@@ -819,7 +819,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         });
         // 创建鼠标跟随的文字提示框
         if (this._startFollowText) {
-            var t = this._followTitle = new BMap.Label(this._startFollowText, {offset : new BMap.Size(14, 16)});
+            var t = this._followTitle = new BMapGL.Label(this._startFollowText, {offset : new BMapGL.Size(14, 16)});
             this._followTitle.setStyles({color : "#333", borderColor : "#ff0103"});
         }
     };
@@ -916,7 +916,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                 me._paths[me._paths.length - 1].setStrokeOpacity(me._opts.opacity);
             }
 
-            var path = new BMap.Polyline([poi, poi], {enableMassClear : me._enableMassClear});
+            var path = new BMapGL.Polyline([poi, poi], {enableMassClear : me._enableMassClear});
             me._map.addOverlay(path);
             me._paths.push(path);
             me._overlays.push(path);
@@ -947,7 +947,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             } else {
                 disText = "起点";
             }                
-            var disLabel = new BMap.Label(disText, {offset : new BMap.Size(10, -5), enableMassClear : me._enableMassClear});
+            var disLabel = new BMapGL.Label(disText, {offset : new BMapGL.Size(10, -5), enableMassClear : me._enableMassClear});
             disLabel.setStyles({color : "#333", borderColor : "#ff0103"});
             me._map.addOverlay(disLabel);
             me._formatSegLabel(disLabel, disText);
@@ -960,8 +960,8 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
              * @name DistanceTool#onaddpoint
              * @event
              * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
-             * <br />{"<b>point</b> : {BMap.Point} 最新添加上的节点BMap.Point对象,
-             * <br />"<b>pixel</b>：{BMap.pixel} 最新添加上的节点BMap.Pixel对象,
+             * <br />{"<b>point</b> : {BMapGL.Point} 最新添加上的节点BMap.Point对象,
+             * <br />"<b>pixel</b>：{BMapGL.pixel} 最新添加上的节点BMap.Pixel对象,
              * <br />"<b>index</b>：{Number} 最新添加的节点的索引,
              * <br />"<b>distance</b>：{Number} 截止最新添加的节点的总距离}
              *
@@ -1007,7 +1007,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
                 // 修改最后一条折线的终点位置，使之随着鼠标移动画线
                 var path = me._paths[me._paths.length - 1];
-                var poi = me._map.pixelToPoint(new BMap.Pixel(x, y));
+                var poi = me._map.pixelToPoint(new BMapGL.Pixel(x, y));
                 path.setPositionAt(1, poi);
 
                 if (!me._mapMoving) {
@@ -1050,7 +1050,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
                         // 显示跟随提示框，并修改线路位置
                         var lstP = me._paths[me._paths.length - 1];
-                        var poiN = me._map.pixelToPoint(new BMap.Pixel(x, y));
+                        var poiN = me._map.pixelToPoint(new BMapGL.Pixel(x, y));
                         if (!lstP) {
                             return;
                         }
@@ -1177,7 +1177,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
          * @name DistanceTool#ondrawend
          * @event
          * @param {Event Object} e 回调函数会返回event参数，包括以下返回值：
-         * <br />{"<b>points</b> : {BMap.Point} 所有测量时，打下的节点BMap.Point对象,
+         * <br />{"<b>points</b> : {BMapGL.Point} 所有测量时，打下的节点BMap.Point对象,
          * <br />"<b>overlays</b>：{Array} 所有测量时，生成的线段BMap.Overlay对象,
          * <br />"<b>distance</b>：{Number} 测量解释时的最终距离}
          *
@@ -1331,15 +1331,15 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
     /**
      * 添加测距结点
-     * @param {BMap.Point} 节点
+     * @param {BMapGL.Point} 节点
      * @return 无返回值
      */
     DistanceTool.prototype._addSecPoint = function(pt){
         var ico = 
             this._opts.secIcon ? 
                 this._opts.secIcon :
-                new BMap.Icon("http://api.map.baidu.com/images/mapctrls.png", new BMap.Size(11, 11), {imageOffset: new BMap.Size(-26, -313)});
-        var secPt = new BMap.Marker(pt, {
+                new BMapGL.Icon("http://api.map.baidu.com/images/mapctrls.png", new BMapGL.Size(11, 11), {imageOffset: new BMapGL.Size(-26, -313)});
+        var secPt = new BMapGL.Marker(pt, {
             icon : ico, 
             clickable : false, 
             baseZIndex : 3500000, 
@@ -1394,7 +1394,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
     /**
      * 调整分段距离样式
-     * @param {BMap.Label} label 提示框的Label
+     * @param {BMapGL.Label} label 提示框的Label
      * @param {String} 需要填入的文字
      * @return 没有返回值
      */
@@ -1448,20 +1448,20 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         }
         // 显示总距离
         var pt = disObj.points[disObj.points.length - 1];
-        pt.disLabel = new BMap.Label("", {offset: new BMap.Size(-15, -40), enableMassClear: me._enableMassClear});
+        pt.disLabel = new BMapGL.Label("", {offset: new BMapGL.Size(-15, -40), enableMassClear: me._enableMassClear});
         pt.disLabel.setStyles({color: "#333", borderColor: "#ff0103"});
         me._map.addOverlay(pt.disLabel);
-        pt.disLabel.setOffset(new BMap.Size(disOffset[0], disOffset[1]));
+        pt.disLabel.setOffset(new BMapGL.Size(disOffset[0], disOffset[1]));
         pt.disLabel.setPosition(pt);
         me._formatTitle(2, "", "", pt.disLabel);
         // 添加关闭按钮
         var bico = 
             this._opts.closeIcon ? 
                 this._opts.closeIcon :
-                new BMap.Icon("http://api.map.baidu.com/images/mapctrls.gif", new BMap.Size(12, 12), {imageOffset: new BMap.Size(0, -14)});
-        disObj.closeBtn = new BMap.Marker(disObj.points[disObj.points.length - 1], 
+                new BMapGL.Icon("http://api.map.baidu.com/images/mapctrls.gif", new BMapGL.Size(12, 12), {imageOffset: new BMapGL.Size(0, -14)});
+        disObj.closeBtn = new BMapGL.Marker(disObj.points[disObj.points.length - 1], 
             {icon : bico, 
-            offset : new BMap.Size(btnOffset[0], btnOffset[1]), 
+            offset : new BMapGL.Size(btnOffset[0], btnOffset[1]), 
             baseZIndex : 3600000,
             enableMassClear : me._enableMassClear}
         );
@@ -1598,7 +1598,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
     /**
      * 验证传入点的位置合理性
-     * @param {BMap.Point} pt 需要被验证的point点
+     * @param {BMapGL.Point} pt 需要被验证的point点
      * @return 无返回值
      */
     DistanceTool.prototype._isPointValid = function(pt){
@@ -1733,7 +1733,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             if (isNaN(x) || isNaN(y)) {
                 return;
             }
-            return this._map.pixelToPoint(new BMap.Pixel(x, y));
+            return this._map.pixelToPoint(new BMapGL.Pixel(x, y));
         },
 
         /**
