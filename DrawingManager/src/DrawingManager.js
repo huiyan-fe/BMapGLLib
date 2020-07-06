@@ -1614,6 +1614,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             var cz = map.getViewport(points);
             cz.zoom -= 1;
             map.setViewport(cz);
+            map.removeOverlay(tip_label);
 
             var width = me._map.getDistance(startPoint, points[2]).toFixed(0);
             var height = me._map.getDistance(startPoint, points[6]).toFixed(0);
@@ -1942,9 +1943,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         div.className = 'operateWindow';
         var html = '<div><span id="confirmOperate"></span><span id="cancelOperate"></span><span id="warnOperate">' + overlyTypeText + '不超过' + this.limit / 10000 + unit + '！</span></div>';
         div.innerHTML = html;
-        this._map.addEventListener('resize', function (e) {
-            me._adjustSize(e.size);
-        });
         this._map.getPanes().markerPane.appendChild(div);
         this.updateWindow();
         this._bind();
@@ -2086,9 +2084,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         }
 
         div.innerHTML = html;
-        this._map.addEventListener('resize', function (e) {
-            me._adjustSize(e.size);
-        });
         this._map.getPanes().markerPane.appendChild(div);
         this._bind();
         return div;
