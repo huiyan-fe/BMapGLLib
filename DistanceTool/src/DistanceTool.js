@@ -1340,7 +1340,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         var ico = 
             this._opts.secIcon ? 
                 this._opts.secIcon :
-                new BMapGL.Icon("//api.map.baidu.com/images/mapctrls.png", new BMapGL.Size(11, 11), {imageOffset: new BMapGL.Size(-26, -313)});
+                new BMapGL.Icon("//huiyan.baidu.com/cms/images/mapctrls.png", new BMapGL.Size(11, 11), {imageOffset: new BMapGL.Size(-26, -313)});
         var secPt = new BMapGL.Marker(pt, {
             icon : ico, 
             clickable : false, 
@@ -1460,7 +1460,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         var bico = 
             this._opts.closeIcon ? 
                 this._opts.closeIcon :
-                new BMapGL.Icon("//api.map.baidu.com/images/mapctrls.gif", new BMapGL.Size(12, 12), {imageOffset: new BMapGL.Size(0, -14)});
+                new BMapGL.Icon("//huiyan.baidu.com/cms/images/mapctrls.gif", new BMapGL.Size(24, 24), {imageOffset: new BMapGL.Size(0, 0)});
         disObj.closeBtn = new BMapGL.Marker(disObj.points[disObj.points.length - 1], 
             {icon : bico, 
             offset : new BMapGL.Size(btnOffset[0], btnOffset[1]), 

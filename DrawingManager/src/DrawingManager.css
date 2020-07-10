@@ -229,7 +229,7 @@
     width: 50px;
     height: 30px;
     margin-left: 15px;
-    background: #ffffff url("../images/confirm2.png") no-repeat top center;
+    background: #ffffff url("//mapopen.cdn.bcebos.com/cms/images/DrawingManager/confirm2.png") no-repeat top center;
     background-size: contain;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
     border-radius: 2px;
@@ -239,7 +239,7 @@
     width: 50px;
     height: 30px;
     margin-left: 8px;
-    background: #ffffff url("../images/cancel2.png") no-repeat top center;
+    background: #ffffff url("//mapopen.cdn.bcebos.com/cms/images/DrawingManager/cancel2.png") no-repeat top center;
     background-size: contain;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
     border-radius: 2px;
