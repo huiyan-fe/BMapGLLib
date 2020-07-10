@@ -1,29 +1,34 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>
-通过按钮控制工具的开启和关闭</title>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/library/DistanceTool/1.2/src/DistanceTool_min.js"></script>
-
+    <meta charset="utf-8">
+    <title> 通过按钮控制工具的开启和关闭</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <script>
+    window.BMAP_AUTHENTIC_KEY = '1zCurcFsElvz9ppBbGznbioXHDX82Tyw';
+    </script>
+    <script src="http://9ttsqe3c4vcrz.cfc-execute.bj.baidubce.com/bmapgltest/?v=1.0&type=webgl"></script>
+    <!-- <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script> -->
+    <script src="../src/DistanceTool.js"></script>
 </head>
 <body>
-<div style="width:520px;height:340px;border:1px solid gray" id="container">
-</div>
-<input type="button" value="开启" onclick="myDis.open();" />
-<input type="button" value="关闭" onclick="myDis.close()" />
+    <div style="width:800px;height:500px;border:1px solid gray" id="map">
+    </div>
+    <input type="button" value="开启" onclick="myDis.open();">
+    <input type="button" value="关闭" onclick="myDis.close()">
 </body>
 </html>
-<script type="text/javascript">
-
-var map = new BMap.Map("container");
-map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
-var myDis = new BMapLib.DistanceTool(map);
+<script>
+var map = new BMapGL.Map('map');
+map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 15);
+var myDis = new BMapGLLib.DistanceTool(map);
 
 // 如果要调试事件接口，请打开下方屏蔽代码，
 // 在firefox或者chrome下查看调试信息
 
-/*myDis.addEventListener("drawend", function(e) {
+myDis.addEventListener("drawend", function(e) {
 	console.log("drawend");
 	console.log(e.points);
 	console.log(e.overlays);
@@ -42,5 +47,5 @@ myDis.addEventListener("removepolyline", function(e) {
 	console.log("removepolyline");
 	console.log(e);
 });
-*/
+
 </script>
