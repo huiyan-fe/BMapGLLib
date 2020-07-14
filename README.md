@@ -3,9 +3,7 @@
 本代码库是基于百度地图JSAPI GL版的JavaScript开源工具库，如果使用的是2D地图的话，参考旧的[2D开源库](https://github.com/huiyan-fe/BMap-JavaScript-library)。
 
 ## 如何使用
-我们在将GL版的开源工具库放到了百度云的BOS存储上，根据github文件目录可以推理出BOS的路径。
-
-比如
+我们在将GL版的开源工具库放到了百度云的BOS存储上，根据github文件目录可以推理出BOS的路径，比如：
 
 `<link href="//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css" rel="stylesheet">`
 

@@ -1937,8 +1937,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     Operate.prototype.initialize = function (map) {
         var me = this;
         this._map = map;
-        var overlyTypeText = (this.type === 'polygon' ? '面积' : '长度');
-        var unit = (this.type === 'polygon' ? '万平方米' : '万米');
+        var overlyTypeText = (this.type === 'polyline' ? '长度' : '面积');
+        var unit = (this.type === 'polyline' ? '万米' : '万平方米');
         var div = this.div = document.createElement('div');
         div.className = 'operateWindow';
         var html = '<div><span id="confirmOperate"></span><span id="cancelOperate"></span><span id="warnOperate">' + overlyTypeText + '不超过' + this.limit / 10000 + unit + '！</span></div>';
