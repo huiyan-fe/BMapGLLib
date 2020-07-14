@@ -6,11 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
-    <script>
-    window.BMAP_AUTHENTIC_KEY = '1zCurcFsElvz9ppBbGznbioXHDX82Tyw';
-    </script>
-    <script src="http://9ttsqe3c4vcrz.cfc-execute.bj.baidubce.com/bmapgltest/?v=1.0&type=webgl"></script>
-    <!-- <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script> -->
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
     <script src="../src/DistanceTool.js"></script>
 </head>
 <body>
@@ -28,24 +24,23 @@ var myDis = new BMapGLLib.DistanceTool(map);
 // 如果要调试事件接口，请打开下方屏蔽代码，
 // 在firefox或者chrome下查看调试信息
 
-myDis.addEventListener("drawend", function(e) {
-	console.log("drawend");
-	console.log(e.points);
-	console.log(e.overlays);
-	console.log(e.distance);
+myDis.addEventListener('drawend', function (e) {
+    console.log('drawend');
+    console.log(e.points);
+    console.log(e.overlays);
+    console.log(e.distance);
 });
 
-myDis.addEventListener("addpoint", function(e) {
-	console.log("addpoint");
-	console.log(e.point);
-	console.log(e.pixel);
-	console.log(e.index);
-	console.log(e.distance);
+myDis.addEventListener('addpoint', function (e) {
+    console.log('addpoint');
+    console.log(e.point);
+    console.log(e.pixel);
+    console.log(e.index);
+    console.log(e.distance);
 });
 
-myDis.addEventListener("removepolyline", function(e) {
-	console.log("removepolyline");
-	console.log(e);
+myDis.addEventListener('removepolyline', function (e) {
+    console.log('removepolyline');
+    console.log(e);
 });
-
 </script>

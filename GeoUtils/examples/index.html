@@ -1,112 +1,161 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>GeoUtils示例</title>
-<script>
-window.BMAP_AUTHENTIC_KEY = '1zCurcFsElvz9ppBbGznbioXHDX82Tyw';
-</script>
-<script src="http://9ttsqe3c4vcrz.cfc-execute.bj.baidubce.com/bmapgltest/?v=1.0&type=webgl"></script>
-<script type="text/javascript" src="../src/GeoUtils.js"></script>
-<style type="text/css">
-    table{
-        font-size:14px;
+    <title>GeoUtils示例</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
+    <script src="../src/GeoUtils.js"></script>
+    <style>
+    table {
+        font-size: 14px;
     }
-</style>
+    </style>
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
 </head>
 <body>
-<div style="float:left;width:600px;height:500px;border:1px solid gray" id="container"></div>
-<div style="float:left;width:300px;height:500px;border:1px solid gray" id="control">
-    <table style="width:100%;" >
-        <tr>
-            <td colspan="2">点与矩形的关系: </td>
-        </tr>
-        <tr>            
-            <td><input type="button" value="点在矩形内" onclick="ptInRect()" /></td>
-            <td><input type="button" value="点在矩形外" onclick="ptOutRect()" /></td>
-        </tr>
-        <tr>
-            <td><br/></td>
-        </tr>
-        <tr>
-            <td colspan="2">点与圆形的关系: </td>
-        </tr>
-        <tr>            
-            <td><input type="button" value="点在圆形内" onclick="ptInCircle()" /></td>
-            <td><input type="button" value="点在圆形外" onclick="ptOutCircle()" /></td>
-        </tr>
-        <tr>
-            <td><br/></td>
-        </tr>
-        <tr>
-            <td colspan="2">计算折线长度: </td>
-        </tr>
-        <tr>            
-            <td><input type="button" value="参数为折线" onclick="computeLenByPolyine()" /></td>
-            <td><input type="button" value="参数为点数组" onclick="computeLenByArray()" /></td>
-        </tr>
-        <tr>
-            <td><br/></td>
-        </tr>
-        <tr>
-            <td colspan="2">计算多边形面积: </td>
-        </tr>
-        <tr>            
-            <td><input type="button" value="参数为多边形" onclick="computeAreaByPolygon()" /></td>
-            <td><input type="button" value="参数为点数组" onclick="computeAreaByArray()" /></td>
-        </tr>
-        <tr>
-            <td><br/></td>
-        </tr>
-        <tr>
-            <td colspan="2">判断点是否在折线上: </td>
-        </tr>
-        <tr>            
-            <td><input type="button" value="点在折线上" onclick="ptOnPolyline()" /></td>
-            <td><input type="button" value="点在折线外" onclick="ptOutPolyline()" /></td>
-        </tr>
-        <tr>
-            <td><br/></td>
-        </tr>
-        <tr>
-            <td colspan="2">判断点是否在多边形内: </td>
-        </tr>
-        <tr>            
-            <td><input type="button" value="点在多边形内" onclick="ptInPolygon()" /></td>
-            <td><input type="button" value="点在多边形外" onclick="ptOutPolygon()" /></td>
-        </tr>
-    <table>
-</div>
+    <div style="float:left;width:600px;height:500px;border:1px solid gray" id="container"></div>
+    <div style="float:left;width:300px;height:500px;border:1px solid gray" id="control">
+        <table style="width:100%;">
+            <tr>
+                <td colspan="2">
+                    点与矩形的关系:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="点在矩形内" onclick="ptInRect()">
+                </td>
+                <td>
+                    <input type="button" value="点在矩形外" onclick="ptOutRect()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    点与圆形的关系:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="点在圆形内" onclick="ptInCircle()">
+                </td>
+                <td>
+                    <input type="button" value="点在圆形外" onclick="ptOutCircle()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    计算折线长度:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="参数为折线" onclick="computeLenByPolyine()">
+                </td>
+                <td>
+                    <input type="button" value="参数为点数组" onclick="computeLenByArray()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    计算多边形面积:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="参数为多边形" onclick="computeAreaByPolygon()">
+                </td>
+                <td>
+                    <input type="button" value="参数为点数组" onclick="computeAreaByArray()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    判断点是否在折线上:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="点在折线上" onclick="ptOnPolyline()">
+                </td>
+                <td>
+                    <input type="button" value="点在折线外" onclick="ptOutPolyline()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    判断点是否在多边形内:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="点在多边形内" onclick="ptInPolygon()">
+                </td>
+                <td>
+                    <input type="button" value="点在多边形外" onclick="ptOutPolygon()">
+                </td>
+            </tr>
+            <table>
+            </table>
+        </table>
+    </div>
 </body>
 </html>
-<script type="text/javascript">
-
-var map = new BMapGL.Map("container");
+<script>
+var map = new BMapGL.Map('container');
 var pt = new BMapGL.Point(116.404, 39.915);
 map.centerAndZoom(pt, 16);
 
-map.enableScrollWheelZoom();//开启滚动缩放
-map.enableContinuousZoom();//开启缩放平滑
+map.enableScrollWheelZoom(); // 开启滚动缩放
+map.enableContinuousZoom(); // 开启缩放平滑
 
-//点在矩形内
-function ptInRect(){    
-    var pt = new BMapGL.Point(116.404, 39.915);//测试点
+// 点在矩形内
+function ptInRect() {
+    var pt = new BMapGL.Point(116.404, 39.915); // 测试点
 
-    var pt1 = new BMapGL.Point(116.400, 39.910);//西南脚点
-    var pt2 = new BMapGL.Point(116.410, 39.920);//东北脚点
-    var bds = new BMapGL.Bounds(pt1, pt2); //测试Bounds对象
-        
+    var pt1 = new BMapGL.Point(116.400, 39.910); // 西南脚点
+    var pt2 = new BMapGL.Point(116.410, 39.920); // 东北脚点
+    var bds = new BMapGL.Bounds(pt1, pt2); // 测试Bounds对象
+
     var result = BMapGLLib.GeoUtils.isPointInRect(pt, bds);
-    if(result == true){
-        alert("点在矩形内");
-    } else {
-        alert("点在矩形外")
+    if (result == true) {
+        alert('点在矩形内');
+    }
+    else {
+        alert('点在矩形外');
     }
 
-    //演示：将点与矩形添加到地图上
-    map.clearOverlays();    
+    // 演示：将点与矩形添加到地图上
+    map.clearOverlays();
     var mkr = new BMapGL.Marker(pt);
     var pts = [];
-    //bds的四个脚点坐标
+    // bds的四个脚点坐标
     var leftTop = new BMapGL.Point(pt1.lng, pt2.lat);
     var rightTop = new BMapGL.Point(pt2.lng, pt2.lat);
     var leftBottom = new BMapGL.Point(pt1.lng, pt1.lat);
@@ -116,31 +165,32 @@ function ptInRect(){
     pts.push(rightBottom);
     pts.push(leftBottom);
     var rect = new BMapGL.Polygon(pts);
-    map.addOverlay(mkr);//添加测试点
-    map.addOverlay(rect);//添加测试矩形    
-    
+    map.addOverlay(mkr); // 添加测试点
+    map.addOverlay(rect); // 添加测试矩形    
+
 }
 
-//点在矩形外
-function ptOutRect(){
-    var pt = new BMapGL.Point(116.398, 39.915);//测试点
+// 点在矩形外
+function ptOutRect() {
+    var pt = new BMapGL.Point(116.398, 39.915); // 测试点
 
-    var pt1 = new BMapGL.Point(116.400, 39.910);//西南脚点
-    var pt2 = new BMapGL.Point(116.410, 39.920);//东北脚点
-    var bds = new BMapGL.Bounds(pt1, pt2); //测试Bounds对象
-        
+    var pt1 = new BMapGL.Point(116.400, 39.910); // 西南脚点
+    var pt2 = new BMapGL.Point(116.410, 39.920); // 东北脚点
+    var bds = new BMapGL.Bounds(pt1, pt2); // 测试Bounds对象
+
     var result = BMapGLLib.GeoUtils.isPointInRect(pt, bds);
-    if(result == true){
-        alert("点在矩形内");
-    } else {
-        alert("点在矩形外")
+    if (result == true) {
+        alert('点在矩形内');
+    }
+    else {
+        alert('点在矩形外');
     }
 
-    //演示：将点与矩形添加到地图上
-    map.clearOverlays();    
+    // 演示：将点与矩形添加到地图上
+    map.clearOverlays();
     var mkr = new BMapGL.Marker(pt);
     var pts = [];
-    //bds的四个脚点坐标
+    // bds的四个脚点坐标
     var leftTop = new BMapGL.Point(pt1.lng, pt2.lat);
     var rightTop = new BMapGL.Point(pt2.lng, pt2.lat);
     var leftBottom = new BMapGL.Point(pt1.lng, pt1.lat);
@@ -150,261 +200,267 @@ function ptOutRect(){
     pts.push(rightBottom);
     pts.push(leftBottom);
     var rect = new BMapGL.Polygon(pts);
-    map.addOverlay(mkr);//添加测试点
-    map.addOverlay(rect);//添加测试矩形     
+    map.addOverlay(mkr); // 添加测试点
+    map.addOverlay(rect); // 添加测试矩形     
 }
 
-//点在圆内
-function ptInCircle(){
-    var pt = new BMapGL.Point(116.404, 39.915);//测试点
-    var c = new BMapGL.Point(116.404, 39.915); //圆心 
-    var circle = new BMapGL.Circle(c, 500);//测试圆
-        
+// 点在圆内
+function ptInCircle() {
+    var pt = new BMapGL.Point(116.404, 39.915); // 测试点
+    var c = new BMapGL.Point(116.404, 39.915); // 圆心 
+    var circle = new BMapGL.Circle(c, 500); // 测试圆
+
     var result = BMapGLLib.GeoUtils.isPointInCircle(pt, circle);
-    if(result == true){
-        alert("点在圆形内");
-    } else {
-        alert("点在圆形外")
+    if (result == true) {
+        alert('点在圆形内');
+    }
+    else {
+        alert('点在圆形外');
     }
 
-    //演示：将点与圆形添加到地图上
+    // 演示：将点与圆形添加到地图上
     map.clearOverlays();
     var mkr = new BMapGL.Marker(pt);
     map.addOverlay(mkr);
     map.addOverlay(circle);
 }
 
-//点在圆外
-function ptOutCircle(){
-    var pt = new BMapGL.Point(116.396, 39.915);//测试点
-    var c = new BMapGL.Point(116.404, 39.915); //圆心 
-    var circle = new BMapGL.Circle(c, 500);//测试圆        
-    
+// 点在圆外
+function ptOutCircle() {
+    var pt = new BMapGL.Point(116.396, 39.915); // 测试点
+    var c = new BMapGL.Point(116.404, 39.915); // 圆心 
+    var circle = new BMapGL.Circle(c, 500); // 测试圆        
+
     var result = BMapGLLib.GeoUtils.isPointInCircle(pt, circle);
-    if(result == true){
-        alert("点在圆形内");
-    } else {
-        alert("点在圆形外")
+    if (result == true) {
+        alert('点在圆形内');
+    }
+    else {
+        alert('点在圆形外');
     }
 
-    //演示：将点与圆形添加到地图上
+    // 演示：将点与圆形添加到地图上
     map.clearOverlays();
     var mkr = new BMapGL.Marker(pt);
     map.addOverlay(mkr);
     map.addOverlay(circle);
 }
 
-//计算长度，参数为折线
-function computeLenByPolyine(){    
+// 计算长度，参数为折线
+function computeLenByPolyine() {
     var pts = [];
-    var pt1 = new BMapGL.Point(116.400,39.910);
-    var pt2 = new BMapGL.Point(116.402,39.912);
-    var pt3 = new BMapGL.Point(116.403,39.914);
-    var pt4 = new BMapGL.Point(116.404,39.917);
-    var pt5 = new BMapGL.Point(116.406,39.918);
-    
+    var pt1 = new BMapGL.Point(116.400, 39.910);
+    var pt2 = new BMapGL.Point(116.402, 39.912);
+    var pt3 = new BMapGL.Point(116.403, 39.914);
+    var pt4 = new BMapGL.Point(116.404, 39.917);
+    var pt5 = new BMapGL.Point(116.406, 39.918);
+
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     pts.push(pt4);
     pts.push(pt5);
 
-    var ply = new BMapGL.Polyline(pts);    
+    var ply = new BMapGL.Polyline(pts);
     var dis = BMapGLLib.GeoUtils.getPolylineDistance(ply);
-    alert("共" + dis.toFixed(2) + "米");
-    
-    //演示：将线添加到地图上
+    alert('共' + dis.toFixed(2) + '米');
+
+    // 演示：将线添加到地图上
     map.clearOverlays();
     map.addOverlay(ply);
 }
 
-//计算长度，参数为点数组
-function computeLenByArray(){
+// 计算长度，参数为点数组
+function computeLenByArray() {
     var pts = [];
-    var pt1 = new BMapGL.Point(116.400,39.910);
-    var pt2 = new BMapGL.Point(116.402,39.912);
-    var pt3 = new BMapGL.Point(116.403,39.914);
-    var pt4 = new BMapGL.Point(116.404,39.917);
-    var pt5 = new BMapGL.Point(116.406,39.918);
-    
+    var pt1 = new BMapGL.Point(116.400, 39.910);
+    var pt2 = new BMapGL.Point(116.402, 39.912);
+    var pt3 = new BMapGL.Point(116.403, 39.914);
+    var pt4 = new BMapGL.Point(116.404, 39.917);
+    var pt5 = new BMapGL.Point(116.406, 39.918);
+
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     pts.push(pt4);
     pts.push(pt5);
-        
+
     var dis = BMapGLLib.GeoUtils.getPolylineDistance(pts);
-    alert("共" + dis.toFixed(2) + "米");
-    
-    //演示：将线添加到地图上
-    var ply = new BMapGL.Polyline(pts, {strokeColor: "red", strokeStyle:"dashed"});
+    alert('共' + dis.toFixed(2) + '米');
+
+    // 演示：将线添加到地图上
+    var ply = new BMapGL.Polyline(pts, {strokeColor: 'red', strokeStyle: 'dashed'});
     map.clearOverlays();
-    map.addOverlay(ply);        
+    map.addOverlay(ply);
 }
 
-//计算面积，参数为多边形
-function computeAreaByPolygon(){
+// 计算面积，参数为多边形
+function computeAreaByPolygon() {
     var pts = [];
     var pt1 = new BMapGL.Point(116.395, 39.910);
     var pt2 = new BMapGL.Point(116.394, 39.918);
     var pt3 = new BMapGL.Point(116.396, 39.919);
     var pt4 = new BMapGL.Point(116.404, 39.920);
-    var pt5 = new BMapGL.Point(116.406, 39.913);    
-    
-    pts.push(pt1);
-    pts.push(pt2);
-    pts.push(pt3);
-    pts.push(pt4);
-    pts.push(pt5);    
+    var pt5 = new BMapGL.Point(116.406, 39.913);
 
-    var ply = new BMapGL.Polygon(pts);    
-    var area = BMapGLLib.GeoUtils.getPolygonArea(ply);
-    alert("共" + area.toFixed(2) + "平方米"); 
-    
-    //演示：将面添加到地图上    
-    map.clearOverlays();
-    map.addOverlay(ply);  
-}
-
-//计算面积，参数为数组
-function computeAreaByArray(){
-    var pts = [];
-    var pt1 = new BMapGL.Point(116.395, 39.910);
-    var pt2 = new BMapGL.Point(116.394, 39.918);
-    var pt3 = new BMapGL.Point(116.396, 39.919);
-    var pt4 = new BMapGL.Point(116.404, 39.920);
-    var pt5 = new BMapGL.Point(116.406, 39.913);    
-    
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     pts.push(pt4);
     pts.push(pt5);
-        
+
+    var ply = new BMapGL.Polygon(pts);
+    var area = BMapGLLib.GeoUtils.getPolygonArea(ply);
+    alert('共' + area.toFixed(2) + '平方米');
+
+    // 演示：将面添加到地图上    
+    map.clearOverlays();
+    map.addOverlay(ply);
+}
+
+// 计算面积，参数为数组
+function computeAreaByArray() {
+    var pts = [];
+    var pt1 = new BMapGL.Point(116.395, 39.910);
+    var pt2 = new BMapGL.Point(116.394, 39.918);
+    var pt3 = new BMapGL.Point(116.396, 39.919);
+    var pt4 = new BMapGL.Point(116.404, 39.920);
+    var pt5 = new BMapGL.Point(116.406, 39.913);
+
+    pts.push(pt1);
+    pts.push(pt2);
+    pts.push(pt3);
+    pts.push(pt4);
+    pts.push(pt5);
+
     var area = BMapGLLib.GeoUtils.getPolygonArea(pts);
-    alert("共" + area.toFixed(2) + "平方米"); 
-    
-    //演示：将面添加到地图上
-    var ply = new BMapGL.Polygon(pts, {strokeColor: "red", strokeStyle:"dashed", fillColor:"gray"});    
+    alert('共' + area.toFixed(2) + '平方米');
+
+    // 演示：将面添加到地图上
+    var ply = new BMapGL.Polygon(pts, {strokeColor: 'red', strokeStyle: 'dashed', fillColor: 'gray'});
     map.clearOverlays();
-    map.addOverlay(ply);          
+    map.addOverlay(ply);
 }
 
-//点在折线上
-function ptOnPolyline(){
+// 点在折线上
+function ptOnPolyline() {
     var pts = [];
     var pt1 = new BMapGL.Point(116.395, 39.910);
     var pt2 = new BMapGL.Point(116.405, 39.920);
     var pt3 = new BMapGL.Point(116.410, 39.920);
-    
+
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     var ply = new BMapGL.Polyline(pts);
-    
-    var pt = new BMapGL.Point(116.400, 39.915);    
-    
+
+    var pt = new BMapGL.Point(116.400, 39.915);
+
     var result = BMapGLLib.GeoUtils.isPointOnPolyline(pt, ply);
-    if(result == true){
-        alert("点在折线上");
-    } else {
-        alert("点在折线外")
+    if (result == true) {
+        alert('点在折线上');
     }
-    
+    else {
+        alert('点在折线外');
+    }
+
     map.clearOverlays();
-    var mkr = new BMapGL.Marker(pt);    
-    map.addOverlay(mkr);    
-    map.addOverlay(ply);   
+    var mkr = new BMapGL.Marker(pt);
+    map.addOverlay(mkr);
+    map.addOverlay(ply);
 }
 
-//点在折线外
-function ptOutPolyline(){
+// 点在折线外
+function ptOutPolyline() {
     var pts = [];
     var pt1 = new BMapGL.Point(116.395, 39.910);
     var pt2 = new BMapGL.Point(116.405, 39.920);
     var pt3 = new BMapGL.Point(116.410, 39.920);
-    
+
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     var ply = new BMapGL.Polyline(pts);
-    
-    var pt = new BMapGL.Point(116.401, 39.915);    
-    
+
+    var pt = new BMapGL.Point(116.401, 39.915);
+
     var result = BMapGLLib.GeoUtils.isPointOnPolyline(pt, ply);
-    if(result == true){
-        alert("点在折线上");
-    } else {
-        alert("点在折线外")
+    if (result == true) {
+        alert('点在折线上');
     }
-    
+    else {
+        alert('点在折线外');
+    }
+
     map.clearOverlays();
-    var mkr = new BMapGL.Marker(pt);    
-    map.addOverlay(mkr);    
-    map.addOverlay(ply);   
+    var mkr = new BMapGL.Marker(pt);
+    map.addOverlay(mkr);
+    map.addOverlay(ply);
 }
 
-//点在多边形内
-function ptInPolygon(){
+// 点在多边形内
+function ptInPolygon() {
     var pts = [];
     var pt1 = new BMapGL.Point(116.395, 39.910);
     var pt2 = new BMapGL.Point(116.394, 39.914);
     var pt3 = new BMapGL.Point(116.403, 39.920);
     var pt4 = new BMapGL.Point(116.402, 39.914);
-    var pt5 = new BMapGL.Point(116.410, 39.913);    
-    
+    var pt5 = new BMapGL.Point(116.410, 39.913);
+
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     pts.push(pt4);
-    pts.push(pt5);  
+    pts.push(pt5);
     var ply = new BMapGL.Polygon(pts);
-    
-    var pt =new BMapGL.Point(116.400, 39.914);
-    
+
+    var pt = new BMapGL.Point(116.400, 39.914);
+
     var result = BMapGLLib.GeoUtils.isPointInPolygon(pt, ply);
-    if(result == true){
-        alert("点在多边形内");
-    } else {
-        alert("点在多边形外")
-    } 
-    
-    //演示：将面添加到地图上    
+    if (result == true) {
+        alert('点在多边形内');
+    }
+    else {
+        alert('点在多边形外');
+    }
+
+    // 演示：将面添加到地图上    
     map.clearOverlays();
     var mkr = new BMapGL.Marker(pt);
     map.addOverlay(mkr);
-    map.addOverlay(ply);      
+    map.addOverlay(ply);
 }
 
-//点在多边形外
-function ptOutPolygon(){
+// 点在多边形外
+function ptOutPolygon() {
     var pts = [];
     var pt1 = new BMapGL.Point(116.395, 39.910);
     var pt2 = new BMapGL.Point(116.394, 39.914);
     var pt3 = new BMapGL.Point(116.396, 39.919);
     var pt4 = new BMapGL.Point(116.406, 39.920);
-    var pt5 = new BMapGL.Point(116.410, 39.913);    
-    
+    var pt5 = new BMapGL.Point(116.410, 39.913);
+
     pts.push(pt1);
     pts.push(pt2);
     pts.push(pt3);
     pts.push(pt4);
-    pts.push(pt5);  
+    pts.push(pt5);
     var ply = new BMapGL.Polygon(pts);
-    
-    var pt =new BMapGL.Point(116.410, 39.915);
-    
+
+    var pt = new BMapGL.Point(116.410, 39.915);
+
     var result = BMapGLLib.GeoUtils.isPointInPolygon(pt, ply);
-    if(result == true){
-        alert("点在多边形内");
-    } else {
-        alert("点在多边形外")
-    } 
-    
-    //演示：将面添加到地图上    
+    if (result == true) {
+        alert('点在多边形内');
+    }
+    else {
+        alert('点在多边形外');
+    }
+
+    // 演示：将面添加到地图上    
     map.clearOverlays();
     var mkr = new BMapGL.Marker(pt);
     map.addOverlay(mkr);
-    map.addOverlay(ply); 
+    map.addOverlay(ply);
 }
 </script>
