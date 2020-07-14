@@ -118,7 +118,7 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
                 var precision =
                     (curPt.lng - point.lng) * (nextPt.lat - point.lat) -
                     (nextPt.lng - point.lng) * (curPt.lat - point.lat);
-                if (precision < 2e-10 && precision > -2e-10) {
+                if (precision < 2e-9 && precision > -2e-9) {
                     //实质判断是否接近0
                     return true;
                 }
@@ -379,7 +379,8 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
         } else {
             pts = polygon;
         }
-        if (pts[0].equals(pts[pts.length-1])) {
+
+        if (pts[0].equals(pts[pts.length - 1])) {
             pts.pop();
         }
         if (pts.length < 3) {

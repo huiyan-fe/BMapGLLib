@@ -1341,9 +1341,9 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             this._opts.secIcon ? 
                 this._opts.secIcon :
                 new BMapGL.Icon("//huiyan.baidu.com/cms/images/mapctrls.png", 
-                                new BMapGL.Size(21, 11), {
-                                    anchor: new BMapGL.Size(6, 1),  
-                                    imageOffset: new BMapGL.Size(12, 178),
+                                new BMapGL.Size(12, 12), {
+                                    imageSize: new BMapGL.Size(37, 442),
+                                    imageOffset: new BMapGL.Size(25, 312),
                                 });
         var secPt = new BMapGL.Marker(pt, {
             icon : ico, 
@@ -1465,9 +1465,9 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             this._opts.closeIcon ? 
                 this._opts.closeIcon :
                 new BMapGL.Icon("//huiyan.baidu.com/cms/images/mapctrls.gif", 
-                                new BMapGL.Size(70, 10), {
-                                    anchor: new BMapGL.Size(0, 0),       // icon定位位置
-                                    imageOffset: new BMapGL.Size(0, 12)  // 设置icon偏移
+                                new BMapGL.Size(12, 12), {
+                                    imageSize: new BMapGL.Size(82, 174),
+                                    imageOffset: new BMapGL.Size(0, 14)  // 设置icon偏移
                                 });
         disObj.closeBtn = new BMapGL.Marker(disObj.points[disObj.points.length - 1], 
             {icon : bico, 

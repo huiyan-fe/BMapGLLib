@@ -1442,7 +1442,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             // 裁剪
             try {
-                if (me._enableGpc && window.gpcas) {
+                if (me._enableGpc && window.gpcas && 'polygon' === me._drawingType) {
                     var res = new gpcas.geometry.PolyDefault();
                     for (var i = 0; i < points.length; i++) {
                         res.addPoint(new gpcas.Point(points[i].lng, points[i].lat));
@@ -1766,7 +1766,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             // 异常情况处理
             if (!result.data || result.data < 0) {
                 result.data = 0;
-                console.log('计算函数异常处理');
+                console.error('计算函数异常处理');
             } else {
                 // 保留2位小数位
                 result.data = result.data.toFixed(2);
@@ -1777,7 +1777,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
              */
             // result.label = this._addLabel(point, result.data);
         }
-        console.log('result.data', result.data);
         return result;
     };
 
@@ -1789,8 +1788,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (!BMapGLLib.GeoUtils) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
-            // script.setAttribute('src', '//huiyan-fe.github.io/BMap-JavaScript-library/src/GeoUtils/GeoUtils.min.js');
-            script.setAttribute('src', '../../GeoUtils/GeoUtils.js');
+            script.setAttribute('src', '//mapopen.cdn.bcebos.com/github/BMapGLLib/GeoUtils/src/GeoUtils.min.js');
+            // script.setAttribute('src', '../../GeoUtils/GeoUtils.js');
             document.body.appendChild(script);
         }
 
@@ -1804,7 +1803,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (!window.gpcas) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', '../src/gpc.js');
+            script.setAttribute('src', '//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/gpc.js');
+            // script.setAttribute('src', '../src/gpc.js');
             document.body.appendChild(script);
         }
 
