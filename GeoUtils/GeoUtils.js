@@ -379,7 +379,9 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
         } else {
             pts = polygon;
         }
-
+        if (pts[0].equals(pts[pts.length-1])) {
+            pts.pop();
+        }
         if (pts.length < 3) {
             //小于3个顶点，不能构建面
             return 0;
