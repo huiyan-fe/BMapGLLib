@@ -20,7 +20,7 @@
 </td>
 <td width='600'>
 提供鼠标绘制点、线、面、多边形（矩形、圆）的编辑工具条的开源代码库。且用户可使用JavaScript API对应覆盖物（点、线、面等）类接口对其进行属性（如颜色、线宽等）设置、编辑（如开启线顶点编辑等）等功能。<br/><br/>
-<a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/examples/index.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/DrawingManager/examples/index.html'>示例</a>　　
 <a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.js'>源码</a>　　
 <a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js'>压缩源码</a>
 </td>
@@ -35,7 +35,7 @@
 </td>
 <td width='600'>
 百度地图的测距工具类，对外开放。 允许用户在地图上点击完成距离的测量。 使用者可以自定义测距线段的相关样式，例如线宽、颜色、测距结果所用的单位制等等。 <br/><br/>
-<a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/DistanceTool/examples/index.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/DistanceTool/examples/index.html'>示例</a>　　
 <a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/DistanceTool/src/DistanceTool.js'>源码</a>　　
 <a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/DistanceTool/src/DistanceTool.min.js'>压缩源码</a>
 </td>
@@ -50,7 +50,7 @@
 </td>
 <td width='600'>
 GeoUtils类提供若干几何算法，用来帮助用户判断点与矩形、 圆形、多边形线、多边形面的关系,并提供计算折线长度和多边形的面积的公式。 <br/><br/>
-<a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/GeoUtils/examples/index.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/GeoUtils/examples/index.html'>示例</a>　　
 <a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/GeoUtils/src/GeoUtils.js'>源码</a>　　
 <a target='_blank' href='http://mapopen.cdn.bcebos.com/github/BMapGLLib/GeoUtils/src/GeoUtils.min.js'>压缩源码</a>
 </td>
