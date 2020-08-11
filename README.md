@@ -61,7 +61,7 @@ GeoUtils类提供若干几何算法，用来帮助用户判断点与矩形、 �
 <table>
 <tr>
 <td width='250'>
-<img src='https://bj.bcebos.com/v1/mapopen/cms/images/BMapGLLib/trackAnimation.jpg' width='250' />
+<img src='https://bj.bcebos.com/v1/mapopen/github/BMap-JavaScript-library/images/trackAnimation.png' width='250' />
 </td>
 <td width='600'>
 TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
