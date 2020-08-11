@@ -56,6 +56,21 @@ GeoUtils类提供若干几何算法，用来帮助用户判断点与矩形、 �
 </td>
 </table>
 
+视角轨迹动画
+---------
+<table>
+<tr>
+<td width='250'>
+<img src='https://bj.bcebos.com/v1/mapopen/cms/images/BMapGLLib/trackAnimation.jpg' width='250' />
+</td>
+<td width='600'>
+TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/TrackAnimation/example/index.html'>示例</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/TrackAnimation/src/TrackAnimation.js'>源码</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/TrackAnimation/src/TrackAnimation.min.js'>压缩源码</a>
+</td>
+</table>
+
 ## 如何开发贡献代码
 1. clone本代码库
 2. 修改src目录下源文件
