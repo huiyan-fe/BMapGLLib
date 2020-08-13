@@ -921,11 +921,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (opts.sorptionDistance !== undefined) {
             this.setSorptionDistance(opts.sorptionDistance);
         }
-        if (opts.enableDrawingTool) {
-            var drawingTool = new DrawingTool(this, opts.drawingToolOptions);
-            this._drawingTool = drawingTool;
-            map.addControl(drawingTool);
-        }
 
         // 是否计算绘制出的面积
         if (opts.enableCalculate === true) {
