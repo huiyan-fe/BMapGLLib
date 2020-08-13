@@ -2019,7 +2019,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             calculate = this.DrawingManager._calculate(overlay, overlay.getPath());
         }
 
-        console.log(calculate, limit)
         if (Object.prototype.toString.call(limit) === '[object Number]' && calculate.data > limit) {
             document.getElementById('confirmOperate').style.display = 'none';
             document.getElementById('warnOperate').style.display = 'block';
