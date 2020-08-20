@@ -1,7 +1,7 @@
 /**
  * @fileoverview 视角轨迹动画
  * 主入口类是<a href="example/index.html">TrackAnimation</a>，
- * 基于Baidu Map API GL。
+ * 基于Baidu Map API GL 1.0。
  *
  * @author Baidu Map Api Group
  * @version 1.0
@@ -11,14 +11,17 @@
  * @namespace BMapGL的所有library类均放在BMapGLLib命名空间下
  */
 var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
+
 (function () {
     var DELTA_ZOOM = 1;
     var DEFAULT_TILT = 55;
+    var DEFAULT_HEADING = 0;
     var DEFAULT_DURATION = 10000;
     var DEFAULT_DELAY = 0;
     var DEFAULT_OVERALLVIEW = true;
     var PLAY = 1;
     var CANCEL = 2;
+    var PAUSE = 3;
     var start = 0;
     var TrackAnimation =
     /**
@@ -44,6 +47,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this._opts = {
             zoom: this._getZoom(),
             tilt: DEFAULT_TILT,
+            heading: DEFAULT_HEADING,
             duration: DEFAULT_DURATION,
             delay: DEFAULT_DELAY,
             overallView: DEFAULT_OVERALLVIEW
@@ -51,7 +55,10 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this._initOpts(opts);
         this._expandPath = this._addPath(polyline.getPath());
         // window.requestAnimationFrame(this._step);
+        // 暂停时累计经历的时间
+        this._pauseTime = 0;
     };
+
     /**
      * 获取轨迹播放合适的缩放级别
      * @return {number} zoom
@@ -59,6 +66,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype._getZoom = function () {
         return Math.min(this._overallView.zoom + DELTA_ZOOM, this._map.getMaxZoom());
     };
+
     /**
      * 根据当前配置更新动画参数
      */
@@ -67,6 +75,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this._updateViewAni();
         this._polyline.setPath(this._expandPath.slice(0, 1));
     };
+
     /**
      * 轨迹动画
      */
@@ -74,6 +83,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this._expandPath = this._addPath(this._totalPath);
         
     };
+
     /**
      * 视角动画
      */
@@ -89,7 +99,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                 center: new BMapGL.Point(item.lng, item.lat),
                 zoom: this._opts.zoom,
                 tilt: i === 0 ? 0 : this._opts.tilt,
-                heading: 0,
+                heading: i === 0 ? 0 : this._opts.heading,
                 percentage: percent
             });
         }
@@ -102,6 +112,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                 percentage: 1
             });
         }
+
         var opts = {
             duration: duration,
             delay: 0,
@@ -109,6 +120,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         };
         this._viewAni = new BMapGL.ViewAnimation(keyFrames, opts);
     };
+
     /**
      * 扩充Path
      * @param {Array} path 原始路径
@@ -134,6 +146,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this._pathPercents = percents;
         return expandPath;
     };
+
     /**
      * 获取差值Path
      * @param {Object} start 起始点
@@ -148,12 +161,13 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         for (var i = 0; i <= num; i++) {
             var point = new BMapGL.Point(
                 (end.lng - start.lng) / num * i + start.lng,
-                (end.lat - start.lat) / num * i + start.lat,
-            )
+                (end.lat - start.lat) / num * i + start.lat
+            );
             result.push(point);
         }
         return result;
     }
+
     /**
      * 初始化配置参数
      * @param {Object} opts 配置
@@ -165,6 +179,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             }
         }
     };
+
     /**
      * 启动动画
      */
@@ -179,36 +194,79 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             me._map.startViewAnimation(me._viewAni);
         }, this._opts.delay);
     };
+
     /**
      * 终止动画
      */
     TrackAnimation.prototype.cancel = function () {
+        this._clearRAF();
         this._status = CANCEL;
         start = 0;
+        this._pauseTime = 0;
         this._map.cancelViewAnimation(this._viewAni);
+        this._map.removeOverlay(this._polyline);
     };
+
+    /**
+     * 暂停动画
+     */
+    TrackAnimation.prototype.pause = function () {
+        if (this._status === PLAY) {
+            this._clearRAF();
+            this._map.pauseViewAnimation(this._viewAni);
+            this._status = PAUSE;
+            this._isPausing = performance.now();
+        }
+    };
+
+    /**
+     * 继续动画
+     */
+    TrackAnimation.prototype.continue = function () {
+        if (this._status === PAUSE) {
+            this._pauseTime += performance.now() - this._isPausing;
+            this._isPausing = undefined;
+            this._status = PLAY;
+            this._step(performance.now());
+            this._map.continueViewAnimation(this._viewAni);
+        }
+    };
+
     /**
      * rAF动画函数
      * @param {number} timestamp 时间戳
      */
     TrackAnimation.prototype._step = function (timestamp) {
-        if (this._status !== PLAY) {
+        if (this._status === CANCEL) {
             start = 0;
             return;
         }
         if (!start) {
             start = timestamp;
         }
+        timestamp = timestamp - this._pauseTime;
         
         var percent = (timestamp - start) / this._opts.duration;
         var end = Math.round(this._expandPath.length * percent);
         this._polyline.setPath(this._expandPath.slice(0, end));
         if (timestamp < start + this._opts.duration) {
-            window.requestAnimationFrame(this._step.bind(this));
+            this._timer = window.requestAnimationFrame(this._step.bind(this));
         } else {
             start = 0;
+            this._status = CANCEL;
+            this._pauseTime = 0;
         }
     };
+
+    /**
+     * 清除rAF动画函数
+     */
+    TrackAnimation.prototype._clearRAF = function () {
+        if (this._timer) {
+            window.cancelAnimationFrame(this._timer);
+        }
+    };
+
     /**
      * 设置缩放级别
      * @param {number} zoom 缩放级别
@@ -216,6 +274,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.setZoom = function (zoom) {
         this._opts.zoom = zoom;
     };
+
     /**
      * 获取缩放级别
      * @return {number} zoom
@@ -223,6 +282,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.getZoom = function (zoom) {
         return this._opts.zoom;
     };
+
     /**
      * 设置角度
      * @param {number} tilt 角度
@@ -230,6 +290,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.setTilt = function (tilt) {
         this._opts.tilt = tilt;
     };
+
     /**
      * 获取角度
      * @return {number} tilt
@@ -237,6 +298,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.getTilt = function (tilt) {
         return this._opts.tilt;
     };
+
     /**
      * 设置延迟
      * @param {number} delay 延迟
@@ -244,6 +306,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.setDelay = function (delay) {
         this._opts.delay = delay;
     };
+
     /**
      * 获取延迟
      * @return {number} delay
@@ -251,6 +314,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.getDelay = function (delay) {
         return this._opts.delay;
     };
+
     /**
      * 设置持续事件
      * @param {number} duration 持续事件
@@ -258,6 +322,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.setDuration = function (duration) {
         this._opts.duration = duration;
     };
+
     /**
      * 获取持续事件
      * @return {number} duration
@@ -265,18 +330,21 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     TrackAnimation.prototype.getDuration = function (duration) {
         return this._opts.duration;
     };
+
     /**
      * 开启总览
      */
     TrackAnimation.prototype.enableOverallView = function () {
         this._opts.overallView = true;
     };
+
     /**
      * 关闭总览
      */
     TrackAnimation.prototype.disableOverallView = function () {
         this._opts.overallView = false;
     };
+
     /**
      * 更新折线
      * @param {Object} polyline 更新
@@ -285,6 +353,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this._polyline = polyline;
         this._totalPath = polyline.getPath();
     };
+
     /**
      * 获取折线
      * @return {Object} polyline
