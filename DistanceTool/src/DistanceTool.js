@@ -1385,8 +1385,8 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         // 由于webkit内核浏览器下，cursor设置后默认不会居中，所以需要对偏移值进行设置
         var csr = 
             /webkit/.test(navigator.userAgent.toLowerCase()) ?
-                "url(" + this._opts.cursor + ") 3 6, crosshair" :
-                "url(" + this._opts.cursor + "), crosshair"
+                "url(" + cursor + ") 3 6, crosshair" :
+                "url(" + cursor + "), crosshair"
         OperationMask._setCursor(csr);
     };
 
@@ -1758,6 +1758,8 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             this._inUse = false;
             if (this._maskElement) {
                 this._maskElement.style.display = 'none';
+                this._map.getContainer().removeChild(this._maskElement);
+                this._maskElement = null;
             }
         },
 
