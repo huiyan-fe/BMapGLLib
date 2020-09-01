@@ -1481,18 +1481,18 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         disObj.closeBtn.addEventListener("click", function(e){
             // 关闭本次测距，清除相关存储和变量
             for (var i = 0, l = disObj.points.length; i < l; i ++){
-                disObj.points[i].disLabel.remove();
+                this.map.removeOverlay(disObj.points[i].disLabel);
                 disObj.points[i].disLabel = null;
             }
             for (var i = 0, l = disObj.paths.length; i < l; i ++){
-                disObj.paths[i].remove();
+                this.map.removeOverlay(disObj.paths[i]);
                 disObj.paths[i] = null;
             }
             for (var i = 0, l = disObj.dots.length; i < l; i ++){
-                disObj.dots[i].remove();
+                this.map.removeOverlay(disObj.dots[i]);
                 disObj.dots[i] = null;
             }
-            disObj.closeBtn.remove();
+            this.map.removeOverlay(disObj.closeBtn);
             disObj.closeBtn = null;
             stopBubble(e);
             
