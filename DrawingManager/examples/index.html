@@ -11,12 +11,6 @@
             width: 100%;
             margin: 0;
         }
-        .selectbox_Drawing {
-            position: relative;
-            width: 400px;
-            top: 20px;
-            left: 50px;
-        }
     </style>
     <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
     <script src="../src/DrawingManager.js"></script>
@@ -58,8 +52,9 @@
                 enableTips: true,
                 customContainer: 'selectbox_Drawing',
                 hasCustomStyle: true,
-                offset: new BMapGL.Size(5, 5), // 偏离值
-                scale: 0.8, // 工具栏缩放比例
+                anchor: BMAP_ANCHOR_TOP_LEFT,
+                offset: new BMapGL.Size(15, 15), // 偏离值
+                scale: 1, // 工具栏缩放比例
                 drawingModes: [
                     BMAP_DRAWING_MARKER,
                     BMAP_DRAWING_POLYLINE,
