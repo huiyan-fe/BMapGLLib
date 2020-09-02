@@ -1226,13 +1226,13 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             // 不是有效绘制，清除所有内容
             me._clearCurData();
         } else {
-            me._paths[me._paths.length - 1].remove();
+            me._map.removeOverlay(me._paths[me._paths.length - 1]);
             me._paths[me._paths.length - 1] = null;
             me._paths.length = me._paths.length - 1;
             // 移除最近一次标记
             var pt = me._points[me._points.length - 1];
-            if (pt.disLabel){
-                pt.disLabel.remove();
+            if (pt.disLabel) {
+                me._map.removeOverlay(pt.disLabel);
             }
             me._processLastOp();
         }
@@ -1261,14 +1261,14 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     DistanceTool.prototype._clearCurData = function(){
         for (var i = 0, l = this._points.length; i < l; i ++){
             if (this._points[i].disLabel){
-                this._points[i].disLabel.remove();
+                this._map.removeOverlay(this._points[i].disLabel);
             }
         }
         for (var i = 0, l = this._paths.length; i < l; i ++){
-            this._paths[i].remove();
+            this._map.removeOverlay(this._paths[i]);
         }
         for (var i = 0, l = this._dots.length; i < l; i ++){
-            this._dots[i].remove();
+            this._map.removeOverlay(this._dots[i]);
         }
         this._initData();
     };
@@ -1423,7 +1423,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         // 验证路径
         if (me._paths.length > me._points.length - 1){
             var l = me._paths.length - 1;
-            me._paths[l].remove();
+            me._map,removeOverlay(me._paths[l]);
             me._paths[l] = null;
             me._paths.length = l;
         }
