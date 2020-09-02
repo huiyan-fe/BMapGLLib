@@ -2496,11 +2496,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.drawingManager = drawingManager;
 
         drawingToolOptions = this.drawingToolOptions = drawingToolOptions || {};
+        this._opts = {};
         // 默认停靠位置和偏移量
-        if (!drawingToolOptions.hasCustomStyle) {
-            this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
-            this.defaultOffset = new BMapGL.Size(10, 10);
-        }
+        this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
+        this.defaultOffset = new BMapGL.Size(10, 10);
 
         // 默认所有工具栏都显示
         this.defaultDrawingModes = [
@@ -2541,7 +2540,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         // 用来设置外层边框阴影
         var panel = this.panel = document.createElement('div');
         panel.className = 'BMapGLLib_Drawing_panel';
-        if (this.drawingToolOptions && !this.drawingToolOptions.hasCustomStyle && this.drawingToolOptions.scale) {
+        if (this.drawingToolOptions && this.drawingToolOptions.hasCustomStyle && this.drawingToolOptions.scale) {
             this._setScale(this.drawingToolOptions.scale);
         }
 
