@@ -6,12 +6,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
     <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
     <script src="../src/AreaRestriction.js"></script>
 </head>
 <body>
-    <div style="width:800px;height:500px;border:1px solid gray" id="map">
-    </div>
+    <div id="map"></div>
 </body>
 </html>
 <script>
@@ -19,10 +24,16 @@
     map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
     map.enableScrollWheelZoom();
 
-    var b = new BMapGL.Bounds(new BMapGL.Point(116.027143, 39.772348), new BMapGL.Point(116.832025, 40.126349));
+    var bound = new BMapGL.Bounds(new BMapGL.Point(116.027143, 39.772348), new BMapGL.Point(116.832025, 40.126349));
+    map.addOverlay(new BMapGL.Polygon([
+        new BMapGL.Point(bound.sw.lng, bound.sw.lat),
+        new BMapGL.Point(bound.sw.lng, bound.ne.lat),
+        new BMapGL.Point(bound.ne.lng, bound.ne.lat),
+        new BMapGL.Point(bound.ne.lng, bound.sw.lat)
+    ]))
 
     try {	
-        BMapGLLib.AreaRestriction.setBounds(map, b);
+        BMapGLLib.AreaRestriction.setBounds(map, bound);
     } catch (e) {
         alert(e);
     }

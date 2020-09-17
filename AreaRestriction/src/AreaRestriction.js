@@ -70,6 +70,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
         // 添加地图的moving事件，用以对浏览区域的限制
         _map.addEventListener('moveend', this._mapMoveendEvent);
+        _map.addEventListener('zoomend', this._mapMoveendEvent);
         _isRestricted = true;
         return true;
     };
@@ -139,6 +140,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         }
 
         _map.removeEventListener('moveend', this._mapMoveendEvent);
+        _map.removeEventListener('zoomend', this._mapMoveendEvent);
         _isRestricted = false;
     };
 
