@@ -61,13 +61,28 @@ GeoUtils类提供若干几何算法，用来帮助用户判断点与矩形、 �
 <table>
 <tr>
 <td width='250'>
-<img src='https://bj.bcebos.com/v1/mapopen/github/BMap-JavaScript-library/images/trackAnimation.png' width='250' />
+<img src='https://mapopen.bj.bcebos.com/github/BMap-JavaScript-library/images/trackAnimation.png' width='250' />
 </td>
 <td width='600'>
 TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
-<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/TrackAnimation/example/index.html'>示例</a>　　
-<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/TrackAnimation/src/TrackAnimation.js'>源码</a>　　
-<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/TrackAnimation/src/TrackAnimation.min.js'>压缩源码</a>
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/TrackAnimation/example/index.html'>示例</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/TrackAnimation/src/TrackAnimation.js'>源码</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/TrackAnimation/src/TrackAnimation.min.js'>压缩源码</a>
+</td>
+</table>
+
+区域限制
+---------
+<table>
+<tr>
+<td width='250'>
+<img src='https://raw.githubusercontent.com/huiyan-fe/BMap-JavaScript-library/master/images/AreaRestriction.png' width='250' />
+</td>
+<td width='600'>
+百度地图浏览区域限制类，对外开放。 允许开发者输入限定浏览的地图区域的Bounds值， 则地图浏览者只能在限定区域内浏览地图。 <br/><br/>
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/AreaRestriction/example/index.html'>示例</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/AreaRestriction/src/AreaRestriction.js'>源码</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/AreaRestriction/src/AreaRestriction.min.js'>压缩源码</a>
 </td>
 </table>
 

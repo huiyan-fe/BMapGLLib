@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>区域限制</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
+    <script src="../src/AreaRestriction.js"></script>
+</head>
+<body>
+    <div style="width:800px;height:500px;border:1px solid gray" id="map">
+    </div>
+</body>
+</html>
+<script>
+    var map = new BMapGL.Map("map");
+    map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
+    map.enableScrollWheelZoom();
+
+    var b = new BMapGL.Bounds(new BMapGL.Point(116.027143, 39.772348), new BMapGL.Point(116.832025, 40.126349));
+
+    try {	
+        BMapGLLib.AreaRestriction.setBounds(map, b);
+    } catch (e) {
+        alert(e);
+    }
+</script>

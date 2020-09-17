@@ -4,10 +4,10 @@
  * 允许用户在地图上点击完成鼠标绘制的功能。
  * 使用者可以自定义所绘制结果的相关样式，例如线宽、颜色、测线段距离、面积等等。
  * 主入口类是<a href="symbols/BMapGLLib.DrawingManager.html">DrawingManager</a>，
- * 基于Baidu Map API 1.4。
+ * 基于Baidu Map API GL 1.0。
  *
  * @author Baidu Map Api Group
- * @version 1.4
+ * @version 1.0
  */
 
 /**

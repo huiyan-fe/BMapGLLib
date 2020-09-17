@@ -2,10 +2,10 @@
  * @fileoverview GeoUtils类提供若干几何算法，用来帮助用户判断点与矩形、
  * 圆形、多边形线、多边形面的关系,并提供计算折线长度和多边形的面积的公式。
  * 主入口类是<a href="symbols/BMapGLLib.GeoUtils.html">GeoUtils</a>，
- * 基于Baidu Map API 1.2。
+ * 基于Baidu Map API GL 1.0。
  *
  * @author Baidu Map Api Group
- * @version 1.2
+ * @version 1.0
  */
 
 /**

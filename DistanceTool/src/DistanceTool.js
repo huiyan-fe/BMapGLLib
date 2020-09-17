@@ -3,10 +3,10 @@
  * 允许用户在地图上点击完成距离的测量。
  * 使用者可以自定义测距线段的相关样式，例如线宽、颜色、测距结果所用的单位制等等。
  * 主入口类是<a href="symbols/BMapGLLib.DistanceTool.html">DistanceTool</a>，
- * 基于Baidu Map API 1.2。
+ * 基于Baidu Map API GL 1.0。
  *
  * @author Baidu Map Api Group 
- * @version 1.2
+ * @version 1.0
  */
 
 /** 
