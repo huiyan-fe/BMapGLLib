@@ -86,6 +86,22 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 </td>
 </table>
 
+自定义信息窗口
+---------
+<table>
+<tr>
+<td width='250'>
+<img src='https://raw.githubusercontent.com/huiyan-fe/BMapGLLib/master/images/InfoBox.png' width='250' />
+</td>
+<td width='600'>
+百度地图的infoBox。类似于infoWindow，比infoWindow更有灵活性，比如可以定制border，关闭按钮样式等。<br/><br/>
+<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/examples/top.html'>在顶部打开InfoBox</a>　　
+<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/examples/bottom.html'>在底部打开InfoBox</a>　　
+<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/src/InfoBox.js'>源码</a>　　
+<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/src/InfoBox.min.js'>压缩源码</a>
+</td>
+</table>
+
 ## 如何开发贡献代码
 1. clone本代码库
 2. 修改src目录下源文件

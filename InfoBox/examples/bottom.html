@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+	.infoBoxContent{font-size:12px;}
+	.infoBoxContent .title{background:url(images/title.jpg) no-repeat;height:42px;width:272px;}
+	.infoBoxContent .title strong{font-size:14px;line-height:42px;padding:0 10px 0 5px;}
+	.infoBoxContent .title .price{color:#FFFF00;}
+	.infoBoxContent .list{width:268px;border:solid 1px #4FA5FC;border-top:none;background:#fff;height:260px;}
+	.infoBoxContent .list ul{margin:0;padding:5px;list-style:none;}
+	.infoBoxContent .list ul li {float:left;width:255px;border-bottom:solid 1px #4FA5FC;padding:2px 0;}
+	.infoBoxContent .list ul .last{border:none;}
+	.infoBoxContent .list ul img{width:53px;height:42px;margin-right:5px;}
+	.infoBoxContent .list ul p{padding:0;margin:0;}
+	.infoBoxContent .left{float:left;}
+	.infoBoxContent .rmb{float:right;color:#EB6100;font-size:14px;font-weight:bold;}
+	.infoBoxContent a{color:#0041D9;text-decoration:none;}
+</style>
+<script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
+<script type="text/javascript" src="../src/InfoBox.js"></script>
+
+
+<title>InfoBox示例</title>
+</head>
+<body>
+	<div id="map_canvas" style="width: 600px; height: 500px"></div>
+
+<button id="close">close</button>
+<button id="open">open</button>
+<button id="show">show</button>
+<button id="hide">hide</button>
+<button id="enableAutoPan">enableAutoPan</button>
+<button id="disableAutoPan">disableAutoPan</button>
+ <script type="text/javascript">
+var map = new BMapGL.Map('map_canvas');
+var poi = new BMapGL.Point(116.307852,40.057031);
+map.centerAndZoom(poi, 16);
+var html = ["<div class='infoBoxContent'><div class='title'><strong>中海雅园</strong><span class='price'>均价43000</span></div>",
+"<div class='list'><ul><li><div class='left'><img src='images/house3.jpg'/></div><div class='left'><a target='_blank' href='http://map.baidu.com'>中海雅园南北通透四居室</a><p>4室2厅，205.00平米，3层</p></div><div class='rmb'>760万</div></li>"
+,"<li><div class='left'><img src='images/house1.jpg'/></div><div class='left'><a target='_blank' href='http://map.baidu.com'>中海雅园四居室还带保姆间</a><p>2室1厅，112.00平米，16层</p></div><div class='rmb'>300万</div></li>"
+,"<li><div class='left'><img src='images/house2.jpg'/></div><div class='left'><a target='_blank' href='http://map.baidu.com'>《有钥匙 随时看》花园水系</a><p>3室2厅，241.00平米，16层</p></div><div class='rmb'>400万</div></li>"
+,"<li><div class='left'><img src='images/house3.jpg'/></div><div class='left'><a target='_blank' href='http://map.baidu.com'>富力城D区正规楼王大三居</a><p>3室3厅，241.00平米，17层</p></div><div class='rmb'>600万</div></li>"
+,"<li class='last'><div class='left'><img src='images/house1.jpg'/></div><div class='left'><a target='_blank' href='http://map.baidu.com'>富力城豪，身份人士的象征</a><p>4室2厅，213.90平米，25层</p></div><div class='rmb'>700万</div></li>"
+,"</ul></div>"
+,"</div>"];
+var infoBox = new BMapGLLib.InfoBox(map,html.join(""),{
+	boxStyle:{
+		background:"url('images/tipbox.gif') no-repeat center top"
+		,width: "270px"
+		,height: "300px"
+	}
+	,closeIconMargin: "1px 1px 0 0"
+	,closeIconUrl: 'images/close.png'
+	,enableAutoPan: true
+	,align: INFOBOX_AT_BOTTOM
+	,offset: new BMapGL.Size(25,25)
+});
+var marker = new BMapGL.Marker(poi);
+map.addOverlay(marker);
+infoBox.open(marker);
+marker.enableDragging();
+$("close").onclick = function(){
+	infoBox.close();
+}
+$("open").onclick = function(){
+	infoBox.open(marker);
+}
+$("show").onclick = function(){
+	infoBox.show();
+}
+$("hide").onclick = function(){
+	infoBox.hide();
+}
+$("enableAutoPan").onclick = function(){
+	infoBox.enableAutoPan();
+}
+$("disableAutoPan").onclick = function(){
+	infoBox.disableAutoPan();
+}
+function $(id){
+	return document.getElementById(id);
+}
+
+</script>
+</body>
+
+</html>
