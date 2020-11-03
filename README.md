@@ -95,10 +95,10 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 </td>
 <td width='600'>
 百度地图的infoBox。类似于infoWindow，比infoWindow更有灵活性，比如可以定制border，关闭按钮样式等。<br/><br/>
-<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/examples/top.html'>在顶部打开InfoBox</a>　　
-<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/examples/bottom.html'>在底部打开InfoBox</a>　　
-<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/src/InfoBox.js'>源码</a>　　
-<a target='_blank' href=https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/src/InfoBox.min.js'>压缩源码</a>
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/examples/top.html'>示例1(顶部展示)</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/examples/bottom.html'>示例2(底部展示)</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/src/InfoBox.js'>源码</a>　　
+<a target='_blank' href='https://mapopen.bj.bcebos.com/github/BMapGLLib/InfoBox/src/InfoBox.min.js'>压缩源码</a>
 </td>
 </table>
 
