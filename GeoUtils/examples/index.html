@@ -121,6 +121,25 @@
                     <input type="button" value="点在多边形外" onclick="ptOutPolygon()">
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    判断折线与多边形相交:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="折线与多边形相交" onclick="polylineIntersectPolygon()">
+                </td>
+                <td>
+                    <input type="button" value="折线与多边形不相交" onclick="polylineAwayPolygon()">
+                </td>
+            </tr>
+            
             <table>
             </table>
         </table>
@@ -462,5 +481,77 @@ function ptOutPolygon() {
     var mkr = new BMapGL.Marker(pt);
     map.addOverlay(mkr);
     map.addOverlay(ply);
+}
+// 折线与多边形不相交情况
+function polylineAwayPolygon(){
+    var pts = [], pts2 = [];
+    var pt1 = new BMapGL.Point(116.395, 39.910);
+    var pt2 = new BMapGL.Point(116.394, 39.914);
+    var pt3 = new BMapGL.Point(116.396, 39.919);
+    var pt4 = new BMapGL.Point(116.406, 39.920);
+
+    pts.push(pt1);
+    pts.push(pt2);
+    pts.push(pt3);
+    pts.push(pt4);
+    var plyg = new BMapGL.Polygon(pts);
+
+    var pt6 = new BMapGL.Point(116.407, 39.911);
+    var pt7 = new BMapGL.Point(116.406, 39.913);
+    var pt8 = new BMapGL.Point(116.400, 39.912);
+
+    pts2.push(pt8);
+    pts2.push(pt7);
+    pts2.push(pt6);
+    var plyl = new BMapGL.Polyline(pts2);
+
+    var result = BMapGLLib.GeoUtils.isPolylineIntersectArea(plyl, plyg);
+    if (result == true) {
+        alert('折线和多边形相交');
+    }
+    else {
+        alert('折线和多边形不想交');
+    }
+
+    map.clearOverlays();
+    map.addOverlay(plyl);
+    map.addOverlay(plyg);
+}
+
+// 折线与多边形相交
+function polylineIntersectPolygon(){
+    var pts = [], pts2 = [];
+    var pt1 = new BMapGL.Point(116.395, 39.910);
+    var pt2 = new BMapGL.Point(116.394, 39.914);
+    var pt3 = new BMapGL.Point(116.396, 39.919);
+    var pt4 = new BMapGL.Point(116.406, 39.920);
+
+    pts.push(pt1);
+    pts.push(pt2);
+    pts.push(pt3);
+    pts.push(pt4);
+    var plyg = new BMapGL.Polygon(pts);
+
+    var pt6 = new BMapGL.Point(116.393, 39.919);
+    var pt7 = new BMapGL.Point(116.399, 39.913);
+    var pt8 = new BMapGL.Point(116.407, 39.913);
+
+    pts2.push(pt6);
+    pts2.push(pt7);
+    pts2.push(pt8);
+    var plyl = new BMapGL.Polyline(pts2);
+
+    var result = BMapGLLib.GeoUtils.isPolylineIntersectArea(plyl, plyg);
+    if (result == true) {
+        alert('折线和多边形相交');
+    }
+    else {
+        alert('折线和多边形不想交');
+    }
+
+    map.clearOverlays();
+    map.addOverlay(plyl);
+    map.addOverlay(plyg);
+
 }
 </script>
