@@ -520,11 +520,11 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
      */
 
     GeoUtils.isPolylineIntersectArea = function (lines, polygon) {
-        let segmentIntersect = function (a, b, c, d) {
-            let x1 = a.lng, y1 = a.lat;
-            let x2 = b.lng, y2 = b.lat;
-            let x3 = c.lng, y3 = c.lat;
-            let x4 = d.lng, y4 = d.lat;
+        var segmentIntersect = function (a, b, c, d) {
+            var x1 = a.lng, y1 = a.lat;
+            var x2 = b.lng, y2 = b.lat;
+            var x3 = c.lng, y3 = c.lat;
+            var x4 = d.lng, y4 = d.lat;
 
             if (!(Math.min(x1, x2) <= Math.max(x3, x4) && Math.min(y3, y4) <= Math.max(y1, y2) && Math.min(x3, x4) <= Math.max(x1, x2) && Math.min(y1, y2) <= Math.max(y3, y4)))
                 return false;
@@ -549,26 +549,26 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
             console.error('参数出错,传入值非折线和多边形')
             return false;
         }
-        let maybeLine = [], ploygonLine = [];
+        var maybeLine = [], ploygonLine = [];
         // 遍历所有点 在内部直接返回true
-        for (let j = 0; j < lines.length; j++) {
+        for (var j = 0; j < lines.length; j++) {
             if (GeoUtils.isPointInPolygon(lines[j], polygon)) {
                 return true;
             }
         }
 
-        for (let n = 1; n < lines.length; n++) {
+        for (var n = 1; n < lines.length; n++) {
             maybeLine.push([lines[n - 1], lines[n]]);
         }
 
-        for (let k = 1; k < polygon.length; k++) {
+        for (var k = 1; k < polygon.length; k++) {
             ploygonLine.push([polygon[k - 1], polygon[k]]);
         }
         ploygonLine.push([polygon[polygon.length - 1], polygon[0]]);
 
         // 折线与多边形边若相交则返回true
-        for (let l = 0; l < maybeLine.length; l++) {
-            for (let m = 0; m < ploygonLine.length; m++) {
+        for (var l = 0; l < maybeLine.length; l++) {
+            for (var m = 0; m < ploygonLine.length; m++) {
                 if (segmentIntersect(maybeLine[l][0], maybeLine[l][1], ploygonLine[m][0], ploygonLine[m][1])) return true;
             }
         }
