@@ -204,7 +204,7 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
                         //cross point on the left side
                         var xinters =
                             ((p.lat - p1.lat) * (p2.lng - p1.lng)) /
-                                (p2.lat - p1.lat) +
+                            (p2.lat - p1.lat) +
                             p1.lng; //cross point of lng
                         if (Math.abs(p.lng - xinters) < precision) {
                             //overlies on a ray
@@ -322,7 +322,7 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
             EARTHRADIUS *
             Math.acos(
                 Math.sin(y1) * Math.sin(y2) +
-                    Math.cos(y1) * Math.cos(y2) * Math.cos(x2 - x1)
+                Math.cos(y1) * Math.cos(y2) * Math.cos(x2 - x1)
             )
         );
     };
@@ -472,13 +472,13 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
                     CHtangent * CLtangent) /
                 (Math.sqrt(
                     AHtangent * AHtangent +
-                        BHtangent * BHtangent +
-                        CHtangent * CHtangent
+                    BHtangent * BHtangent +
+                    CHtangent * CHtangent
                 ) *
                     Math.sqrt(
                         ALtangent * ALtangent +
-                            BLtangent * BLtangent +
-                            CLtangent * CLtangent
+                        BLtangent * BLtangent +
+                        CLtangent * CLtangent
                     ));
             if (AngleCos < -1.0) AngleCos = -1.0;
             if (AngleCos > 1.0) AngleCos = 1.0;
@@ -510,4 +510,70 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
         totalArea = (Sum - (Count - 2) * Math.PI) * Radius * Radius;
         return totalArea; //返回总面积
     };
+
+    /**
+     * 判断折线与多边形是否相交
+     *  参考：https://www.cnblogs.com/tuyang1129/p/9390376.html
+     * @param {Polyline|Array<Point>} lines 折线
+     * @param {Polygon|Array<Point>} polygon 多边形
+     * @returns {Boolean} 折线和多边形是否相交
+     */
+
+    GeoUtils.isPolylineIntersectArea = function (lines, polygon) {
+        var segmentIntersect = function (a, b, c, d) {
+            var x1 = a.lng, y1 = a.lat;
+            var x2 = b.lng, y2 = b.lat;
+            var x3 = c.lng, y3 = c.lat;
+            var x4 = d.lng, y4 = d.lat;
+
+            if (!(Math.min(x1, x2) <= Math.max(x3, x4) && Math.min(y3, y4) <= Math.max(y1, y2) && Math.min(x3, x4) <= Math.max(x1, x2) && Math.min(y1, y2) <= Math.max(y3, y4)))
+                return false;
+            var u, v, w, z
+            u = (x3 - x1) * (y2 - y1) - (x2 - x1) * (y3 - y1);
+            v = (x4 - x1) * (y2 - y1) - (x2 - x1) * (y4 - y1);
+            w = (x1 - x3) * (y4 - y3) - (x4 - x3) * (y1 - y3);
+            z = (x2 - x3) * (y4 - y3) - (x4 - x3) * (y2 - y3);
+            return (u * v <= 2e-10 && w * z <= 2e-10);
+        }
+
+        if (!(lines instanceof BMapGL.Polyline && polygon instanceof BMapGL.Polygon)) {
+            console.error('参数出错,传入值非折线和多边形')
+            return false;
+        }
+
+        lines = lines.getPath().map(function (point) { return { 'lng': point.lng, 'lat': point.lat } });
+        polygon = polygon.getPath().map(function (point) { return { 'lng': point.lng, lat: point.lat } });
+
+        // 包含点的判断
+        if (lines.length < 1 || polygon.length <= 2) {
+            console.error('参数出错,传入值非折线和多边形')
+            return false;
+        }
+        var maybeLine = [], ploygonLine = [];
+        // 遍历所有点 在内部直接返回true
+        for (var j = 0; j < lines.length; j++) {
+            if (GeoUtils.isPointInPolygon(lines[j], polygon)) {
+                return true;
+            }
+        }
+
+        for (var n = 1; n < lines.length; n++) {
+            maybeLine.push([lines[n - 1], lines[n]]);
+        }
+
+        for (var k = 1; k < polygon.length; k++) {
+            ploygonLine.push([polygon[k - 1], polygon[k]]);
+        }
+        ploygonLine.push([polygon[polygon.length - 1], polygon[0]]);
+
+        // 折线与多边形边若相交则返回true
+        for (var l = 0; l < maybeLine.length; l++) {
+            for (var m = 0; m < ploygonLine.length; m++) {
+                if (segmentIntersect(maybeLine[l][0], maybeLine[l][1], ploygonLine[m][0], ploygonLine[m][1])) return true;
+            }
+        }
+        return false;
+    }
+
+
 })(); //闭包结束
