@@ -105,6 +105,6 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 ## 如何开发贡献代码
 1. clone本代码库
 2. 修改src目录下源文件
-3. 压缩生成.min文件
+3. [压缩](https://tool.oschina.net/jscompress/)生成.min文件
 4. 上传代码，告知维护同学codereview
 
