@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+    body{margin:0;padding:0}
+    #container {width:700px;height:400px;border:1px solid gray;margin:10px 0 0 10px;}
+    #ta {width:700px;height:300px;border:1px solid gray;margin:10px 0 0 10px}
+</style>
+<title>富Marker示例1</title>
+<script src="//api.map.baidu.com/api?v=1.0&type=webgl&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
+<script type="text/javascript" src="../src/RichMarker.js"></script>
+</head>
+<body>
+<div id="container"></div>
+<div>
+    <textarea id="ta"></textarea>
+    <input type="button" value="clear" onclick="cr()" />
+</div>
+</body>
+</html>
+<script type="text/javascript">
+
+var map = new BMapGL.Map("container");
+map.centerAndZoom(new BMapGL.Point(116.309965, 40.058333), 17);
+map.enableScrollWheelZoom();
+
+var htm = "<div style='background:#E7F0F5;color:#0082CB;border:1px solid #333;width:145px;'>"
+              +     "欢迎使用百度地图！"
+              +     "<img src='http://map.baidu.com/img/logo-map.gif' border='0' />"
+              + "</div>";
+var point = new BMapGL.Point(116.30816, 40.056863);
+var myRM= new BMapGLLib.RichMarker(htm, point,
+            {"anchor" : new BMapGL.Size(-72, -84), "enableDragging" : true});
+
+map.addOverlay(myRM);
+
+var ta = document.getElementById("ta");
+
+function setTA(str) {
+	ta.value += str;
+}
+
+function cr() {
+	ta.value = "";
+}
+
+myRM.addEventListener("onmousedown", function(e) {
+	setTA("MouseDown : " + e.point.lng + " , " + e.point.lat + " ; " + e.pixel.x + " , " + e.pixel.y + " | ");
+});
+myRM.addEventListener("onclick", function(e) {
+	setTA("Click | ");
+});
+myRM.addEventListener("onmouseup", function(e) {
+	setTA("MouseUp : " + e.point.lng + " , " + e.point.lat + " ; " + e.pixel.x + " , " + e.pixel.y + " | ");
+});
+myRM.addEventListener("onmouseout", function(e) {
+	setTA("MouseOut : " + e.point.lng + " , " + e.point.lat + " ; " + e.pixel.x + " , " + e.pixel.y + " | ");
+});
+myRM.addEventListener("onmouseover", function(e) {
+	setTA("MouseOver : " + e.point.lng + " , " + e.point.lat + " ; " + e.pixel.x + " , " + e.pixel.y + " | ");
+});
+myRM.addEventListener("ondragstart", function(e) {
+	setTA("DragStart | ");
+});
+myRM.addEventListener("ondragging", function(e) {
+	setTA("Dragging : " + e.point.lng + " , " + e.point.lat + " ; " + e.pixel.x + " , " + e.pixel.y + " | ");
+});
+myRM.addEventListener("ondragend", function(e) {
+	setTA("DragEnd : " + e.point.lng + " , " + e.point.lat + " ; " + e.pixel.x + " , " + e.pixel.y + " | ");
+});
+myRM.addEventListener("onremove", function(e) {
+	setTA("remove |");
+});
+
+myRM.addEventListener("ondblclick", function(e) {
+	setTA("RM dblclick |");
+});
+
+myRM.addEventListener("onclick", function(e) {
+	setTA("RM click |");
+});
+myRM.addEventListener("ontouchend", function(e) {
+	setTA("touchend |");
+});
+</script>
