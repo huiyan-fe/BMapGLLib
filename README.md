@@ -102,6 +102,22 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 </td>
 </table>
 
+富标注
+---------
+<table>
+<tr>
+<td width='250'>
+<img src='https://raw.githubusercontent.com/huiyan-fe/BMap-JavaScript-library/master/images/RichMarker.png' width='250' />
+</td>
+<td width='600'>
+百度地图的富Marker类，对外开放。 允许用户在自定义丰富的Marker展现样式，并添加点击、双击、拖拽等事件。<br/><br/>
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/RichMarker/examples/RichMarker.html'>示例1</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/RichMarker/examples/RichMarker_Advanced.html'>示例2</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/RichMarker/src/RichMarker.js'>源码</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/RichMarker/src/RichMarker.min.js'>压缩源码</a>
+</td>
+</table>
+
 ## 如何开发贡献代码
 1. clone本代码库
 2. 修改src目录下源文件
