@@ -118,6 +118,21 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 </td>
 </table>
 
+路书
+---------
+<table>
+<tr>
+<td width='250'>
+<img src='https://raw.githubusercontent.com/huiyan-fe/BMapGLLib/master/images/AreaRestriction.png' width='250' />
+</td>
+<td width='600'>
+百度地图路书类，实现Marker沿路线运动，对外开放。 用户可以在地图上自定义轨迹运动，支持暂停/停止功能，并可以自定义路过某个点的图片，文字介绍等。 <br/><br/>
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/Lushu/examples/index.html'>示例</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/Lushu/src/Lushu.js'>源码</a>　　
+<a target='_blank' href='https://bj.bcebos.com/v1/mapopen/github/BMapGLLib/Lushu/src/Lushu.min.js'>压缩源码</a>
+</td>
+</table>
+
 ## 如何开发贡献代码
 1. clone本代码库
 2. 修改src目录下源文件
