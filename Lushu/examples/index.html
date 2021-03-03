@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>路书</title>
+	<style type="text/css">
+		body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+		#map_canvas{width:100%;height:500px;}
+		#result {width:100%}
+	</style>
+	<script>
+        window.BMAP_AUTHENTIC_KEY = '7Cc5Kmn672miPzG4qQhvlOrERcXMMinq';
+      </script>
+      <script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=1zCurcFsElvz9ppBbGznbioXHDX82Tyw"></script>
+      <script type="text/javascript" src="../src/Lushu.js"></script>
+</head>
+<body>
+	<div id="map_canvas"></div>
+	<div id="result"></div>
+	<button id="run">开始</button>
+	<button id="stop">停止</button>
+	<button id="pause">暂停</button>
+	<button id="hide">隐藏信息窗口</button>
+	<button id="show">展示信息窗口</button>
+	<script>
+	var map = new BMapGL.Map('map_canvas');
+	map.enableScrollWheelZoom();
+    map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
+    
+	var lushu;
+	// 实例化一个驾车导航用来生成路线
+    var drv = new BMapGL.DrivingRoute('北京', {
+        onSearchComplete: function(res) {
+            if (drv.getStatus() == BMAP_STATUS_SUCCESS) {
+                var plan = res.getPlan(0);
+                var arrPois =[];
+                for(var j=0;j<plan.getNumRoutes();j++){
+                    var route = plan.getRoute(j);
+                    arrPois= arrPois.concat(route.getPath());
+                }
+                map.addOverlay(new BMapGL.Polyline(arrPois, {strokeColor: '#111'}));
+                map.setViewport(arrPois);
+
+                lushu = new BMapGLLib.LuShu(map, arrPois, {
+                    defaultContent: '', // "从天安门到百度大厦"
+                    autoView: true, // 是否开启自动视野调整，如果开启那么路书在运动过程中会根据视野自动调整
+                    icon: new BMapGL.Icon('./images/car.png', new BMapGL.Size(32, 32), {anchor: new BMapGL.Size(10, 10)}),
+                    speed: 500,
+                    enableRotation: true, // 是否设置marker随着道路的走向进行旋转
+                    // landmarkPois: [
+                    //     {lng:116.314782, lat:39.913508, html:'加油站', pauseTime:2},
+                    //     {lng:116.315391, lat:39.964429, html:'高速公路收费<div><img src="//map.baidu.com/img/logo-map.gif"/></div>', pauseTime:3},
+                    //     {lng:116.381476, lat:39.974073, html:'肯德基早餐', pauseTime:2}
+                    // ]
+                });
+            }
+        }
+    });
+    var start=new BMapGL.Point(116.404844, 40);
+    var end=new BMapGL.Point(116.308102, 40.056057);
+    drv.search(start, end);
+    
+	//绑定事件
+	$("run").onclick = function(){
+		lushu.start();
+	}
+	$("stop").onclick = function(){
+		lushu.stop();
+	}
+	$("pause").onclick = function(){
+		lushu.pause();
+	}
+	$("hide").onclick = function(){
+		lushu.hideInfoWindow();
+	}
+	$("show").onclick = function(){
+		lushu.showInfoWindow();
+	}
+	function $(element){
+		return document.getElementById(element);
+	}
+</script>
+</body>
+</html>
