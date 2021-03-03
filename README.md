@@ -123,7 +123,7 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 <table>
 <tr>
 <td width='250'>
-<img src='https://raw.githubusercontent.com/huiyan-fe/BMapGLLib/master/images/AreaRestriction.png' width='250' />
+<img src='https://raw.githubusercontent.com/huiyan-fe/BMap-JavaScript-library/master/images/LuShu.png' width='250' />
 </td>
 <td width='600'>
 百度地图路书类，实现Marker沿路线运动，对外开放。 用户可以在地图上自定义轨迹运动，支持暂停/停止功能，并可以自定义路过某个点的图片，文字介绍等。 <br/><br/>
