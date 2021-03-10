@@ -1139,8 +1139,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             strokeWeight: 2 // 边线的宽度，以像素为单位。
         };
 
-        var centerIcon = new BMapGL.Icon('//mapopen.cdn.bcebos.com/cms/images/DrawingManager/circenter.png', new BMapGL.Size(20, 20));
-        var moveIcon = new BMapGL.Icon('///mapopen.cdn.bcebos.com/cms/images/DrawingManager/nbsearch2.png', new BMapGL.Size(40, 20), {
+        var centerIcon = new BMapGL.Icon('//mapopen.bj.bcebos.com/cms/images/DrawingManager/circenter.png', new BMapGL.Size(20, 20));
+        var moveIcon = new BMapGL.Icon('///mapopen.bj.bcebos.com/cms/images/DrawingManager/nbsearch2.png', new BMapGL.Size(40, 20), {
             imageOffset: new BMapGL.Size(0, 10)
         });
 
@@ -1266,6 +1266,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousedownAction);
             baidu.un(document, 'mouseup', endAction);
+            me.close();
         };
 
         /**
@@ -1555,7 +1556,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             return [pointLT, pointTC, pointRT, pointRC, pointRB, pointBC, pointLB, pointLC];
         }
 
-        var moveIcon = new BMapGL.Icon('//mapopen.cdn.bcebos.com/cms/images/DrawingManager/bullet2.png', new BMapGL.Size(10, 10));
+        var moveIcon = new BMapGL.Icon('//mapopen.bj.bcebos.com/cms/images/DrawingManager/bullet2.png', new BMapGL.Size(10, 10));
         moveIcon.setImageSize(new BMapGL.Size(10, 10));
 
         /**
@@ -1709,6 +1710,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
             baidu.un(document, 'mouseup', endAction);
+            me.close();
         };
 
         /**
