@@ -1139,8 +1139,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             strokeWeight: 2 // 边线的宽度，以像素为单位。
         };
 
-        var centerIcon = new BMapGL.Icon('//huiyan.baidu.com/cms/images/DrawingManager/circenter.png', new BMapGL.Size(20, 20));
-        var moveIcon = new BMapGL.Icon('//huiyan.baidu.com/cms/images/DrawingManager/nbsearch2.png', new BMapGL.Size(40, 20), {
+        var centerIcon = new BMapGL.Icon('//mapopen.cdn.bcebos.com/cms/images/DrawingManager/circenter.png', new BMapGL.Size(20, 20));
+        var moveIcon = new BMapGL.Icon('///mapopen.cdn.bcebos.com/cms/images/DrawingManager/nbsearch2.png', new BMapGL.Size(40, 20), {
             imageOffset: new BMapGL.Size(0, 10)
         });
 
@@ -1555,7 +1555,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             return [pointLT, pointTC, pointRT, pointRC, pointRB, pointBC, pointLB, pointLC];
         }
 
-        var moveIcon = new BMapGL.Icon('//huiyan.baidu.com/cms/images/DrawingManager/bullet2.png', new BMapGL.Size(10, 10));
+        var moveIcon = new BMapGL.Icon('//mapopen.cdn.bcebos.com/cms/images/DrawingManager/bullet2.png', new BMapGL.Size(10, 10));
         moveIcon.setImageSize(new BMapGL.Size(10, 10));
 
         /**
@@ -1833,7 +1833,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     };
 
     /**
-     * 派发事件
+     * 派发成功事件
      */
     DrawingManager.prototype._dispatchOverlayComplete = function (overlay, calculate) {
         var options = {
@@ -1847,6 +1847,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         this.dispatchEvent(this._drawingType + 'complete', overlay);
         this.dispatchEvent('overlaycomplete', options);
+    };
+
+    /**
+     * 派发失败事件
+     */
+    DrawingManager.prototype._dispatchOverlayCancel = function (overlay) {
+        var options = {
+            overlay: overlay,
+            drawingMode: this._drawingType
+        };
+
+        this.dispatchEvent(this._drawingType + 'cancel', overlay);
+        this.dispatchEvent('overlaycancel', options);
     };
 
     // 判断吸附算法
@@ -1994,6 +2007,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 }
             }
             map.removeOverlay(overlay);
+
+            that.DrawingManager._dispatchOverlayCancel(overlay);
             that.DrawingManager._mask.show();
             that.DrawingManager._setDrawingMode(that.type);
         });
