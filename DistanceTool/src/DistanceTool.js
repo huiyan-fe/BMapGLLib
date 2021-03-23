@@ -1340,7 +1340,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         var ico = 
             this._opts.secIcon ? 
                 this._opts.secIcon :
-                new BMapGL.Icon("//huiyan.baidu.com/cms/images/mapctrls.png", 
+                new BMapGL.Icon("//mapopen.bj.bcebos.com/cms/images/mapctrls.png", 
                                 new BMapGL.Size(12, 12), {
                                     imageSize: new BMapGL.Size(37, 442),
                                     imageOffset: new BMapGL.Size(25, 312),
@@ -1464,7 +1464,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         var bico = 
             this._opts.closeIcon ? 
                 this._opts.closeIcon :
-                new BMapGL.Icon("//huiyan.baidu.com/cms/images/mapctrls.gif", 
+                new BMapGL.Icon("//mapopen.bj.bcebos.com/cms/images/mapctrls.gif", 
                                 new BMapGL.Size(12, 12), {
                                     imageSize: new BMapGL.Size(82, 174),
                                     imageOffset: new BMapGL.Size(0, 14)  // 设置icon偏移
