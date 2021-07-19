@@ -27,6 +27,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
 (function() {
 
+    var circlePng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAs1JREFUWAnNmb9v01AQx989SzVI8dIBJNZ27Mb/QRpExMiOKAW1Mw3MRVCB2BlRECF/CBtjuwbBwGJL1JXs474vtuU4Tkho4tyTGr9ffvfxvV93VzL/mfYPLndSumqT4buG6Y4MI3+MpyQayc/IEI/Y0DfLW8Ov725cuKYlf2iZ/p3j8FZylT4hQx1m3lvmXSL6zoYH3pZ9PzgNfi367kKA3R634t/REXF6zMa0Fh28rp8IjJjsqb/det3vUVTXp1z3T8DOs/B+kvIHw3y7/OK180Q/PUuPB2+DL/PGsrMaZQrp3tPwJEn488rhIFQ+GGNDBmTN4qht6D7nm3ESfpRBurNeXGk9Ud/3gkf9N/SnOu6UBvE1jcKBSBQBmXWanAJsH0YvGtNcWV0C6WSX6yQ/McVuQ2DNycFW6ddQkdjz6EF54xQg46MkPMfibYimXozsbn872M2PoGKKcc5tHA7IoiDHkuE7DeKGSOP04rqHcL1Klq8VqMj6dgc3jtMgx+mBFjh8DlhwpSI/BiTaR0FTwn0PHnJWiYnPNcHlLNb4uxYmU16h7Qk26+w5bWQZD9hsZmzqRBRDGJsks4JVMgIwN9M1ArIAykRrRHNMwoY1+EMtoLBhDcID05pGMsWsF1DYLPxWrepzPjWcaq2AYLPw+OFUa4MEE9jG1ox4/NoAEYUAkwNEOAJGohZIsICpAITlinCEFkCw5PEbp0GAIVZixGHZOKRzmoQlSwUgvCjESsSG3eDVJ26nMOQeHRgLQBScP0r0EvmNJJFd9onBIOtxMiH80D4MPzUeXZD4zPAseCjHy8QMTmgQqOiAQI5k+pPoayxlwaMqnOOZJXasSRenOVlfKES0JdM6PGu9qoObC5iDqw1g5oBYtIiVGLK9VRzmbgwZC2NWN0Qus/yc2iTlxmoeIRIXhRBHX5bAXrV9XlmmcH1B9DrBTf0b4i99lUEMOuku/wAAAABJRU5ErkJggg==';
+    var bulletPng = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAd9JREFUOBGtVc8rRFEUPufOvELMguTHwkbKjxRlo9gqNpjyFyhTit3I8i1ldpQa5S9QmA1lS9koSn6UZmMxSCyGkPlx3O+9mTe8Zl4zw7eZ7rnn++aee893HlMRzEXFeLh6m2LJTpHwEJG022mcIJZTYbXX2lu/txnilJvO7sDkYnJaC0REqNO993PNTHEiDsfWAru/4vmFaYo6e35dEZIwYh1tPhobNmig20/NjcpKe3rJ0vlNmg5PUnR3n7FiTBwZbGpYNk3OIuCccHIhuQoxv49lNljD4yMG6VMUhT49HRynaGvnU9IZ0Wkcia0HlhxBlCkiOxAz5+u4v8tXVMgdvLjNkLnxbosyB1E+4wEeL5PXuLPQTC1NjBpunud6/yhF0e0PVBNv6Qv0KLwmxHBnKLNSgAMuNKClrNbQKniAUnfm9SfggAtAS9l9RtZrehG99tAJFnTP6n6wmzbfGl7EUnsFrrTbDVYqs4q4FtR20kDTVosClxMK3oQQHFAtHK7WUjA6hGAnOKBSgAMuAC2FqYGmhDdhp0oBDrjQgJayRxBbAwHehJ3KBXLBsfM5DC3H/v81HHIdSYQRpMcX6ekRhjcPjr/KGV+6Unt8xXJlOSfMl/lvAzYviN+/fAK+AW5jAVefzjWGAAAAAElFTkSuQmCC';
+    var nbPng = 'data:image/png;base64,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';
+
     /**
      * 声明baidu包
      */
@@ -1139,8 +1143,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             strokeWeight: 2 // 边线的宽度，以像素为单位。
         };
 
-        var centerIcon = new BMapGL.Icon('//mapopen.bj.bcebos.com/cms/images/DrawingManager/circenter.png', new BMapGL.Size(20, 20));
-        var moveIcon = new BMapGL.Icon('///mapopen.bj.bcebos.com/cms/images/DrawingManager/nbsearch2.png', new BMapGL.Size(40, 20), {
+        var centerIcon = new BMapGL.Icon(circlePng, new BMapGL.Size(20, 20));
+        var moveIcon = new BMapGL.Icon(nbPng, new BMapGL.Size(40, 20), {
             imageOffset: new BMapGL.Size(0, 10)
         });
 
@@ -1556,7 +1560,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             return [pointLT, pointTC, pointRT, pointRC, pointRB, pointBC, pointLB, pointLC];
         }
 
-        var moveIcon = new BMapGL.Icon('//mapopen.bj.bcebos.com/cms/images/DrawingManager/bullet2.png', new BMapGL.Size(10, 10));
+        var moveIcon = new BMapGL.Icon(bulletPng, new BMapGL.Size(10, 10));
         moveIcon.setImageSize(new BMapGL.Size(10, 10));
 
         /**
