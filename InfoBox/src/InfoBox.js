@@ -264,6 +264,7 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
         this._opts.boxClass = opts.boxClass || "infoBox";
         this._opts.boxStyle = opts.boxStyle || {};
         this._opts.closeIconHide = opts.closeIconHide || false;
+        this._opts.closeIconWidth = opts.closeIconWidth || "60px"
         this._opts.closeIconClickType = opts.closeIconClickType || 0;  // 0 关闭close(销毁div)  1 隐藏hide（display:none）
         this._opts.closeIconMargin = opts.closeIconMargin || "2px";
         this._opts.closeIconUrl = opts.closeIconUrl || "close.png";
@@ -490,7 +491,7 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
             if (this._opts.disableClose) {
                 return '<div></div>';
             }
-            var img = "<img src='"+ this._opts.closeIconUrl +"' align='right' style='position:absolute;right:0px;cursor:pointer;margin:"+ this._opts.closeIconMargin +"'/>";
+            var img = "<img src='"+ this._opts.closeIconUrl +"' align='right' style='position:absolute;right:0px;cursor:pointer;margin:"+ this._opts.closeIconMargin + ";width:"+this._opts.closeIconWidth+"'/>";
             return img;
         },
         /**
