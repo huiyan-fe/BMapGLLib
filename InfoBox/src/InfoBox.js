@@ -263,6 +263,8 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
         this._opts.offset =  opts.offset || new BMapGL.Size(0,0);
         this._opts.boxClass = opts.boxClass || "infoBox";
         this._opts.boxStyle = opts.boxStyle || {};
+        this._opts.closeIconHide = opts.closeIconHide || false;
+        this._opts.closeIconClickType = opts.closeIconClickType || 0;  // 0 关闭close(销毁div)  1 隐藏hide（display:none）
         this._opts.closeIconMargin = opts.closeIconMargin || "2px";
         this._opts.closeIconUrl = opts.closeIconUrl || "close.png";
         this._opts.enableAutoPan = opts.enableAutoPan  ? true : false;
@@ -503,7 +505,11 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
 	        if(!this._div){
 	            return;
 	        }
-	        var closeHtml = this._getCloseIcon();
+	        var closeHtml = ''
+            //是否配置显示close 
+            if (!this._opts.closeIconHide) {
+                closeHtml = this._getCloseIcon();
+            }
 	        //string类型的content
 	        if(typeof content.nodeType === "undefined"){
 	            this._div.innerHTML = closeHtml + content;
@@ -513,8 +519,9 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
 	        }
 	        this._content = content;
 	        //添加click关闭infobox事件
-	        this._addEventToClose();
-
+            if (!this._opts.closeIconHide) {
+                this._addEventToClose();
+            }
    	    },
         /**
          * 调整infobox的position
@@ -578,7 +585,12 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
         _closeHandler: function(){
             var me = this;
             return function(e){
-                me.close();
+                // 点击关闭按钮的事件 0 关闭 1 隐藏
+                if (me._opts.closeIconClickType === 0) {
+                    me.close();
+                } else {
+                    me.hide();
+                }
             }
         },
         /**
