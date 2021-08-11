@@ -263,7 +263,7 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
         this._opts.offset =  opts.offset || new BMapGL.Size(0,0);
         this._opts.boxClass = opts.boxClass || "infoBox";
         this._opts.boxStyle = opts.boxStyle || {};
-        this._opts.closeIconHide = opts.closeIconHide || false;
+        this._opts.showCloseIcon = opts.showCloseIcon || false;
         this._opts.closeIconWidth = opts.closeIconWidth || "60px"
         this._opts.closeIconClickType = opts.closeIconClickType || 0;  // 0 关闭close(销毁div)  1 隐藏hide（display:none）
         this._opts.closeIconMargin = opts.closeIconMargin || "2px";
@@ -508,7 +508,7 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
 	        }
 	        var closeHtml = ''
             //是否配置显示close 
-            if (!this._opts.closeIconHide) {
+            if (!this._opts.showCloseIcon) {
                 closeHtml = this._getCloseIcon();
             }
 	        //string类型的content
@@ -520,7 +520,7 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
 	        }
 	        this._content = content;
 	        //添加click关闭infobox事件
-            if (!this._opts.closeIconHide) {
+            if (!this._opts.showCloseIcon) {
                 this._addEventToClose();
             }
    	    },
