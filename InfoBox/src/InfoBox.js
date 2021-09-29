@@ -635,7 +635,6 @@ var INFOBOX_AT_TOP = 1, INFOBOX_AT_RIGHT = 2, INFOBOX_AT_BOTTOM = 3, INFOBOX_AT_
                 var icon = this._marker.getIcon();
             }
             //基于bottom定位，也就是infoBox在上方的情况
-            console.log(icon)
             switch(this._opts.align){
                 case INFOBOX_AT_TOP:
                     //上侧超出
