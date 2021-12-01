@@ -57,6 +57,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         // window.requestAnimationFrame(this._step);
         // 暂停时累计经历的时间
         this._pauseTime = 0;
+        this._last2Points = [];
     };
 
     /**
@@ -248,7 +249,9 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         
         var percent = (timestamp - start) / this._opts.duration;
         var end = Math.round(this._expandPath.length * percent);
-        this._polyline.setPath(this._expandPath.slice(0, end));
+        var currentPath = this._expandPath.slice(0, end);
+        this._last2Points = currentPath.slice(-4);
+        this._polyline.setPath(currentPath);
         if (timestamp < start + this._opts.duration) {
             this._timer = window.requestAnimationFrame(this._step.bind(this));
         } else {
@@ -360,5 +363,13 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      */
     TrackAnimation.prototype.getPolyline = function () {
         return this._polyline;
+    };
+
+    /**
+     * 获取视野点
+     * @return {Object} polyline
+     */
+    TrackAnimation.prototype.getLastPoint = function () {
+        return [this._last2Points[0], this._last2Points[3]];
     };
 })();
