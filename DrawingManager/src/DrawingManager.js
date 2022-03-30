@@ -1270,7 +1270,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousedownAction);
             baidu.un(document, 'mouseup', endAction);
-            me.close();
+            // me.close();
+            map.removeOverlay(mask);
         };
 
         /**
@@ -1499,7 +1500,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             points.length = 0;
             drawPoint.length = 0;
-            me.close();
+            // me.close();
+            map.removeOverlay(mask);
 
         };
 
@@ -1714,7 +1716,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
             baidu.un(document, 'mouseup', endAction);
-            me.close();
+            // me.close();
+            map.removeOverlay(mask);
         };
 
         /**
@@ -2015,8 +2018,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.removeOverlay(overlay);
 
             that.DrawingManager._dispatchOverlayCancel(overlay);
-            that.DrawingManager._mask.show();
-            that.DrawingManager._setDrawingMode(that.type);
+            // that.DrawingManager._mask.show();
+            // that.DrawingManager._setDrawingMode(that.type);
+            that.DrawingManager.close();
         });
     };
 
