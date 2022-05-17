@@ -607,6 +607,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>offset</b>" : {Size} 偏移值。
      * <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>scale</b>" : {Number} 工具栏的缩放比例,默认为1
      * <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"<b>drawingModes</b>" : {DrawingType<Array>} 工具栏上可以选择出现的绘制模式,将需要显示的DrawingType以数组型形式传入，如[BMAP_DRAWING_MARKER, BMAP_DRAWING_CIRCLE] 将只显示画点和画圆的选项
+     * <br />"<b>enableSorption</b>" : {Boolean} 是否开启边界吸附功能
+     * <br />"<b>sorptiondistance</b>" : {Number} 边界吸附距离
      * <br />"<b>enableCalculate</b>" : {Boolean} 绘制是否进行测距(画线时候)、测面(画圆、多边形、矩形)
      * <br />"<b>markerOptions</b>" : {MarkerOptions} 所画的点的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a>
      * <br />"<b>circleOptions</b>" : {CircleOptions} 所画的圆的可选参数，参考api中的<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%80%BB%E7%B1%BB/%E8%A6%86%E7%9B%96%E7%89%A9%E7%B1%BB">对应类</a>
@@ -1359,7 +1361,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 鼠标点击的事件
          */
         var startAction = function (e) {
-            if (me.controlButton == 'right' && (e.button == 1 || e.button == 0)) {
+            if (me.controlButton === 'right' && (e.button === 1 || e.button === 0)) {
                 return;
             }
 
@@ -1373,7 +1375,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             if (points.length == 1) {
                 if (me._drawingType == BMAP_DRAWING_POLYLINE) {
-                    
                     overlay = new BMapGL.Polyline(drawPoint, me.polylineOptions);
                 } else if (me._drawingType == BMAP_DRAWING_POLYGON) {
                     overlay = new BMapGL.Polygon(drawPoint, me.polygonOptions);
@@ -1428,7 +1429,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             isBinded = false;
             map.removeOverlay(tip_label);
             mask.disableEdgeMove();
-            mask.removeEventListener('mousedown',startAction);
+            mask.removeEventListener('mousedown', startAction);
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
             mask.removeEventListener('dblclick', dblclickAction);
@@ -1770,7 +1771,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             // 异常情况处理
             if (!result.data || result.data < 0) {
                 result.data = 0;
-                console.error('计算函数异常处理');
+                // console.error('计算函数异常处理');
             } else {
                 // 保留2位小数位
                 result.data = result.data.toFixed(2);
@@ -1976,9 +1977,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             if (that.type == 'rectangle') {
                 var calculate = that.DrawingManager._calculate(overlay, overlay.getPath());
+                that.DrawingManager.overlays.push(overlay);
             }
             else if (that.type == 'circle') {
                 var calculate = that.DrawingManager._calculate(overlay, that.point);
+                that.DrawingManager.overlays.push(overlay);
             }
             else if (that.type == 'polygon') {
                 var calculate = that.DrawingManager._calculate(overlay, (overlay.getPath()));
