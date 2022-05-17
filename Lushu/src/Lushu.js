@@ -295,6 +295,17 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     };
 
     /**
+     * 停止运动并清除overlay
+     * @return 无返回值.
+     *
+     * @example <b>参考示例：</b><br />
+     * lushu.clear();
+     */
+    LuShu.prototype.clear = function () {
+        this._clear();
+    };
+
+    /**
      * 暂停运动
      * @return 无返回值.
      */
@@ -594,6 +605,29 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                 clearTimeout(this._setTimeoutQuene[i]);
             }
             this._setTimeoutQuene.length = 0;
+        },
+        /**
+         * 停止运动并清除overlay
+         * @return 无返回值.
+         */
+        _clear: function () {
+            var me = this;
+            if (me._marker) {
+                me.stop();
+                // 清除overlay
+                me._map.removeOverlay(me._marker);
+                me._map.removeOverlay(me._markerL);
+                me._map.removeOverlay(me._markerR);
+                clearTimeout(me._timeoutFlag);
+                me._marker = null;
+                me._markerL = null;
+                me._markerR = null;
+            }
+            if (me._overlay) {
+                // 清除overlay
+                me._map.removeOverlay(me._overlay);
+                me._overlay = null;
+            }
         },
         //缓动效果
         _tween: {

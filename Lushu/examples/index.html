@@ -18,6 +18,7 @@
 	<div id="result"></div>
 	<button id="run">开始</button>
 	<button id="stop">停止</button>
+	<button id="clear">清除</button>
 	<button id="pause">暂停</button>
 	<button id="hide">隐藏信息窗口</button>
 	<button id="show">展示信息窗口</button>
@@ -65,6 +66,9 @@
 	}
 	$("stop").onclick = function(){
 		lushu.stop();
+	}
+	$("clear").onclick = function(){
+		lushu.clear();
 	}
 	$("pause").onclick = function(){
 		lushu.pause();
