@@ -972,7 +972,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.setRectangleOptions(opts.rectangleOptions);
         this.setLabelOptions(opts.labelOptions);
         this.controlButton = opts.controlButton == 'right' ? 'right' : 'left';
-
+        this.enableEditing = opts.enableEditing;
     };
 
     DrawingManager.prototype.enableDrawingTool = function() {
@@ -1097,6 +1097,16 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             this._drawingTool.setStyleByDrawingMode('hander');
         }
 
+    };
+
+    /**
+     * 根据enableEditing配置来判定完成绘制后是否需要编辑
+     */
+    DrawingManager.prototype._disableEditByCustomOption = function(){
+        //配置了不需要编辑 模拟点击完成
+        if(this.enableEditing === false){
+            document.getElementById('confirmOperate').click();
+        }
     };
 
     /**
@@ -1235,7 +1245,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.addOverlay(polyline);
             map.addOverlay(radiusWindow);
             map.addOverlay(operateWindow);
-
+            me._disableEditByCustomOption();
             radiusWindow.addEventListener('radiuschange', function (e) {
                 var radius = e.radius;
                 circle.setRadius(radius);
@@ -1492,7 +1502,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             var operateWindow = new Operate(targetOverlay, me);
             map.addOverlay(operateWindow);
-
+            me._disableEditByCustomOption();
             overlay.addEventListener('lineupdate', function (e) {
                 var point = getNorthEast(e.currentTarget.getPath());
                 operateWindow.setPosition(point, true);
@@ -1716,6 +1726,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.disableEdgeMove();
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
+            me._disableEditByCustomOption();
             baidu.un(document, 'mouseup', endAction);
             // me.close();
             map.removeOverlay(mask);
