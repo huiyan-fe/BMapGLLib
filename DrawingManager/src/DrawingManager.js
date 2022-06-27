@@ -1103,6 +1103,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * 根据enableEditing配置来判定完成绘制后是否需要编辑
      */
     DrawingManager.prototype._disableEditByCustomOption = function(){
+        var options = this[this._drawingType + 'Options'];
+        if(options && options.enableAfterEditing === true){
+            return;
+        }
         //配置了不需要编辑 模拟点击完成
         if(this.enableEditing === false){
             document.getElementById('confirmOperate').click();
