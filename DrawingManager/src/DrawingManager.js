@@ -175,7 +175,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * @param   {string}   type         自定义事件的名称
          * @param   {Function} handler      自定义事件被触发时应该调用的回调函数
          * @param   {string}   [key]        为事件监听函数指定的名称，可在移除时使用。如果不提供，方法会默认为它生成一个全局唯一的key。
-         * @remark  事件类型区分大小写。如果自定义事件名称不是以小写"on"开头，该方法会给它加上"on"再进行判断，即"click"和"onclick"会被认为是同一种事件。 
+         * @remark  事件类型区分大小写。如果自定义事件名称不是以小写"on"开头，该方法会给它加上"on"再进行判断，即"click"和"onclick"会被认为是同一种事件。
          */
         baidu.lang.Class.prototype.addEventListener = function (type, handler, key) {
             if (!baidu.lang.isFunction(handler)) {
@@ -507,8 +507,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
                 // listener存在时，移除element的所有以listener监听的type类型事件
                 // listener不存在时，移除element的所有type类型事件
-                if (item[1] === type 
-                    && item[0] === element 
+                if (item[1] === type
+                    && item[0] === element
                     && (isRemoveAll || item[2] === listener)) {
                     realType = item[4];
                     realListener = item[3];
@@ -574,7 +574,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * @grammar baidu.browser.ie
          * @meta standard
          * @shortcut ie
-         * @see baidu.browser.firefox,baidu.browser.safari,baidu.browser.opera,baidu.browser.chrome,baidu.browser.maxthon 
+         * @see baidu.browser.firefox,baidu.browser.safari,baidu.browser.opera,baidu.browser.chrome,baidu.browser.maxthon
          */
         baidu.browser = baidu.browser || {};
         if (/msie (\d+\.\d)/i.test(navigator.userAgent)) {
@@ -775,7 +775,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this._enableGpc = false;
     };
 
-    /** 
+    /**
      * 获取所有绘制的覆盖物
      */
     DrawingManager.prototype.getOverlays = function() {
@@ -814,7 +814,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         }
     };
 
-    /** 
+    /**
      * 清除所有绘制的覆盖物
      */
     DrawingManager.prototype.clearOverlays = function() {
@@ -972,7 +972,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         this.setRectangleOptions(opts.rectangleOptions);
         this.setLabelOptions(opts.labelOptions);
         this.controlButton = opts.controlButton == 'right' ? 'right' : 'left';
-
+        //默认不跳过编辑
+        this.skipEditing = opts.skipEditing === undefined ? false : opts.skipEditing;
     };
 
     DrawingManager.prototype.enableDrawingTool = function() {
@@ -1100,6 +1101,29 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     };
 
     /**
+     * 各个形状的options中的skipEditing来优先判定是否跳过编辑
+     * 根据skipEditing配置来判定完成绘制后是否需要编辑辑
+     */
+    DrawingManager.prototype._skipEditing = function(){
+        var options = this[this._drawingType + 'Options'];
+        var masterSkipEditing = this.skipEditing;
+        var optionsSkipEditing = null;
+        if(options) {
+            optionsSkipEditing = undefined === options.skipEditing ? optionsSkipEditing : options.skipEditing;
+        }
+        /**
+         * 父子开关-子开关优先
+         * 默认场景 不配参数 不模拟点击
+         * 普通场景 任一为true模拟点击完成
+         * 特殊场景 masterSkipEditing=true optionsSkipEditing=false 不模拟点击
+         */
+        if ((optionsSkipEditing || masterSkipEditing)
+            && optionsSkipEditing !== false) {
+            document.getElementById('confirmOperate').click();
+        }
+    };
+
+    /**
      * 绑定鼠标画点的事件
      */
     DrawingManager.prototype._bindMarker = function () {
@@ -1107,7 +1131,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var me = this,
             map = this._map,
             mask = this._mask;
-        
+
         /**
          * 鼠标点击的事件
          */
@@ -1133,7 +1157,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             circle = null,
             overlays = [],
             centerPoint = null; // 圆的中心点
-        
+
         var radius = 1;
         var moveMarker = null;
         var polyline = null;
@@ -1215,7 +1239,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             var midPoint = new BMapGL.Point((circle.getBounds().getNorthEast().lng + centerPoint.lng) / 2, centerPoint.lat);
             radiusWindow = new Screenshot('circle', midPoint, radius, circle, me);
-            
+
             overlays = overlays.concat([moveMarker, polyline, radiusWindow]);
             var limit = null;
             if (me.limit) {
@@ -1235,7 +1259,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.addOverlay(polyline);
             map.addOverlay(radiusWindow);
             map.addOverlay(operateWindow);
-
+            me._skipEditing();
             radiusWindow.addEventListener('radiuschange', function (e) {
                 var radius = e.radius;
                 circle.setRadius(radius);
@@ -1335,7 +1359,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * 画线和画多边形相似性比较大，公用一个方法
      */
     DrawingManager.prototype._bindPolylineOrPolygon = function () {
-        
+
         var me = this,
             map = this._map,
             mask = this._mask,
@@ -1433,11 +1457,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
             mask.removeEventListener('dblclick', dblclickAction);
-    
+
             if (me.controlButton == 'right') {
                 points.push(e.point);
             } else if (baidu.ie <= 8) {
-                
+
             } else {
                 points.pop();
             }
@@ -1492,7 +1516,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             var operateWindow = new Operate(targetOverlay, me);
             map.addOverlay(operateWindow);
-
+            me._skipEditing();
             overlay.addEventListener('lineupdate', function (e) {
                 var point = getNorthEast(e.currentTarget.getPath());
                 operateWindow.setPosition(point, true);
@@ -1547,7 +1571,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             polygon = null,
             startPoint = null;
 
-        
+
         // 获取4个顶点和4条边中点的坐标
         function getRectAllPoints(pointA, pointB) {
             var pointLT = new BMapGL.Point(pointA.lng, pointA.lat); // 左上角
@@ -1716,6 +1740,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             mask.disableEdgeMove();
             mask.removeEventListener('mousemove', moveAction);
             mask.removeEventListener('mousemove', mousemoveAction);
+            me._skipEditing();
             baidu.un(document, 'mouseup', endAction);
             // me.close();
             map.removeOverlay(mask);
@@ -2277,7 +2302,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     /**
      * 派发事件
      */
-    Screenshot.prototype._dispatchRadiusChange = function (opt) {        
+    Screenshot.prototype._dispatchRadiusChange = function (opt) {
         this.dispatchEvent('radiuschange', opt);
     };
 
