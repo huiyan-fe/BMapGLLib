@@ -1111,17 +1111,14 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if(options) {
             optionsSkipEditing = undefined === options.skipEditing ? optionsSkipEditing : options.skipEditing;
         }
-        //options配置了不跳过编辑 优先匹配
-        if(optionsSkipEditing === false){
-            return;
-        }
-        //options配置了跳过编辑 模拟点击完成
-        if(optionsSkipEditing === true){
-            document.getElementById('confirmOperate').click();
-            return;
-        }
-        //主配置中配置了跳过编辑 模拟点击完成
-        if(masterSkipEditing === true){
+        /**
+         * 父子开关-子开关优先
+         * 默认场景 不配参数 不模拟点击
+         * 普通场景 任一为true模拟点击完成
+         * 特殊场景 masterSkipEditing=true optionsSkipEditing=false 不模拟点击
+         */
+        if ((optionsSkipEditing || masterSkipEditing)
+            && optionsSkipEditing !== false) {
             document.getElementById('confirmOperate').click();
         }
     };
