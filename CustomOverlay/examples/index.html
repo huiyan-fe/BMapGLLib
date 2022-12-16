@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Custom Overlay</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=kiOd4V5aN0FijwNkj7EjdF2NE2ryPagf"></script>
+    <script src="../src/CustomOverlay.js"></script>
+</head>
+<body>
+    <div style="width:800px;height:500px;border:1px solid gray" id="map">
+    </div>
+</body>
+</html>
+<script>
+var map = new BMapGL.Map('map');
+var point = new BMapGL.Point(116.404, 39.915);
+var point2 = new BMapGL.Point(116.405, 39.915);
+map.centerAndZoom(point, 15);
+
+var overlay1 = new BMapGLLib.CustomOverlay(point, '<div style="background: red; width: 100px; height: 100px;">123</div>');
+map.addOverlay(overlay1);
+
+var div = document.createElement('div');
+div.style.cssText = 'background: yellow; width: 20px; height: 20px;';
+var overlay2 = new BMapGLLib.CustomOverlay(point, div);
+map.addOverlay(overlay2);
+// overlay2.setPosition(point2);
+
+var dragging = false;
+overlay1.addEventListener('mousedown', e => {
+    map.disableDragging();
+    dragging = true;
+});
+overlay1.addEventListener('mousemove', e => {
+    if (dragging) {
+        overlay1.setPosition(e.latLng);
+        overlay1.draw();
+    }
+});
+overlay1.addEventListener('mouseup', e => {
+    map.enableDragging();
+    dragging = false;
+})
+</script>
