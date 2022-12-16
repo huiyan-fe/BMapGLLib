@@ -30,17 +30,22 @@ map.addOverlay(overlay2);
 // overlay2.setPosition(point2);
 
 var dragging = false;
-overlay1.addEventListener('mousedown', e => {
+overlay2.addEventListener('mousedown', e => {
     map.disableDragging();
     dragging = true;
 });
-overlay1.addEventListener('mousemove', e => {
+
+document.body.addEventListener('mousemove', e => {
     if (dragging) {
-        overlay1.setPosition(e.latLng);
-        overlay1.draw();
+        var x = e.clientX || e.pageX;
+        var y = e.clientY || e.pageY;
+        var pixel = new BMapGL.Pixel(x, y);
+        var latlng = map.pixelToPoint(pixel);
+        overlay2.setPosition(latlng);
+        overlay2.draw();
     }
 });
-overlay1.addEventListener('mouseup', e => {
+overlay2.addEventListener('mouseup', e => {
     map.enableDragging();
     dragging = false;
 })
