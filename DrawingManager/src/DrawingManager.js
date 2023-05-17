@@ -1139,6 +1139,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             // 往地图上添加marker
             var marker = new BMapGL.Marker(e.point, me.markerOptions);
             map.addOverlay(marker);
+            me.addOverlayData(marker);
             me._dispatchOverlayComplete(marker);
         };
 
