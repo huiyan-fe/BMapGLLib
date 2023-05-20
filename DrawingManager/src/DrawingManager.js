@@ -1603,9 +1603,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             /** @type {Array} */
             var initialStartPaths = initialOverlay.getPath();
             var lastPoint = initialStartPaths[initialStartPaths.length - 1];
-            initialStartPaths.forEach(function (point) {
-                startAction({ point })
-            })
+
+            for(var i=0; i<initialStartPaths.length; i++){
+                startAction({ point:initialStartPaths[i] });
+            }
 
             if(me._drawingType === 'polyline'){
                 startAction({ point:lastPoint })
