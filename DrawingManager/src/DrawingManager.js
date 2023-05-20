@@ -1602,11 +1602,16 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if(isEdit){
             /** @type {Array} */
             var initialStartPaths = initialOverlay.getPath();
+            var lastPoint = initialStartPaths[initialStartPaths.length - 1];
             initialStartPaths.forEach(function (point) {
                 startAction({ point })
             })
 
-            dblclickAction({point: initialStartPaths[initialStartPaths.length - 1]})
+            if(me._drawingType === 'polyline'){
+                startAction({ point:lastPoint })
+            }
+
+            dblclickAction({point: lastPoint})
         }
     };
 
