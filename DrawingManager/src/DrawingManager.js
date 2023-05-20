@@ -844,6 +844,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             this.clearOverlay(overlay)
             this._drawingType = 'polygon'
             this._open(true, overlay)
+        }else if( drawingMode === 'polyline'){
+            this.clearOverlay(overlay)
+            this._drawingType = 'polyline'
+            this._open(true, overlay)
         }
     };
 
