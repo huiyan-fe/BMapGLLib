@@ -836,6 +836,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             this.clearOverlay(overlay)
             this._drawingType = 'circle'
             this._open(true, overlay)
+        }else if( drawingMode === 'rectangle'){
+            this.clearOverlay(overlay)
+            this._drawingType = 'rectangle'
+            this._open(true, overlay)
         }
     };
 
@@ -1083,7 +1087,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     this._bindPolylineOrPolygon();
                     break;
                 case BMAP_DRAWING_RECTANGLE:
-                    this._bindRectangle();
+                    this._bindRectangle(isEdit, overlay);
                     break;
             }
         }
@@ -1595,9 +1599,12 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
     /**
      * 绑定鼠标画矩形的事件
+     * 默认为开启鼠标进行circle绘制，传入edit时进入编辑模式，编辑模式下需要传递初始值
+     * @param {Boolean | undefined} isEdit 是否为编辑模式
+     * @param {BMapGL.Overlay | undefined} initialOverlay overlay初始值
      */
 
-    DrawingManager.prototype._bindRectangle = function () {
+    DrawingManager.prototype._bindRectangle = function (isEdit, initialOverlay) {
 
         var me = this,
             map = this._map,
@@ -1799,6 +1806,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         mask.addEventListener('mousedown', startAction);
         mask.addEventListener('mousemove', mousemoveAction);
+
+        /**
+         * 如果是编辑模式，设置初始值
+         */
+        if(isEdit){
+            var initialBounds = initialOverlay.getBounds()
+            var southWestPoint = initialBounds.getSouthWest()
+            var northEastPoint = initialBounds.getNorthEast()
+
+            startAction({ point : southWestPoint})
+            moveAction({ point: northEastPoint })
+            endAction({ point: northEastPoint })
+        }
     };
 
     /**
