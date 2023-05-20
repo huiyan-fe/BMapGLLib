@@ -831,23 +831,12 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
      * @example drawingManager.setOverlayEdit('circle',overlay)
      */
     DrawingManager.prototype.setOverlayEdit = function(drawingMode, overlay) {
-        // TODO：适配各种类型的编辑模式
-        if( drawingMode === 'circle'){
+        if(['circle','rectangle','polygon','polyline'].includes(drawingMode)){
             this.clearOverlay(overlay)
-            this._drawingType = 'circle'
+            this._drawingType = drawingMode
             this._open(true, overlay)
-        }else if( drawingMode === 'rectangle'){
-            this.clearOverlay(overlay)
-            this._drawingType = 'rectangle'
-            this._open(true, overlay)
-        }else if( drawingMode === 'polygon'){
-            this.clearOverlay(overlay)
-            this._drawingType = 'polygon'
-            this._open(true, overlay)
-        }else if( drawingMode === 'polyline'){
-            this.clearOverlay(overlay)
-            this._drawingType = 'polyline'
-            this._open(true, overlay)
+        }else{
+            console.error('暂不支持的编辑类型',drawingMode)
         }
     };
 
