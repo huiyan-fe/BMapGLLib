@@ -833,6 +833,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     DrawingManager.prototype.setOverlayEdit = function(drawingMode, overlay) {
         if(['circle','rectangle','polygon','polyline'].includes(drawingMode)){
             this.clearOverlay(overlay)
+            this._map.removeOverlay(overlay);
             this._drawingType = drawingMode
             this._open(true, overlay)
         }else{
