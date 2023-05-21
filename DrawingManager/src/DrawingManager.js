@@ -826,6 +826,22 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     };
 
     /**
+     * 使overlay重新进入edit模式
+     * overlay可从overlaycomplete事件中获取
+     * @example drawingManager.setOverlayEdit('circle',overlay)
+     */
+    DrawingManager.prototype.setOverlayEdit = function(drawingMode, overlay) {
+        if(['circle','rectangle','polygon','polyline'].includes(drawingMode)){
+            this.clearOverlay(overlay)
+            this._map.removeOverlay(overlay);
+            this._drawingType = drawingMode
+            this._open(true, overlay)
+        }else{
+            console.error('暂不支持的编辑类型',drawingMode)
+        }
+    };
+
+    /**
      * 鼠标绘制完成后，派发总事件的接口
      * @name DrawingManager#overlaycomplete
      * @event
@@ -1021,9 +1037,11 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
     /**
      * 开启地图的绘制状态
+     * @param {Boolean} isEdit 是否为编辑状态打开
+     * @param {BMapGL.Overlay} overlay 要编辑的覆盖物
      * @return {Boolean}，开启绘制状态成功，返回true；否则返回false。
      */
-    DrawingManager.prototype._open = function () {
+    DrawingManager.prototype._open = function (isEdit, overlay) {
 
         this._isOpen = true;
 
@@ -1033,15 +1051,17 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         }
 
         this._map.addOverlay(this._mask);
-        this._setDrawingMode(this._drawingType);
+        this._setDrawingMode(this._drawingType, isEdit, overlay);
 
     };
 
     /**
      * 设置当前的绘制模式
      * @param {DrawingType}
+     * @param {Boolean} isEdit 是否为编辑模式
+     * @param {BMapGL.Overlay} overlay 要编辑的覆盖物
      */
-    DrawingManager.prototype._setDrawingMode = function (drawingType) {
+    DrawingManager.prototype._setDrawingMode = function (drawingType, isEdit, overlay) {
 
         this._drawingType = drawingType;
 
@@ -1058,14 +1078,14 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     this._bindMarker();
                     break;
                 case BMAP_DRAWING_CIRCLE:
-                    this._bindCircle();
+                    this._bindCircle(isEdit, overlay);
                     break;
                 case BMAP_DRAWING_POLYLINE:
                 case BMAP_DRAWING_POLYGON:
-                    this._bindPolylineOrPolygon();
+                    this._bindPolylineOrPolygon(isEdit, overlay);
                     break;
                 case BMAP_DRAWING_RECTANGLE:
-                    this._bindRectangle();
+                    this._bindRectangle(isEdit, overlay);
                     break;
             }
         }
@@ -1148,9 +1168,12 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
     /**
      * 绑定鼠标画圆的事件
+     * 默认为开启鼠标进行circle绘制，传入edit时进入编辑模式，编辑模式下需要传递初始值
+     * @param {Boolean | undefined} isEdit 是否为编辑模式
+     * @param {BMapGL.Overlay | undefined} initialOverlay overlay初始值
      */
     var tip_label = null;
-    DrawingManager.prototype._bindCircle = function () {
+    DrawingManager.prototype._bindCircle = function (isEdit, initialOverlay) {
 
         var me = this,
             map = this._map,
@@ -1354,12 +1377,27 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         mask.addEventListener('mousedown', mousedownAction);
         mask.addEventListener('mousemove', mousemoveAction);
+
+        /**
+         * 如果是编辑模式，设置初始值
+         */
+        if(isEdit){
+            var initialCenterPoint = initialOverlay.getCenter()
+            var initialEndPoint = new BMapGL.Point(initialOverlay.getBounds().getNorthEast().lng, initialCenterPoint.lat);
+
+            startAction({ point : initialCenterPoint})
+            moveAction({ point: initialEndPoint })
+            endAction({})
+        }
     };
 
     /**
      * 画线和画多边形相似性比较大，公用一个方法
+     * 默认为开启鼠标进行polyline绘制，传入edit时进入编辑模式，编辑模式下需要传递初始值
+     * @param {Boolean | undefined} isEdit 是否为编辑模式
+     * @param {BMapGL.Overlay | undefined} initialOverlay overlay初始值
      */
-    DrawingManager.prototype._bindPolylineOrPolygon = function () {
+    DrawingManager.prototype._bindPolylineOrPolygon = function (isEdit, initialOverlay) {
 
         var me = this,
             map = this._map,
@@ -1558,13 +1596,35 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
             baidu.stopBubble(e);
         });
+
+        /**
+         * 如果是编辑模式，设置初始值
+         */
+        if(isEdit){
+            /** @type {Array} */
+            var initialStartPaths = initialOverlay.getPath();
+            var lastPoint = initialStartPaths[initialStartPaths.length - 1];
+
+            for(var i=0; i<initialStartPaths.length; i++){
+                startAction({ point:initialStartPaths[i] });
+            }
+
+            if(me._drawingType === 'polyline'){
+                startAction({ point:lastPoint })
+            }
+
+            dblclickAction({point: lastPoint})
+        }
     };
 
     /**
      * 绑定鼠标画矩形的事件
+     * 默认为开启鼠标进行circle绘制，传入edit时进入编辑模式，编辑模式下需要传递初始值
+     * @param {Boolean | undefined} isEdit 是否为编辑模式
+     * @param {BMapGL.Overlay | undefined} initialOverlay overlay初始值
      */
 
-    DrawingManager.prototype._bindRectangle = function () {
+    DrawingManager.prototype._bindRectangle = function (isEdit, initialOverlay) {
 
         var me = this,
             map = this._map,
@@ -1766,6 +1826,19 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         mask.addEventListener('mousedown', startAction);
         mask.addEventListener('mousemove', mousemoveAction);
+
+        /**
+         * 如果是编辑模式，设置初始值
+         */
+        if(isEdit){
+            var initialBounds = initialOverlay.getBounds()
+            var southWestPoint = initialBounds.getSouthWest()
+            var northEastPoint = initialBounds.getNorthEast()
+
+            startAction({ point : southWestPoint})
+            moveAction({ point: northEastPoint })
+            endAction({ point: northEastPoint })
+        }
     };
 
     /**
