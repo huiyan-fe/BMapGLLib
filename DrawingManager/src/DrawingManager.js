@@ -927,6 +927,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         if (opts.sorptionDistance !== undefined) {
             this.setSorptionDistance(opts.sorptionDistance);
         }
+        if(opts.sorpOverlays){
+            this.setSorpOverlays(opts.sorpOverlays)
+        }
 
         // 是否计算绘制出的面积
         if (opts.enableCalculate === true) {
@@ -993,6 +996,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
     DrawingManager.prototype.setSorptionDistance = function(distance) {
         this._sorptionDistance = distance || 0;
+    };
+
+    DrawingManager.prototype.setSorpOverlays = function(sorpOverlays) {
+        this._sorpOverlays = sorpOverlays || [];
     };
 
     DrawingManager.prototype.setPolygonOptions = function(options) {
@@ -1430,6 +1437,14 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                     match = matchs[0].point;
                     overlay.setPositionAt(drawPoint.length - 1, matchs[0].point);
                     return;
+                }
+                if(me._sorpOverlays){
+                    var matchs2 = me.getSorptionMatch(point, me._sorpOverlays, me._sorptionDistance);
+                    if (matchs2 && matchs2.length > 0) {
+                        match = matchs2[0].point;
+                        overlay.setPositionAt(drawPoint.length - 1, matchs2[0].point);
+                        return;
+                    }
                 }
             }
             match = null;
