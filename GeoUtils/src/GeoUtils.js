@@ -541,8 +541,8 @@ var BMapGLLib = (window.BMapGLLib = BMapGLLib || {});
             return false;
         }
 
-        lines = lines.getPath().map(function (point) { return { 'lng': point.lng, 'lat': point.lat } });
-        polygon = polygon.getPath().map(function (point) { return { 'lng': point.lng, lat: point.lat } });
+        lines = lines.getPath()
+        polygon = polygon.getPath()
 
         // 包含点的判断
         if (lines.length < 1 || polygon.length <= 2) {
