@@ -447,8 +447,10 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
             //如果小于1直接移动到下一点
             if (count < 1) {
-                me._moveNext(++me.i);
-                return;
+                const t = setTimeout(() => {
+                    me._moveNext(++me.i);
+                }, 0)
+                me._setTimeoutQuene.push(t);
             }
             //两点之间匀速移动
             me._intervalFlag = setInterval(function () {
@@ -766,7 +768,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         return Math.acos(Math.sin(lat1) * Math.sin(lat2)
             + Math.cos(lat1) * Math.cos(lat2) * Math.cos(Math.abs(lng2 - lng1)));
     }
-    
+
     /**
      * 自定义的overlay，显示在小车的上方
      * @param {Point} Point 要定位的点.
