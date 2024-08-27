@@ -29,6 +29,10 @@
 | enableSorption | `Boolean` | 是否开启吸附功能，默认值为false |
 | sorptiondistance | `Number` | 吸附的像素距离，默认值为20 |
 | enableCalculate | `Boolean` | 是否开启面积计算功能，默认值为false，依赖BMapGLLib.GeoUtils |
+| enableLimit | `Boolean` | 是否开启限制绘制区域功能，默认值为false |
+| limitOptions | `Object` | 限制绘制区域的参数 |
+| limitOptions.area | `Number` | 限制绘制区域的面积，单位为平方米 |
+| limitOptions.distance | `Number` | 限制绘制区域的最大距离，单位为米 |
 | markerOptions | `Object` | 绘制点的参数，参考JSAPI MarkerOptions |
 | circleOptions | `Object` | 绘制圆的参数，参考JSAPI CircleOptions |
 | polylineOptions | `Object` | 绘制折线的参数，参考JSAPI PolylineOptions |
@@ -50,7 +54,7 @@
 | open | none | 开启绘制模式 | none |
 | close | none | 关闭绘制模式 | none |
 | setDrawingMode | drawingType | 设置绘制类型，参考drawingToolOptions.drawingModes | none |
-| getDrawingMode | none | 获取当前绘制类型 | 返回值类型为Number |
+| getDrawingMode | none | 获取当前绘制类型 | `string` |
 | enableCalculate | none | 开启面积计算功能 | none |
 | disableCalculate | none | 关闭面积计算功能 | none |
 | enableSorption | none | 开启吸附功能 | none |
