@@ -14,6 +14,9 @@
 ## 功能示例
 
 鼠标绘制工具条库
+
+[文档](./DrawingManager/README.md)
+
 ---------
 <table>
 <tr>
