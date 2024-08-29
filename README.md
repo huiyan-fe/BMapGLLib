@@ -140,7 +140,13 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 
 时间轴
 ---------
+![Timeline](./images/Timeline.png)
 [文档](./Timeline/README.md)
+
+卷帘
+---------
+![Swipe](./images/Swipe.png)
+[文档](./Swipe/README.md)
 
 ## 如何开发贡献代码
 1. clone本代码库
