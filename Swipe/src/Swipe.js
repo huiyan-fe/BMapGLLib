@@ -11,12 +11,24 @@ class Swipe {
         this._mapB = b;
         // swipe中线位置
         this._centerX = 0;
+
+        this._mapA.disableTilt();
+        this._mapB.disableTilt();
+        this._mapA.disableRotate();
+        this._mapB.disableRotate();
+
         this._initDom();
+
+        this._syncMapA = this._syncMapA.bind(this);
+        this._syncMapB = this._syncMapB.bind(this);
+
+        this._onSync();
     }
 
     _initDom() {
         this._swipeControlDiv = document.createElement('div');
         this._swipeControlDiv.className = `${prefix}-swipe`;
+        console.log(this._container);
 
         this._swipeBtn = document.createElement('div');
         this._swipeBtn.className = `${prefix}-swipe-btn`;
@@ -58,6 +70,48 @@ class Swipe {
         
         this._mapA.getContainer().style.clipPath = clipA;
         this._mapB.getContainer().style.clipPath = clipB;
+    }
+
+    _onSync() {
+        this._mapA.addEventListener('moving', this._syncMapA);
+        this._mapA.addEventListener('zooming', this._syncMapA);
+        this._mapB.addEventListener('moving', this._syncMapB);
+        this._mapB.addEventListener('zooming', this._syncMapB);
+    }
+
+    _offSync() {
+        this._mapA.removeEventListener('moving', this._syncMapA);
+        this._mapA.removeEventListener('zooming', this._syncMapA);
+        this._mapB.removeEventListener('moving', this._syncMapB);
+        this._mapB.removeEventListener('zooming', this._syncMapB);
+    }
+
+    _syncMapA() {
+        this._offSync();
+        const zoom = this._mapA.getZoom();
+        const center = this._mapA.getCenter();
+
+        const that = this;
+        this._mapB.centerAndZoom(center, zoom, {
+            noAnimation: true,
+            callback() {
+                that._onSync();
+            },
+        });
+    }
+
+    _syncMapB() {
+        this._offSync();
+        const zoom = this._mapB.getZoom();
+        const center = this._mapB.getCenter();
+
+        const that = this;
+        this._mapA.centerAndZoom(center, zoom, {
+            noAnimation: true,
+            callback() {
+                that._onSync();
+            },
+        });
     }
 
 }

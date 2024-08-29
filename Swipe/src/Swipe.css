@@ -2,7 +2,7 @@
     background-color: #000;
     position: absolute;
     width: 2px;
-    height: 500px;
+    height: 100%;
     z-index: 1;
     top: 0;
     left: 50%;
@@ -14,7 +14,9 @@
     left: -25px;
     height: 50px;
     width: 50px;
+    background-color: aliceblue;
     border-radius: 25px;
-    background-color: #4436e1;
     cursor: ew-resize;
+    background-image: url(./swipe.svg);
+    background-size: 50px;
 }
