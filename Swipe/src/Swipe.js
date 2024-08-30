@@ -28,7 +28,6 @@ class Swipe {
     _initDom() {
         this._swipeControlDiv = document.createElement('div');
         this._swipeControlDiv.className = `${prefix}-swipe`;
-        console.log(this._container);
 
         this._swipeBtn = document.createElement('div');
         this._swipeBtn.className = `${prefix}-swipe-btn`;
