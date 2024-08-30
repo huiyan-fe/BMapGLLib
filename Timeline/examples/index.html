@@ -48,14 +48,15 @@
             const marker = new BMapGL.Marker(new BMapGL.Point(116.404844, 39.921354));
             map.addOverlay(marker);
 
+            const times = [
+                '2024-01-01',
+                '2024-01-02',
+                '2024-01-03',
+                '2024-01-04',
+            ];
             const timeline = new BMapGLLib.Timeline({
                 map,
-                times: [
-                    '2024-01-01',
-                    '2024-01-02',
-                    '2024-01-03',
-                    '2024-01-04',
-                ]
+                times,
             });
 
             const points = [
@@ -64,11 +65,11 @@
                 new BMapGL.Point(116.459461,39.854476),
                 new BMapGL.Point(116.430715,39.932863),
             ];
-            let index = 0;
-
             timeline.on('change', e => {
                 console.log(e);
-                marker.setPosition(points[index++]);
+                const point = points[times.indexOf(e.time)];
+                console.log(point);
+                marker.setPosition(point);
             });
 
         </script>
