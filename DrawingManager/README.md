@@ -26,6 +26,7 @@
 | Name | Type | Description |
 |------|--------|-------------|
 | isOpen | `Boolean` | 是否开启绘制模式 |
+| confirmVisible | `Boolean` | 绘制完成后是否显示确认框，默认值为true，若设置为false则limit相关限制将失效。可以通过监听`overlaycomplete`事件，通过`e.calculate`判断是否超出限制 |
 | enableSorption | `Boolean` | 是否开启吸附功能，默认值为false |
 | sorptiondistance | `Number` | 吸附的像素距离，默认值为20 |
 | enableCalculate | `Boolean` | 是否开启面积计算功能，默认值为false，依赖BMapGLLib.GeoUtils |
@@ -71,3 +72,10 @@
 | overlaycancel | 覆盖物绘制取消事件 |
 | radiuschange | 圆的半径变化事件 |
 | rectwhchange | 矩形的宽高变化事件 |
+
+# EventObject
+| Name | Type | Description |
+|------|--------|-------------|
+| calculate | `string` | 开启`enableCalculate`后生效，值为绘制后的overlay面积或长度 |
+| overlay | `Overlay` | 绘制完成的覆盖物 |
+| drawingMode | `string` | 绘制类型，参考drawingToolOptions.drawingModes |
