@@ -926,6 +926,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          */
         this._opts = opts;
         this._opts.confirmVisible = opts.confirmVisible === false ? false : true;
+        this._opts.autoViewport = opts.autoViewport === false ? false : true;
 
         /**
          * 当前的绘制模式, 默认是绘制点
@@ -1258,7 +1259,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var endAction = function (e) {
             var cz = map.getViewport(circle.getBounds());
             cz.zoom -= 1;
-            map.setViewport(cz);
+            if (me._opts.autoViewport) {
+                map.setViewport(cz);
+            }
             map.removeOverlay(tip_label);
 
             var endPoint = new BMapGL.Point(circle.getBounds().getNorthEast().lng, centerPoint.lat);
@@ -1576,7 +1579,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             overlay.setPath(points);
             var cz = map.getViewport(points);
             cz.zoom -= 1;
-            map.setViewport(cz);
+            if (me._opts.autoViewport) {
+                map.setViewport(cz);
+            }
 
             overlay.enableEditing();
             var limit = null;
@@ -1757,7 +1762,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             var operateWindow;
             var confirmVisible = me._opts.confirmVisible;
             cz.zoom -= 1;
-            map.setViewport(cz);
+            if (me._opts.autoViewport) {
+                map.setViewport(cz);
+            }
             map.removeOverlay(tip_label);
 
             var width = me._map.getDistance(startPoint, points[2]).toFixed(0);

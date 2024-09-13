@@ -27,6 +27,7 @@
 |------|--------|-------------|
 | isOpen | `Boolean` | 是否开启绘制模式 |
 | confirmVisible | `Boolean` | 绘制完成后是否显示确认框，默认值为true，若设置为false则limit相关限制将失效。可以通过监听`overlaycomplete`事件，通过`e.calculate`判断是否超出限制 |
+| autoViewport | `Boolean` | 是否自动调整地图视野，默认值为true |
 | enableSorption | `Boolean` | 是否开启吸附功能，默认值为false |
 | sorptiondistance | `Number` | 吸附的像素距离，默认值为20 |
 | enableCalculate | `Boolean` | 是否开启面积计算功能，默认值为false，依赖BMapGLLib.GeoUtils |
@@ -62,6 +63,7 @@
 | disableSorption | none | 关闭吸附功能 | none |
 | getOverlays | none | 获取绘制的所有覆盖物 | `Overlay[]` |
 | clearOverlays | none | 清除所有绘制的覆盖物 | none |
+| clearOverlay | overlay | 清除指定的覆盖物 | none |
 | addEventListener | event, handler | 添加事件监听函数 | none |
 | removeEventListener | event, handler | 删除事件监听函数 | none |
 
@@ -79,3 +81,12 @@
 | calculate | `string` | 开启`enableCalculate`后生效，值为绘制后的overlay面积或长度 |
 | overlay | `Overlay` | 绘制完成的覆盖物 |
 | drawingMode | `string` | 绘制类型，参考drawingToolOptions.drawingModes |
+
+# DrawingMode
+| Name | Description | value |
+|------|-------------|-----|
+| BMAP_DRAWING_MARKER | 绘制点 | `marker` |
+| BMAP_DRAWING_CIRCLE | 绘制圆 | `circle` |
+| BMAP_DRAWING_POLYLINE | 绘制折线 | `polyline` |
+| BMAP_DRAWING_POLYGON | 绘制多边形 | `polygon` |
+| BMAP_DRAWING_RECTANGLE | 绘制矩形 | `rectangle` |
