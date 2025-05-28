@@ -1714,7 +1714,6 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
          * 开始绘制矩形
          */
         var startAction = function (e) {
-
             baidu.stopBubble(e);
             baidu.preventDefault(e);
             if (me.controlButton == 'right' && (e.button == 1 || e.button == 0)) {
@@ -1787,15 +1786,15 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 });
                 marker.addEventListener('dragging', function (e) {
                     var point = e.latLng;
+                    var EPSILON = 0.000001; // 设置一个很小的阈值，解决低层级下精度问题
                     for (var j = 0; j < pointsTmp.length; j++) {
-                        if (endPoint.lng == pointsTmp[j].lng) {
+                        if (Math.abs(endPoint.lng - pointsTmp[j].lng) < EPSILON) {
                             points[j].lng = point.lng;
                         }
 
-                        if (endPoint.lat == pointsTmp[j].lat) {
+                        if (Math.abs(endPoint.lat - pointsTmp[j].lat) < EPSILON) {
                             points[j].lat = point.lat;
                         }
-
                     }
                     points = getRectAllPoints(points[0], points[4]);
                     for (var j = 0; j < markers.length; j++) {
