@@ -2059,6 +2059,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         var P = map.pointToPixel(point); // point.pixel;
         var match = [];
         for (var j = 0; j < polygons.length; j++) {
+            if (!polygons[j].getPath) {
+                continue;
+            }
             var pixels = polygons[j].getPath();
             var first = pixels[0];
             var last = pixels[pixels.length - 1];
