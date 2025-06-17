@@ -40,6 +40,7 @@
 | polylineOptions | `Object` | 绘制折线的参数，参考JSAPI PolylineOptions |
 | polygonOptions | `Object` | 绘制多边形的参数，参考JSAPI PolygonOptions |
 | rectangleOptions | `Object` | 绘制矩形的参数，参考JSAPI PolygonOptions |
+| labelOptions | `Object` | 提示标签参数，参考JSAPI LabelOptions |
 | enableDrawingTool | `Boolean` | 是否添加绘制工具栏控件，默认不添加 |
 | drawingToolOptions | `Object` | 可选的输入参数 |
 | drawingToolOptions.drawingModes | `Array` | BMAP_DRAWING_MARKER,BMAP_DRAWING_CIRCLE,BMAP_DRAWING_POLYLINE,BMAP_DRAWING_POLYGON,BMAP_DRAWING_RECTANGLE |
@@ -57,6 +58,12 @@
 | close | none | 关闭绘制模式 | none |
 | setDrawingMode | drawingType | 设置绘制类型，参考drawingToolOptions.drawingModes | none |
 | getDrawingMode | none | 获取当前绘制类型 | `string` |
+| setMarkerOptions | markerOptions | 绘制点的参数，参考JSAPI MarkerOptions |
+| setCircleOptions | circleOptions | 绘制圆的参数，参考JSAPI CircleOptions |
+| setPolylineOptions | polylineOptions | 绘制折线的参数，参考JSAPI PolylineOptions |
+| setPolygonOptions | polygonOptions | 绘制多边形的参数，参考JSAPI PolygonOptions |
+| setRectangleOptions | rectangleOptions | 绘制矩形的参数，参考JSAPI PolygonOptions |
+| setLabelOptions | labelOptions | 提示标签参数，参考JSAPI LabelOptions |
 | enableCalculate | none | 开启面积计算功能 | none |
 | disableCalculate | none | 关闭面积计算功能 | none |
 | enableSorption | none | 开启吸附功能 | none |
