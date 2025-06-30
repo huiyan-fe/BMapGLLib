@@ -39,10 +39,34 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      * }
      */
     BMapGLLib.TrackAnimation = function (map, polyline, opts) {
+        var path = polyline.getPath();
+
+        if (polyline._config.linkRight) {
+            var greatCirclePoints = [];
+            var lastPoint = null;
+            for (var i = 0; i < path.length - 1; i++) {
+                if (!i) {
+                    greatCirclePoints.push(path[i]);
+                }
+                var prePoint = lastPoint || path[i];
+                lastPoint = path[i + 1];
+                var dis = Math.abs(lastPoint.lng - prePoint.lng);
+                if (dis > 180) {
+                    if (lastPoint.lng < prePoint.lng) {
+                        lastPoint.lng += 360;
+                    } else {
+                        lastPoint.lng -= 360;
+                    }
+                }
+                greatCirclePoints.push(lastPoint);
+            }
+            path = greatCirclePoints;
+        }
+
         this._map = map;
         this._polyline = polyline;
-        this._totalPath = polyline.getPath();
-        this._overallView = map.getViewport(polyline.getPath());
+        this._totalPath = path;
+        this._overallView = map.getViewport(path);
         this._status = CANCEL;
         this._opts = {
             zoom: this._getZoom(),
@@ -53,7 +77,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             overallView: DEFAULT_OVERALLVIEW
         };
         this._initOpts(opts);
-        this._expandPath = this._addPath(polyline.getPath());
+        this._expandPath = this._addPath(path);
         // window.requestAnimationFrame(this._step);
         // 暂停时累计经历的时间
         this._pauseTime = 0;
