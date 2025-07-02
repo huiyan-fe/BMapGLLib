@@ -1,5 +1,3 @@
-## 注意Swipe不支持同步倾斜角和旋转角度，在线地图同步zoom有延迟，离线地图无延迟
-
 ## Example
 ```html
     <div id="wrapper">
