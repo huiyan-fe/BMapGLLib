@@ -117,6 +117,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         var length = this._totalPath.length;
         var keyFrames = [];
         var duration = this._opts.overallView ? this._opts.duration + 2000 : this._opts.duration;
+
         for (var i = 0; i < length; i++) {
             var item = this._totalPath[i];
             var percent = this._pathPercents[i] * (this._opts.duration / duration)
@@ -138,10 +139,18 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             });
         }
 
+        var me = this;
         var opts = {
             duration: duration,
             delay: 0,
-            interation: 1
+            interation: 1,
+            name: 'first',
+            renderCallback: function() {
+                if (me._percent >= 1) {
+                    me._viewAni._cancel(me._map);
+                }
+                return me._percent;
+            }
         };
         this._viewAni = new BMapGL.ViewAnimation(keyFrames, opts);
     };
@@ -272,6 +281,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         timestamp = timestamp - this._pauseTime;
         
         var percent = (timestamp - start) / this._opts.duration;
+        this._percent = percent;
         var end = Math.round(this._expandPath.length * percent);
         var currentPath = this._expandPath.slice(0, end);
         this._last2Points = currentPath.slice(-4);
@@ -346,8 +356,37 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      * 设置持续事件
      * @param {number} duration 持续事件
      */
-    TrackAnimation.prototype.setDuration = function (duration) {
+    TrackAnimation.prototype.setDuration = function (duration, change) {
+        if (change) {
+            var oldDuration = this._opts.duration;
+            var now = (this._status === PAUSE && this._isPausing) ? this._isPausing : performance.now();
+            // 计算当前进度百分比
+            var percent = (now - start - this._pauseTime) / oldDuration;
+            this._opts._speedFactor = undefined;
+            start = now - percent * duration - this._pauseTime;
+        }
         this._opts.duration = duration;
+    };
+
+    /**
+     * 设置速度因子，1为基准，大于1加速，小于1减速
+     * @param {number} speedFactor 速度因子
+     */
+    TrackAnimation.prototype.setSpeed = function (speedFactor) {
+        if (speedFactor <= 0) {
+            return;
+        }
+        var oldDuration = this._opts.duration;
+        var newDuration = oldDuration * (1 / speedFactor);
+        this.setDuration(newDuration, true);
+    };
+
+    /**
+     * 获取速度因子
+     * @return {number} speedFactor
+     */
+    TrackAnimation.prototype.getSpeed = function () {
+        return this._opts._speedFactor || 1;
     };
 
     /**
