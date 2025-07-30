@@ -645,6 +645,27 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         opts = opts || {};
         this.overlays = []; // 用来存储覆盖物
+        // 判断是否支持PointerEvent
+        var _supportPointerEvent = (window.PointerEvent || window.MSPointerEvent)
+            && (navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0);
+        var eventMapping = {
+            mousedown: 'mousedown',
+            mousemove: 'mousemove',
+            mouseup: 'mouseup',
+        };
+        if (_supportPointerEvent) {
+            if (window.PointerEvent) {
+                eventMapping.mousedown = 'pointerdown';
+                eventMapping.mousemove = 'pointermove';
+                eventMapping.mouseup = 'pointerup';
+            } else if (window.MSPointerEvent) {
+                // old version event with ms prefix
+                eventMapping.mousedown = 'MSPointerDown';
+                eventMapping.mousemove = 'MSPointerMove';
+                eventMapping.mouseup = 'MSPointerUp';
+            }
+        }
+        this._eventMapping = eventMapping;
 
         this._initialize(map, opts);
     };
@@ -1056,7 +1077,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
 
         // 添加遮罩，所有鼠标操作都在这个遮罩上完成
         if (!this._mask) {
-            this._mask = new Mask();
+            this._mask = new Mask({eventMapping: this._eventMapping});
         }
 
         this._map.addOverlay(this._mask);
@@ -1232,8 +1253,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             circle = new BMapGL.Circle(centerPoint, radius, me.circleOptions);
             map.addOverlay(circle);
             mask.enableEdgeMove();
-            mask.addEventListener('mousemove', moveAction);
-            baidu.on(document, 'mouseup', endAction);
+            mask.addEventListener(me._eventMapping.mousemove, moveAction);
+            baidu.on(document, me._eventMapping.mouseup, endAction);
         };
 
         /**
@@ -1334,9 +1355,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             });
 
             mask.disableEdgeMove();
-            mask.removeEventListener('mousemove', moveAction);
-            mask.removeEventListener('mousemove', mousedownAction);
-            baidu.un(document, 'mouseup', endAction);
+            mask.removeEventListener(me._eventMapping.mousemove, moveAction);
+            mask.removeEventListener(me._eventMapping.mousemove, mousedownAction);
+            baidu.un(document, me._eventMapping.mouseup, endAction);
             // me.close();
             map.removeOverlay(mask);
 
@@ -1409,8 +1430,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         };
 
 
-        mask.addEventListener('mousedown', mousedownAction);
-        mask.addEventListener('mousemove', mousemoveAction);
+        mask.addEventListener(me._eventMapping.mousedown, mousedownAction);
+        mask.addEventListener(me._eventMapping.mousemove, mousemoveAction);
 
         /**
          * 如果是编辑模式，设置初始值
@@ -1484,8 +1505,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             if (!isBinded) {
                 isBinded = true;
                 mask.enableEdgeMove();
-                mask.removeEventListener('mousemove', mousemoveAction);
-                mask.addEventListener('mousemove', moveAction);
+                mask.removeEventListener(me._eventMapping.mousemove, mousemoveAction);
+                mask.addEventListener(me._eventMapping.mousemove, moveAction);
                 mask.addEventListener('dblclick', dblclickAction);
             }
 
@@ -1534,9 +1555,9 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             isBinded = false;
             map.removeOverlay(tip_label);
             mask.disableEdgeMove();
-            mask.removeEventListener('mousedown', startAction);
-            mask.removeEventListener('mousemove', moveAction);
-            mask.removeEventListener('mousemove', mousemoveAction);
+            mask.removeEventListener(me._eventMapping.mousedown, startAction);
+            mask.removeEventListener(me._eventMapping.mousemove, moveAction);
+            mask.removeEventListener(me._eventMapping.mousemove, mousemoveAction);
             mask.removeEventListener('dblclick', dblclickAction);
 
             if (me.controlButton == 'right') {
@@ -1645,10 +1666,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.addOverlay(tip_label);
         };
 
-        mask.addEventListener('mousemove', mousemoveAction);
+        mask.addEventListener(me._eventMapping.mousemove, mousemoveAction);
 
         // mask.addEventListener('mouseup', startAction);
-        mask.addEventListener('mousedown', startAction);
+        mask.addEventListener(me._eventMapping.mousedown, startAction);
 
         // 双击时候不放大地图级别
         mask.addEventListener('dblclick', function (e) {
@@ -1726,8 +1747,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             polygon = new BMapGL.Polygon(me._getRectanglePoint(startPoint, endPoint), me.rectangleOptions);
             map.addOverlay(polygon);
             mask.enableEdgeMove();
-            mask.addEventListener('mousemove', moveAction);
-            baidu.on(document, 'mouseup', endAction);
+            mask.addEventListener(me._eventMapping.mousemove, moveAction);
+            baidu.on(document, me._eventMapping.mouseup, endAction);
         };
 
         /**
@@ -1864,10 +1885,10 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.addOverlay(rectInfo);
 
             mask.disableEdgeMove();
-            mask.removeEventListener('mousemove', moveAction);
-            mask.removeEventListener('mousemove', mousemoveAction);
+            mask.removeEventListener(me._eventMapping.mousemove, moveAction);
+            mask.removeEventListener(me._eventMapping.mousemove, mousemoveAction);
             me._skipEditing();
-            baidu.un(document, 'mouseup', endAction);
+            baidu.un(document, me._eventMapping.mouseup, endAction);
             // me.close();
             map.removeOverlay(mask);
 
@@ -1905,8 +1926,8 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
             map.addOverlay(tip_label);
         };
 
-        mask.addEventListener('mousedown', startAction);
-        mask.addEventListener('mousemove', mousemoveAction);
+        mask.addEventListener(me._eventMapping.mousedown, startAction);
+        mask.addEventListener(me._eventMapping.mousemove, mousemoveAction);
 
         /**
          * 如果是编辑模式，设置初始值
@@ -2474,12 +2495,13 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
     /**
      * 创建遮罩对象
      */
-    function Mask() {
+    function Mask(opts) {
 
         /**
          * 鼠标到地图边缘的时候是否自动平移地图
          */
         this._enableEdgeMove = false;
+        this._eventMapping = opts.eventMapping;
     }
 
     Mask.prototype = new BMapGL.Overlay();
@@ -2561,7 +2583,7 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
                 me.dispatchEvent(e);
             };
 
-            if (type == 'mousedown') {
+            if (type == me._eventMapping.mousedown) {
                 lastMousedownXY = getXYbyEvent(e);
             }
 
@@ -2585,14 +2607,14 @@ var BMAP_DRAWING_MARKER    = "marker",     // 鼠标画点模式
         /**
          * 将事件都遮罩层的事件都绑定到domEvent来处理
          */
-        var events = ['click', 'mousedown', 'mousemove', 'mouseup', 'dblclick'],
+        var events = ['click', me._eventMapping.mousedown, me._eventMapping.mousemove, me._eventMapping.mouseup, 'dblclick'],
             index = events.length;
         while (index--) {
             baidu.on(container, events[index], domEvent);
         }
 
         // 鼠标移动过程中，到地图边缘后自动平移地图
-        baidu.on(container, 'mousemove', function (e) {
+        baidu.on(container, me._eventMapping.mousemove, function (e) {
             if (me._enableEdgeMove) {
                 me.mousemoveAction(e);
             }
