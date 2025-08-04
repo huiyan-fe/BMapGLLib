@@ -144,15 +144,11 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             duration: duration,
             delay: 0,
             interation: 1,
-            name: 'first',
-            renderCallback: function() {
-                if (me._percent >= 1) {
-                    me._viewAni._cancel(me._map);
-                }
-                return me._percent;
-            }
         };
         this._viewAni = new BMapGL.ViewAnimation(keyFrames, opts);
+        this._viewAni.addEventListener('animationend', function (e) {
+           me._opts.onAnimateEnd && me._opts.onAnimateEnd(e);
+        });
     };
 
     /**
@@ -281,7 +277,6 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         timestamp = timestamp - this._pauseTime;
         
         var percent = (timestamp - start) / this._opts.duration;
-        this._percent = percent;
         var end = Math.round(this._expandPath.length * percent);
         var currentPath = this._expandPath.slice(0, end);
         this._last2Points = currentPath.slice(-4);
@@ -356,15 +351,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      * 设置持续事件
      * @param {number} duration 持续事件
      */
-    TrackAnimation.prototype.setDuration = function (duration, change) {
-        if (change) {
-            var oldDuration = this._opts.duration;
-            var now = (this._status === PAUSE && this._isPausing) ? this._isPausing : performance.now();
-            // 计算当前进度百分比
-            var percent = (now - start - this._pauseTime) / oldDuration;
-            this._opts._speedFactor = undefined;
-            start = now - percent * duration - this._pauseTime;
-        }
+    TrackAnimation.prototype.setDuration = function (duration) {
         this._opts.duration = duration;
     };
 
@@ -373,12 +360,31 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
      * @param {number} speedFactor 速度因子
      */
     TrackAnimation.prototype.setSpeed = function (speedFactor) {
-        if (speedFactor <= 0) {
+        if (speedFactor <= 0 || !this._viewAni) {
             return;
         }
+
+        // 计算轨迹
+        var now = (this._status === PAUSE && this._isPausing) ? this._isPausing : performance.now();
         var oldDuration = this._opts.duration;
         var newDuration = oldDuration * (1 / speedFactor);
-        this.setDuration(newDuration, true);
+        var percent = (now - start - this._pauseTime) / oldDuration;
+        start = now - percent * newDuration - this._pauseTime;
+
+        // 计算动画
+        var animation = this._viewAni.animation;
+        var aniNow = (this._status === PAUSE && animation._isPausing) ? animation._isPausing : performance.now();
+
+        var aniOldDuration = animation._options.duration;
+        var aniNewDuration = aniOldDuration * (1 / speedFactor);
+
+        var aniStart = animation._beginTime;
+        var aniPercent = (aniNow - aniStart - animation._pauseTime) / aniOldDuration;
+        aniStart = aniNow - aniPercent * aniNewDuration - animation._pauseTime;
+        animation.setBeginTime(aniStart);
+        animation.setDuration(aniNewDuration);
+        
+        this.setDuration(newDuration);
     };
 
     /**
