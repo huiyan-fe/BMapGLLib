@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <title>标注管理 - BMapGL MarkerManager</title>
+  <style>
+    html, body { margin: 0; font-family: "微软雅黑"; }
+    #container { width: 550px; height: 450px; border: 1px solid #999; }
+    #log { background: #000; color: #0f0; position: absolute; left: 580px; top: 20px; width: 220px; padding: 10px; font-size: 14px; }
+    button { margin: 4px 4px 4px 0; padding: 6px 12px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="log"></div>
+  <button id="clearMarkers">clearMarkers</button>
+  <button id="show">show markers</button>
+  <button id="hide">hide markers</button>
+  <button id="toggle">toggle markers</button>
+
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=5ssIAkexwFSGMatjOF95gg3sjet3yxQ1"></script>
+  <script type="text/javascript" src="../src/MarkerManager.js"></script>
+  <script type="text/javascript">
+    var map = new BMapGL.Map("container");
+    var point = new BMapGL.Point(116.404, 39.915);
+    map.centerAndZoom(point, 15);
+    map.enableScrollWheelZoom(true);
+
+    var padding = 200;
+    var mgr = new BMapGLLib.MarkerManager(map, {
+      borderPadding: padding,
+      maxZoom: 18
+    });
+
+    var markersConfig = [
+      { minZoom: 1, maxZoom: 10, markerCount: 80 },
+      { minZoom: 11, maxZoom: 12, markerCount: 10 },
+      { minZoom: 13, maxZoom: 15, markerCount: 150 },
+      { minZoom: 16, maxZoom: 17, markerCount: 10 },
+      { minZoom: 18, maxZoom: 19, markerCount: 100 }
+    ];
+
+    for (var i = 0; i < markersConfig.length; i++) {
+      var t = markersConfig[i];
+      var mks = getRandomMarker(map, mgr, t.markerCount, padding);
+      mgr.addMarkers(mks, t.minZoom, t.maxZoom);
+    }
+    mgr.showMarkers();
+    log();
+
+    map.addEventListener("zoomend", function () { log(); });
+    map.addEventListener("dragend", function () { log(); });
+
+    document.getElementById("clearMarkers").onclick = function () {
+      mgr.clearMarkers();
+      log();
+    };
+    document.getElementById("show").onclick = function () {
+      mgr.show();
+      log();
+    };
+    document.getElementById("hide").onclick = function () {
+      mgr.hide();
+      log();
+    };
+    document.getElementById("toggle").onclick = function () {
+      mgr.toggle();
+      log();
+    };
+
+    /**
+     * 随机生成 marker（GL 版）
+     * @param {BMapGL.Map} map 地图实例
+     * @param {BMapGLLib.MarkerManager} mgr 标注管理器（用于 _getRealBounds）
+     * @param {number} num 生成数量
+     * @param {number} borderPadding 视口外扩像素
+     * @returns {BMapGL.Marker[]}
+     */
+    function getRandomMarker(map, mgr, num, borderPadding) {
+      var container = map.getContainer();
+      var markers = [];
+      var height = (container.offsetHeight || 450) / 2 + borderPadding;
+      var width = (container.offsetWidth || 550) / 2 + borderPadding;
+
+      var center = map.getCenter();
+      var pixel = map.pointToPixel(center);
+      var px = (pixel && (pixel.x != null ? pixel.x : pixel.lng)) || 0;
+      var py = (pixel && (pixel.y != null ? pixel.y : pixel.lat)) || 0;
+      var realBounds = mgr._getRealBounds();
+
+      for (var i = 0; i < num; i++) {
+        var w = width * Math.random();
+        var h = height * Math.random();
+        var newPixel = {
+          x: px + (Math.random() > 0.5 ? w : -w),
+          y: py + (Math.random() > 0.5 ? h : -h)
+        };
+        var pixelObj = new BMapGL.Pixel ? new BMapGL.Pixel(newPixel.x, newPixel.y) : newPixel;
+        var newPoint = map.pixelToPoint(pixelObj);
+
+        if (realBounds.containsPoint(newPoint)) {
+          var marker = new BMapGL.Marker(newPoint);
+          markers.push(marker);
+          (function (mk) {
+            mk.addEventListener("dblclick", function () {
+              mgr.removeMarker(mk);
+              log();
+            });
+          })(marker);
+        }
+      }
+      return markers;
+    }
+
+    function log() {
+      var str = "当前 zoom: " + map.getZoom() + "<br/>地图上 marker 数量: " + mgr.getMarkerCount(map.getZoom());
+      document.getElementById("log").innerHTML = "<h3>调试信息：</h3>" + str;
+    }
+  </script>
+</body>
+</html>
