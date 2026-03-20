@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <title>添加弧线 - BMapGL</title>
+  <style type="text/css">
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: "微软雅黑";
+    }
+  </style>
+</head>
+<body>
+  <div style="width:100%;height:100%;border:1px solid gray" id="container"></div>
+</body>
+</html>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥"></script>
+<script type="text/javascript" src="../src/CurveLine.min.js"></script>
+<script type="text/javascript">
+  var map = new BMapGL.Map("container");
+  map.centerAndZoom(new BMapGL.Point(118.454, 32.955), 6);
+  map.enableScrollWheelZoom(true);
+
+  var beijingPosition = new BMapGL.Point(116.432045, 39.910683);
+  var hangzhouPosition = new BMapGL.Point(120.129721, 30.314429);
+  var taiwanPosition = new BMapGL.Point(121.491121, 25.127053);
+  var points = [beijingPosition, hangzhouPosition, taiwanPosition];
+
+  var curve = new BMapGLLib.CurveLine(points, {
+    strokeColor: "blue",
+    strokeWeight: 3,
+    strokeOpacity: 0.5
+  });
+  map.addOverlay(curve);
+  curve.enableEditing();
+</script>
