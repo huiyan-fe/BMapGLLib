@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>拉框缩放工具 GL版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥"></script>
+    <script src="../src/RectangleZoom.js"></script>
+    <style>
+        html, body { height: 100%; margin: 0; }
+        #container { height: 420px; border: 1px solid #cfcfcf; }
+        .bar { padding: 10px 0; font-family: "Microsoft YaHei", Arial, sans-serif; }
+        .btn {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        .btn.primary { background: #1a73e8; border-color: #1a73e8; color: #fff; }
+        .btn:active { transform: translateY(1px); }
+        .hint { color: #666; font-size: 12px; margin-left: 6px; }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div class="bar">
+        <button class="btn primary" onclick="rz.open()">开启</button>
+        <button class="btn" onclick="rz.close()">关闭</button>
+        <span class="hint">提示：按住鼠标左键拖拽绘制矩形框</span>
+    </div>
+</body>
+</html>
+<script>
+var map = new BMapGL.Map("container");
+map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 12);
+map.enableScrollWheelZoom();
+
+var rz = new BMapGLLib.RectangleZoom(map, {
+    followText: "拖拽鼠标进行操作",
+    strokeWeight: 2,
+    strokeColor: "#111",
+    fillColor: "#ccc",
+    opacity: 0.35,
+    autoClose: false
+});
+</script>
+
