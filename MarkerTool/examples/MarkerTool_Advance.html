@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>添加点标注工具 GL版 -- 高级示例</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥"></script>
+    <script src="../src/MarkerTool.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            font-size: 14px;
+            background: #f0f2f5;
+        }
+        h2 {
+            margin: 0;
+            padding: 12px 16px;
+            background: #1a73e8;
+            color: #fff;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        .layout {
+            display: flex;
+            height: calc(100vh - 46px);
+        }
+        #map {
+            flex: 1;
+        }
+        .sidebar {
+            width: 260px;
+            background: #fff;
+            border-left: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .panel {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+        }
+        .panel-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 13px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 6px 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+        .btn:hover { background: #f0f0f0; }
+        .btn.primary {
+            background: #1a73e8;
+            color: #fff;
+            border-color: #1a73e8;
+        }
+        .btn.primary:hover { background: #1558b0; }
+        .btn.danger {
+            background: #e53935;
+            color: #fff;
+            border-color: #e53935;
+        }
+        .btn.danger:hover { background: #c62828; }
+
+        /* 图标选择面板 */
+        .icon-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .icon-item {
+            width: 36px;
+            height: 36px;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            transition: all 0.15s;
+            font-size: 18px;
+        }
+        .icon-item:hover { border-color: #aaa; background: #eee; }
+        .icon-item.selected { border-color: #1a73e8; background: #e8f0fe; }
+
+        /* 标注列表 */
+        .marker-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .marker-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background 0.1s;
+        }
+        .marker-item:hover { background: #f5f5f5; }
+        .marker-item .icon-badge {
+            font-size: 20px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .marker-item .marker-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .marker-item .marker-name {
+            font-size: 13px;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .marker-item .marker-coord {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
+        }
+        .marker-item .btn-del {
+            color: #999;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .marker-item .btn-del:hover { color: #e53935; background: #fce8e8; }
+        .empty-hint {
+            text-align: center;
+            color: #bbb;
+            font-size: 13px;
+            padding: 30px 0;
+        }
+
+        /* 信息窗样式 */
+        .info-win {
+            box-sizing: border-box;
+            min-width: 220px;
+            font-size: 13px;
+            padding: 0 12px 14px;
+        }
+        .info-win .iw-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #1a73e8;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #eee;
+        }
+        .info-win .iw-row {
+            display: flex;
+            margin-bottom: 6px;
+            align-items: center;
+        }
+        .info-win .iw-label {
+            color: #888;
+            width: 44px;
+            flex-shrink: 0;
+            padding-top: 2px;
+        }
+        .info-win .iw-val {
+            color: #333;
+            flex: 1;
+            word-break: break-all;
+        }
+        .info-win .iw-val.coord {
+            color: #999;
+            font-size: 11px;
+        }
+        .info-win input[type=text], .info-win textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 4px 6px;
+            font-size: 12px;
+            outline: none;
+        }
+        .info-win input[type=text]:focus, .info-win textarea:focus {
+            border-color: #1a73e8;
+        }
+        .info-win textarea { resize: vertical; min-height: 48px; }
+        .info-win .iw-btns {
+            text-align: right;
+        }
+        .info-win .iw-btns button {
+            padding: 5px 16px;
+            border-radius: 3px;
+            border: 1px solid #1a73e8;
+            background: #1a73e8;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .info-win .iw-btns button:hover { background: #1558b0; }
+        .req { color: #e53935; }
+    </style>
+</head>
+<body>
+    <h2>BMapGL MarkerTool 高级示例 — 自定义图标与信息窗</h2>
+    <div class="layout">
+        <div id="map"></div>
+        <div class="sidebar">
+            <!-- 操作按钮 -->
+            <div class="panel">
+                <div class="btn-group">
+                    <button class="btn primary" id="btnToggle" onclick="toggleTool()">关闭工具</button>
+                    <button class="btn danger" onclick="clearAll()">清除全部</button>
+                </div>
+            </div>
+
+            <!-- 图标选择 -->
+            <div class="panel">
+                <div class="panel-title">选择标注图标</div>
+                <div class="icon-grid" id="iconGrid"></div>
+            </div>
+
+            <!-- 标注列表 -->
+            <div class="panel-title" style="padding: 10px 14px 4px; margin:0; color:#333; font-size:13px; font-weight:bold; border-top:1px solid #eee;">
+                已添加标注
+                <span id="markerCount" style="font-size:12px; color:#1a73e8; font-weight:normal;"></span>
+            </div>
+            <div class="marker-list" id="markerList">
+                <div class="empty-hint" id="emptyHint">暂无标注</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+var map = new BMapGL.Map('map');
+map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
+map.enableScrollWheelZoom();
+
+// 预置的图标配置（使用 emoji 作为自定义标注图标）
+var ICON_PRESETS = [
+    { emoji: "📍", label: "地点" },
+    { emoji: "⭐", label: "收藏" },
+    { emoji: "🏠", label: "家"   },
+    { emoji: "🏢", label: "公司" },
+    { emoji: "🏨", label: "酒店" },
+    { emoji: "🍴", label: "餐饮" },
+    { emoji: "🏥", label: "医院" },
+    { emoji: "🏫", label: "学校" },
+    { emoji: "🚉", label: "交通" },
+    { emoji: "🛒", label: "购物" },
+    { emoji: "🌳", label: "公园" },
+    { emoji: "📌", label: "标记" }
+];
+
+var selectedIconIndex = 0;
+var markerRecords = [];
+
+// 创建图标选择网格
+var iconGrid = document.getElementById("iconGrid");
+ICON_PRESETS.forEach(function(preset, idx) {
+    var el = document.createElement("div");
+    el.className = "icon-item" + (idx === 0 ? " selected" : "");
+    el.title = preset.label;
+    el.innerHTML = preset.emoji;
+    el.onclick = function() {
+        selectedIconIndex = idx;
+        document.querySelectorAll(".icon-item").forEach(function(e) { e.classList.remove("selected"); });
+        el.classList.add("selected");
+        mkrTool.setIcon(buildIcon(idx));
+    };
+    iconGrid.appendChild(el);
+});
+
+// 将 emoji 渲染成 BMapGL.Icon
+function buildIcon(idx) {
+    var preset = ICON_PRESETS[idx];
+    var canvas = document.createElement("canvas");
+    canvas.width = 32;
+    canvas.height = 32;
+    var ctx = canvas.getContext("2d");
+    ctx.font = "24px serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(preset.emoji, 16, 16);
+    var dataUrl = canvas.toDataURL();
+    return new BMapGL.Icon(dataUrl, new BMapGL.Size(32, 32), {
+        anchor: new BMapGL.Size(16, 32)
+    });
+}
+
+// 构建编辑态信息窗 HTML
+function buildEditHTML(record) {
+    var id = record.id;
+    return '<div class="info-win">'
+        + '<div class="iw-row">'
+        + '  <span class="iw-label">名称<span class="req">*</span></span>'
+        + '  <input type="text" id="' + id + '_name" placeholder="请输入名称" maxlength="30" />'
+        + '</div>'
+        + '<div class="iw-row">'
+        + '  <span class="iw-label">地址</span>'
+        + '  <textarea id="' + id + '_note" placeholder="可选备注" rows="2"></textarea>'
+        + '</div>'
+        + '<div class="iw-btns">'
+        + '  <button onclick="confirmMarkerInfo(\'' + id + '\')">确定</button>'
+        + '</div>'
+        + '</div>';
+}
+
+// 构建只读态信息窗 HTML（保存后展示）
+function buildReadOnlyHTML(record) {
+    var preset = ICON_PRESETS[record.iconIndex];
+    var noteHtml = record.note
+        ? escapeHTML(record.note)
+        : '<span style="color:#bbb">无</span>';
+    return '<div class="info-win">'
+        + '<div class="iw-title">' + preset.emoji + ' ' + escapeHTML(record.name) + '</div>'
+        + '<div class="iw-row">'
+        + '  <span class="iw-label">地址</span>'
+        + '  <span class="iw-val">' + noteHtml + '</span>'
+        + '</div>'
+        + '</div>';
+}
+
+var INFO_WIN_OPTS = {
+    width: 260,
+    offset: new BMapGL.Size(0, -10)
+};
+
+var mkrTool = new BMapGLLib.MarkerTool(map, {
+    autoClose: false
+});
+
+mkrTool.addEventListener("markend", function(e) {
+    var record = {
+        marker: e.marker,
+        point: e.point,
+        iconIndex: selectedIconIndex,
+        id: "iw_" + Date.now(),
+        name: "",
+        note: "",
+        saved: false
+    };
+    markerRecords.push(record);
+    renderMarkerList();
+
+    var infoWindow = new BMapGL.InfoWindow(buildEditHTML(record), INFO_WIN_OPTS);
+    record.infoWindow = infoWindow;
+
+    e.marker.addEventListener("click", function() {
+        map.openInfoWindow(record.infoWindow, record.point);
+    });
+
+    setTimeout(function() {
+        map.openInfoWindow(record.infoWindow, record.point);
+    }, 10);
+});
+
+function openTool() {
+    mkrTool.setIcon(buildIcon(selectedIconIndex));
+    mkrTool.open();
+}
+
+// 默认开启工具
+openTool();
+
+function toggleTool() {
+    if (mkrTool._isOpen) {
+        mkrTool.close();
+        document.getElementById("btnToggle").textContent = "开启工具";
+        document.getElementById("btnToggle").classList.remove("primary");
+    } else {
+        openTool();
+        document.getElementById("btnToggle").textContent = "关闭工具";
+        document.getElementById("btnToggle").classList.add("primary");
+    }
+}
+
+// 确认保存：切换为只读视图，信息窗保持打开
+function confirmMarkerInfo(id) {
+    var nameEl = document.getElementById(id + "_name");
+    var noteEl = document.getElementById(id + "_note");
+    if (!nameEl || !nameEl.value.trim()) {
+        nameEl && (nameEl.style.borderColor = "#e53935");
+        alert("名称不能为空");
+        return;
+    }
+    var record = findRecordById(id);
+    if (!record) return;
+
+    record.name = nameEl.value.trim();
+    record.note = noteEl ? noteEl.value.trim() : "";
+    record.saved = true;
+
+    var pt = record.point;
+    map.closeInfoWindow();
+    record.infoWindow = new BMapGL.InfoWindow(buildReadOnlyHTML(record), INFO_WIN_OPTS);
+    setTimeout(function() {
+        map.openInfoWindow(record.infoWindow, pt);
+    }, 10);
+
+    renderMarkerList();
+}
+
+function findRecordById(id) {
+    for (var i = 0; i < markerRecords.length; i++) {
+        if (markerRecords[i].id === id) {
+            return markerRecords[i];
+        }
+    }
+    return null;
+}
+
+// 渲染标注列表
+function renderMarkerList() {
+    var list = document.getElementById("markerList");
+    var count = document.getElementById("markerCount");
+    count.textContent = markerRecords.length > 0 ? "（" + markerRecords.length + "个）" : "";
+
+    if (markerRecords.length === 0) {
+        list.innerHTML = '<div class="empty-hint" id="emptyHint">暂无标注</div>';
+        return;
+    }
+    var html = "";
+    markerRecords.forEach(function(rec, idx) {
+        var preset = ICON_PRESETS[rec.iconIndex || 0];
+        var nameHtml = rec.saved
+            ? escapeHTML(rec.name)
+            : '<span style="color:#bbb;font-style:italic;">待填写…</span>';
+        var pt = rec.point;
+        html += '<div class="marker-item" onclick="flyToMarker(' + idx + ')">'
+            + '  <span class="icon-badge">' + preset.emoji + '</span>'
+            + '  <div class="marker-info">'
+            + '    <div class="marker-name">' + nameHtml + '</div>'
+            + '    <div class="marker-coord">' + pt.lng.toFixed(4) + ', ' + pt.lat.toFixed(4) + '</div>'
+            + '  </div>'
+            + '  <span class="btn-del" onclick="removeMarker(event,' + idx + ')">✕</span>'
+            + '</div>';
+    });
+    list.innerHTML = html;
+}
+
+function flyToMarker(idx) {
+    var rec = markerRecords[idx];
+    if (!rec) return;
+    map.flyTo(rec.point, 18);
+}
+
+function removeMarker(event, idx) {
+    event.stopPropagation();
+    var rec = markerRecords[idx];
+    if (rec && rec.marker) {
+        map.removeOverlay(rec.marker);
+    }
+    markerRecords.splice(idx, 1);
+    renderMarkerList();
+}
+
+function clearAll() {
+    markerRecords.forEach(function(rec) {
+        if (rec.marker) {
+            map.removeOverlay(rec.marker);
+        }
+    });
+    markerRecords = [];
+    renderMarkerList();
+}
+
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+</script>

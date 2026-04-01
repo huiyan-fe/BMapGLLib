@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>添加点标注工具 GL版 -- 简单示例</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
+    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥"></script>
+    <script src="../src/MarkerTool.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            font-size: 14px;
+        }
+        #map {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+        }
+        .toolbar {
+            padding: 10px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        .toolbar button {
+            padding: 6px 16px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .toolbar button:hover {
+            background: #e8e8e8;
+        }
+        .toolbar button.active {
+            background: #3388ff;
+            color: #fff;
+            border-color: #2277ee;
+        }
+        #log {
+            padding: 8px 10px;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #666;
+            min-height: 28px;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button id="btnToggle" onclick="toggleTool()" class="active">关闭工具</button>
+        <button onclick="clearAll()">清除标注</button>
+    </div>
+    <div id="map"></div>
+    <div id="log">提示：在地图上单击即可添加标注。</div>
+</body>
+</html>
+<script>
+var map = new BMapGL.Map('map');
+map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
+map.enableScrollWheelZoom();
+
+var mkrTool = new BMapGLLib.MarkerTool(map, {
+    autoClose: false
+});
+mkrTool.open();
+
+var markerCount = 0;
+var markers = [];
+
+mkrTool.addEventListener("markend", function(e) {
+    markerCount++;
+    markers.push(e.marker);
+    var pt = e.point;
+    document.getElementById("log").innerHTML =
+        "已添加第 <b>" + markerCount + "</b> 个标注，坐标：(" +
+        pt.lng.toFixed(5) + ", " + pt.lat.toFixed(5) + ")";
+});
+
+function toggleTool() {
+    var btn = document.getElementById("btnToggle");
+    if (mkrTool._isOpen) {
+        mkrTool.close();
+        btn.textContent = "开启工具";
+        btn.classList.remove("active");
+    } else {
+        mkrTool.open();
+        btn.textContent = "关闭工具";
+        btn.classList.add("active");
+    }
+}
+
+function clearAll() {
+    for (var i = 0; i < markers.length; i++) {
+        map.removeOverlay(markers[i]);
+    }
+    markers = [];
+    markerCount = 0;
+    document.getElementById("log").innerHTML = "已清除所有标注。";
+}
+</script>
