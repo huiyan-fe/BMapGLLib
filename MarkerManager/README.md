@@ -42,8 +42,3 @@ mgr.showMarkers();  // 根据当前视野与 zoom 刷新显示
 
 [examples/MarkerManager.html](./examples/MarkerManager.html)：按多组 zoom 配置批量添加 marker，并演示 clearMarkers、show、hide、toggle 及双击移除。
 
-## 与 2D 版差异
-
-- 依赖 `BMapGL.Map`、`BMapGL.Marker`、`BMapGL.Point`、`BMapGL.Bounds`、`BMapGL.Pixel`。
-- 除 `zoomend`、`dragend` 外，会监听 `zooming`、`moving` 以在 GL 版地图下及时刷新。
-- 接口与 2D 版 MarkerManager 保持一致，便于从 2D 迁移到 GL。

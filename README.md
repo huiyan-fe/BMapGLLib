@@ -138,6 +138,115 @@ TrackAnimation类提供视角轨迹动画展示效果。 <br/><br/>
 </td>
 </table>
 
+热力图
+---------
+[文档](./Heatmap/README.md)
+
+<table>
+<tr>
+<td width='250'>
+<img src='./images/Heatmap.png' width='250' />
+</td>
+<td width='600'>
+提供热力图可视化展现功能，支持设置点半径、透明度、渐变与数据集，用于展示离散点强度分布。<br/><br/>
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/Heatmap/examples/index.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/Heatmap/src/Heatmap.js'>源码</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/Heatmap/src/Heatmap.min.js'>压缩源码</a>
+</td>
+</tr>
+</table>
+
+弧线
+---------
+[文档](./CurveLine/README.md)
+
+<table>
+<tr>
+<td width='250'>
+<img src='./images/CurveLine.png' width='250' />
+</td>
+<td width='600'>
+根据多个控制点生成平滑弧线，支持样式配置与编辑控制点。<br/><br/>
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/CurveLine/examples/index.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/CurveLine/src/CurveLine.js'>源码</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/CurveLine/src/CurveLine.min.js'>压缩源码</a>
+</td>
+</tr>
+</table>
+
+标注管理器
+---------
+[文档](./MarkerManager/README.md)
+
+<table>
+<tr>
+<td width='250'>
+<img src='./images/MarkerManager.png' width='250' />
+</td>
+<td width='600'>
+标注管理器，支持多marker管理，更高效、更便捷。。<br/><br/>
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerManager/examples/MarkerManager.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerManager/src/MarkerManager.js'>源码</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerManager/src/MarkerManager.min.js'>压缩源码</a>
+</td>
+</tr>
+</table>
+
+标注聚合
+---------
+[文档](./MarkerClusterer/README.md)
+
+<table>
+<tr>
+<td width='250'>
+<img src='./images/MarkerClusterer.png' width='250' />
+</td>
+<td width='600'>
+对大量Marker做网格聚合，解决点过密时的遮挡与渲染问题。<br/><br/>
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerClusterer/examples/index.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerClusterer/src/MarkerClusterer.js'>源码</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerClusterer/src/MarkerClusterer.min.js'>压缩源码</a>
+</td>
+</tr>
+</table>
+
+标注工具
+---------
+[文档](./MarkerTool/README.md)
+
+<table>
+<tr>
+<td width='250'>
+<img src='./images/MarkerTool.png' width='250' />
+</td>
+<td width='600'>
+添加标注工具类，允许用户在地图上点击后添加一个点标注，支持自定义标注的图标样式。<br/><br/>
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerTool/examples/MarkerTool_Simple.html'>示例（简单）</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerTool/examples/MarkerTool_Advance.html'>示例（进阶）</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerTool/src/MarkerTool.js'>源码</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerTool/src/MarkerTool.min.js'>压缩源码</a>
+</td>
+</tr>
+</table>
+
+拉框放大
+---------
+[文档](./RectangleZoom/README.md)
+
+<table>
+<tr>
+<td width='250'>
+<img src='./images/RectangleZoom.png' width='250' />
+</td>
+<td width='600'>
+提供拉框选择矩形区域并缩放到该范围的交互工具，可自定义框线样式、填充透明度与提示文案。<br/><br/>
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/RectangleZoom/examples/RectangleZoom.html'>示例</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/RectangleZoom/src/RectangleZoom.js'>源码</a>　　
+<a target='_blank' href='http://mapopen.bj.bcebos.com/github/BMapGLLib/RectangleZoom/src/RectangleZoom.min.js'>压缩源码</a>
+</td>
+</tr>
+</table>
+
 时间轴
 ---------
 ![Timeline](./images/Timeline.png)

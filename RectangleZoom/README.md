@@ -26,6 +26,7 @@ rectangleZoom.open();
 
 | Name | Type | Description |
 |------|------|-------------|
+| zoomType | `Number` | 拉框后放大还是缩小：`0`(放大) / `1`(缩小) |
 | followText | `String` | 开启后鼠标跟随提示文字（可选） |
 | strokeWeight | `Number` | 矩形框线宽 |
 | strokeColor | `String` | 矩形框线色 |
