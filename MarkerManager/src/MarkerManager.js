@@ -28,7 +28,6 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     this._opts.borderPadding = typeof this._opts.borderPadding === 'number' ? this._opts.borderPadding : 0;
 
     var me = this;
-    // GL 版地图事件：zooming / moving 与2D 的zoomend / dragend对应
     this._map.addEventListener('zoomend', function () { me._showMarkers(); });
     this._map.addEventListener('dragend', function () { me._showMarkers(); });
     this._map.addEventListener('zooming', function () { me._showMarkers(); });

@@ -2,10 +2,6 @@
 
 `BMapGLLib.MarkerClusterer` 用于对大量`BMapGL.Marker`做网格聚合，解决地图上点位过密时覆盖和性能问题。
 
-与2D版`BMapLib.MarkerClusterer`逻辑完全一致，API基本兼容，可低成本迁移。
-
-> **渲染方式**：每个聚合簇用`BMapGL.Marker` + canvas自绘图标呈现（等价于2D版的`TextIconOverlay`），通过`addOverlay` / `removeOverlay`管理生命周期。
-
 ---
 
 ## 快速使用
@@ -133,14 +129,6 @@ mc.setStyles(myStyles);
 | `getClustersCount()` | `Number` | 当前视野内实际聚合簇的数量 |
 | `isAverageCenter()` | `Boolean` | 是否使用平均中心 |
 
----
-
-## 行为说明
-
-- **视野联动**：地图`zoomend` / `moveend`时自动重新计算聚合，视野外的marker不参与计算
-- **点击聚合簇**：自动调用`map.setViewport()`缩放到该簇包含的所有点的范围
-- **setStyles触发刷新**：调用`setStyles`后立即重绘；图片异步加载完成后再次刷新
-- **缩放超过maxZoom**：所有聚合簇自动展开为独立散点marker
 
 ---
 
