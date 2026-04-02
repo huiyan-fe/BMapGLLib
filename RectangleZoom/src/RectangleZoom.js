@@ -37,6 +37,12 @@ if (typeof BMapGLLib._toolInUse === "undefined") {
     })();
 
     /**
+     * 拉框后执行放大/缩小操作
+     */
+    var BMAP_ZOOM_IN  = 0;
+    var BMAP_ZOOM_OUT = 1;
+
+    /**
      * @exports RectangleZoom as BMapGLLib.RectangleZoom
      */
     BMapGLLib.RectangleZoom = function(map, opts) {
@@ -46,6 +52,8 @@ if (typeof BMapGLLib._toolInUse === "undefined") {
         baidu.lang.Class.call(this);
         this._map = map;
         this._opts = {
+            // 拉框后放大还是缩小的设置
+            zoomType: BMAP_ZOOM_IN,
             followText: "",
             strokeWeight: 2,
             strokeColor: "#111",
@@ -59,6 +67,9 @@ if (typeof BMapGLLib._toolInUse === "undefined") {
 
         this._opts.strokeWeight = this._opts.strokeWeight <= 0 ? 1 : this._opts.strokeWeight;
         this._opts.opacity = this._opts.opacity < 0 ? 0 : (this._opts.opacity > 1 ? 1 : this._opts.opacity);
+        if (this._opts.zoomType !== BMAP_ZOOM_IN && this._opts.zoomType !== BMAP_ZOOM_OUT) {
+            this._opts.zoomType = BMAP_ZOOM_IN;
+        }
 
         this._isOpen = false;
         this._binded = false;
@@ -391,14 +402,24 @@ if (typeof BMapGLLib._toolInUse === "undefined") {
             ratio = Math.floor(ratio);
 
             var targetZoomLv;
+            var currentZoom = me._map.getZoom();
             if (!isNaN(ratio) && ratio > 0) {
                 var delta = Math.log(ratio) / Math.log(2);
-                targetZoomLv = Math.round(me._map.getZoom() + delta);
-                if (targetZoomLv < me._map.getZoom()) {
-                    targetZoomLv = me._map.getZoom();
+                targetZoomLv = (me._opts.zoomType === BMAP_ZOOM_OUT) ?
+                    Math.round(currentZoom - delta) :
+                    Math.round(currentZoom + delta);
+                if (me._opts.zoomType === BMAP_ZOOM_IN) {
+                    if (targetZoomLv < currentZoom) {
+                        targetZoomLv = currentZoom;
+                    }
+                }
+                else {
+                    if (targetZoomLv > currentZoom) {
+                        targetZoomLv = currentZoom;
+                    }
                 }
             } else {
-                targetZoomLv = me._map.getZoom() + 1;
+                targetZoomLv = currentZoom + (me._opts.zoomType === BMAP_ZOOM_OUT ? -1 : 1);
             }
             targetZoomLv = clampZoom(targetZoomLv);
 
