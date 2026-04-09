@@ -1,6 +1,6 @@
-# MarkerClusterer（GL版）
+# MarkerClusterer（GL 版）
 
-`BMapGLLib.MarkerClusterer` 用于对大量`BMapGL.Marker`做网格聚合，解决地图上点位过密时覆盖和性能问题。
+`BMapGLLib.MarkerClusterer` 用于对大量 `BMapGL.Marker` 做网格聚合，减轻覆盖与性能压力。
 
 ---
 
@@ -10,7 +10,7 @@
 <!-- 引入BMapGL -->
 <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=你的AK"></script>
 <!-- 引入MarkerClusterer -->
-<script src="path/to/MarkerClusterer.js"></script>
+<script src="path/to/MarkerClusterer.min.js"></script>
 ```
 
 ```javascript
@@ -35,40 +35,41 @@ var mc = new BMapGLLib.MarkerClusterer(map, { markers: markers });
 new BMapGLLib.MarkerClusterer(map, options)
 ```
 
+
 | 参数 | 类型 | 默认值 | 说明 |
-|---|---|---|---|
-| `markers` | `BMapGL.Marker[]` | `[]` | 初始要聚合的标注数组 |
-| `gridSize` | `Number` | `60` | 聚合网格像素大小。值越大，聚合范围越广 |
-| `maxZoom` | `Number` | `18` | 最大聚合级别。`zoom > maxZoom`时，所有簇展开为散点 |
-| `minClusterSize` | `Number` | `2` | 最小聚合数量。同一网格内marker数量小于此值时，直接显示散点 |
-| `isAverageCenter` | `Boolean` | `false` | 聚合落脚点是否取所有点的平均坐标。`false`时落在第一个点上 |
-| `styles` | `Array` | `[]` | 自定义聚合图标样式数组，见下方"样式配置"说明 |
+|------|------|--------|------|
+| `markers` | `BMapGL.Marker[]` | 无 | 初始标注数组；传数组即会 `addMarkers`（可为空数组） |
+| `gridSize` | `Number` | `60` | 聚合网格像素大小，越大越容易并成簇 |
+| `maxZoom` | `Number` | `18` | 最大聚合级别；**当前级别 `> maxZoom` 时簇展开为散点** |
+| `minClusterSize` | `Number` | `2` | 最小成簇数量；簇内点数 **小于** 该值时只显示散点、不显示聚合图标 |
+| `isAverageCenter` | `Boolean` | `false` | 仅当在 `options` 里**显式传入**时覆盖默认；`true` 时簇中心为点集平均坐标，否则为第一个点 |
+| `styles` | `Array` | `[]` | 自定义聚合图标样式，见下文「样式配置」 |
 
 ---
 
 ## 样式配置
 
-`styles`是一个数组，每项对应一个数量区间的聚合图标外观。**样式下标按聚合数量的位数自动选择**：
+`styles` 为数组，定义不同聚合数量时的样式。
 
-| 聚合数量 | 使用的样式 |
-|---|---|
-| 1–9 | `styles[0]` |
-| 10–99 | `styles[1]` |
-| 100–999 | `styles[2]` |
-| 以此类推… | … |
-| 超出数组长度 | 使用最后一项 |
+| 聚合数量 count | 使用样式 |
+|----------------|----------|
+| 0–9 | `styles[0]` |
+| 10–19 | `styles[1]` |
+| 20–29 | `styles[2]` |
+| … | … |
 
-> 不传`styles`时，使用内置的绿→黄→橙→橙红→红五档渐变圆形图标。
+未传 `styles` 时，使用内置五档尺寸与颜色的圆形图标。
 
-每项样式对象支持以下字段：
+每项样式对象可含字段：
 
 | 字段 | 类型 | 说明 |
-|---|---|---|
-| `url` 或 `icon` | `String` | 背景图片URL（支持http链接或data URL）。图片会异步预加载，加载完成前先显示纯色圆形 |
-| `size` 或 `sizes` | `[width, height]` 或 `{width, height}` | 图标像素尺寸。未设置时默认`53×53` |
-| `textColor` | `String` | 数字颜色，默认`'#fff'` |
-| `opt_textSize` 或 `textSize` | `Number` | 数字字号（px），默认`12` |
-| `color` | `String` | 无背景图时的纯色圆形填充色 |
+|------|------|------|
+| `url` / `icon` | `String` | 背景图地址 |
+| `size` / `sizes` | `[w,h]` 或 `BMapGL.Size` | 图标像素尺寸，默认约 `53×53` |
+| `textColor` | `String` | 数字颜色，默认 `#ffffff` |
+| `textSize` / `opt_textSize` | `Number` | 数字字号（px），默认 `12` |
+| `color` | `String` | 无有效背景图时的圆填充色 |
+| `anchor` / `opt_anchor` | `BMapGL.Size` 或 `[x,y]` | 图标锚点；不传则图标中心对齐坐标 |
 
 **示例：**
 
@@ -81,16 +82,10 @@ var myStyles = [
     opt_textSize: 12
   },
   {
-    url: './images/cluster_medium.png',
+    url: './images/cluster_large.png',
     size: [50, 50],
     textColor: '#fff',
-    opt_textSize: 14
-  },
-  {
-    url: './images/cluster_large.png',
-    size: [60, 60],
-    textColor: '#fff',
-    opt_textSize: 16
+    textSize: 14
   }
 ];
 
@@ -104,30 +99,22 @@ mc.setStyles(myStyles);
 ### 标注管理
 
 | 方法 | 返回值 | 说明 |
-|---|---|---|
-| `addMarker(marker)` | — | 添加单个marker并重新聚合 |
-| `addMarkers(markers)` | — | 批量添加marker并重新聚合 |
-| `removeMarker(marker)` | `Boolean` | 删除单个marker，成功返回`true` |
-| `removeMarkers(markers)` | `Boolean` | 批量删除marker，有删除成功返回`true` |
-| `clearMarkers()` | — | 清空所有marker和聚合簇 |
+|------|--------|------|
+| `addMarker(marker)` | — | 推入内部列表并 `_createClusters` |
+| `addMarkers(markers)` | — | 批量推入并 `_createClusters` |
+| `removeMarker(marker)` | `Boolean` | 从地图与列表移除，保留 `Label`；成功则清簇后 `_createClusters` |
+| `removeMarkers(markers)` | `Boolean` | 同上批量 |
+| `clearMarkers()` | — | 清簇、移除所有托管 marker（恢复 label）、清空内部数组 |
 
 ### 参数读写
 
 | 方法 | 说明 |
-|---|---|
-| `setGridSize(size)` / `getGridSize()` | 聚合网格像素大小 |
-| `setMaxZoom(zoom)` / `getMaxZoom()` | 最大聚合级别 |
-| `setMinClusterSize(size)` / `getMinClusterSize()` | 最小聚合数量 |
-| `setStyles(styles)` / `getStyles()` | 聚合图标样式数组 |
-
-### 只读信息
-
-| 方法 | 返回值 | 说明 |
-|---|---|---|
-| `getMap()` | `BMapGL.Map` | 当前地图实例 |
-| `getMarkers()` | `BMapGL.Marker[]` | 全部已托管的marker数组 |
-| `getClustersCount()` | `Number` | 当前视野内实际聚合簇的数量 |
-| `isAverageCenter()` | `Boolean` | 是否使用平均中心 |
+|------|------|
+| `setGridSize` / `getGridSize` | 网格像素 |
+| `setMaxZoom` / `getMaxZoom` | 最大聚合级别 |
+| `setMinClusterSize` / `getMinClusterSize` | 最小成簇数量 |
+| `setStyles(styles)` / `getStyles()` | 样式数组；`setStyles` 会预加载图片并 `_redraw` |
+| `setAverageCenter` / `isAverageCenter` | GL 扩展：动态开关平均中心 |
 
 
 ---
