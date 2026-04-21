@@ -2,11 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>添加点标注工具 GL版 -- 高级示例</title>
+    <title>添加点标注工具GL版 -- 高级示例</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0">
-    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥"></script>
+    <script src="https://api.map.baidu.com/api?v=3.0&type=webgl&ak=您的密钥"></script>
     <script src="../src/MarkerTool.js"></script>
     <style>
         * { box-sizing: border-box; }
@@ -94,10 +94,13 @@
             justify-content: center;
             background: #f5f5f5;
             transition: all 0.15s;
-            font-size: 18px;
         }
         .icon-item:hover { border-color: #aaa; background: #eee; }
         .icon-item.selected { border-color: #1a73e8; background: #e8f0fe; }
+        .icon-thumb {
+            display: inline-block;
+            background-repeat: no-repeat;
+        }
 
         /* 标注列表 */
         .marker-list {
@@ -115,9 +118,13 @@
         }
         .marker-item:hover { background: #f5f5f5; }
         .marker-item .icon-badge {
-            font-size: 20px;
+            width: 24px;
+            height: 28px;
             margin-right: 10px;
             flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .marker-item .marker-info {
             flex: 1;
@@ -251,56 +258,53 @@ var map = new BMapGL.Map('map');
 map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
 map.enableScrollWheelZoom();
 
-// 预置的图标配置（使用 emoji 作为自定义标注图标）
-var ICON_PRESETS = [
-    { emoji: "📍", label: "地点" },
-    { emoji: "⭐", label: "收藏" },
-    { emoji: "🏠", label: "家"   },
-    { emoji: "🏢", label: "公司" },
-    { emoji: "🏨", label: "酒店" },
-    { emoji: "🍴", label: "餐饮" },
-    { emoji: "🏥", label: "医院" },
-    { emoji: "🏫", label: "学校" },
-    { emoji: "🚉", label: "交通" },
-    { emoji: "🛒", label: "购物" },
-    { emoji: "🌳", label: "公园" },
-    { emoji: "📌", label: "标记" }
-];
+var SYS_ICONS = BMapGLLib.MarkerTool.SYS_ICONS || [];
+var SYS_ICON_SPRITE = BMapGLLib.MarkerTool.ICON_IMG || 'https://mapopen.bj.bcebos.com/github/BMapGLLib/MarkerTool/assets/us_mk_icon.png';
 
-var selectedIconIndex = 0;
+var selectedIconIndex = 8;
 var markerRecords = [];
 
 // 创建图标选择网格
 var iconGrid = document.getElementById("iconGrid");
-ICON_PRESETS.forEach(function(preset, idx) {
+SYS_ICONS.forEach(function(icon, idx) {
     var el = document.createElement("div");
-    el.className = "icon-item" + (idx === 0 ? " selected" : "");
-    el.title = preset.label;
-    el.innerHTML = preset.emoji;
+    el.className = "icon-item" + (idx === selectedIconIndex ? " selected" : "");
+    el.title = "内置图标 " + idx;
+    el.innerHTML = buildIconThumbHTML(idx);
     el.onclick = function() {
         selectedIconIndex = idx;
         document.querySelectorAll(".icon-item").forEach(function(e) { e.classList.remove("selected"); });
         el.classList.add("selected");
-        mkrTool.setIcon(buildIcon(idx));
+        mkrTool.setIcon(SYS_ICONS[idx]);
     };
     iconGrid.appendChild(el);
 });
 
-// 将 emoji 渲染成 BMapGL.Icon
-function buildIcon(idx) {
-    var preset = ICON_PRESETS[idx];
-    var canvas = document.createElement("canvas");
-    canvas.width = 32;
-    canvas.height = 32;
-    var ctx = canvas.getContext("2d");
-    ctx.font = "24px serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(preset.emoji, 16, 16);
-    var dataUrl = canvas.toDataURL();
-    return new BMapGL.Icon(dataUrl, new BMapGL.Size(32, 32), {
-        anchor: new BMapGL.Size(16, 32)
-    });
+function buildIconThumbHTML(idx) {
+    var meta = getIconThumbMeta(idx);
+    if (!meta) {
+        return "";
+    }
+    return '<span class="icon-thumb" style="width:' + meta.w + 'px;height:' + meta.h + 'px;background-image:url(' + SYS_ICON_SPRITE + ');background-position:' + meta.x + 'px ' + meta.y + 'px;"></span>';
+}
+
+function getIconThumbMeta(idx) {
+    if (idx < 0 || idx > 23) {
+        return null;
+    }
+    if (idx < 6) {
+        return {w: 12, h: 21, x: -23 * idx, y: 0};
+    }
+    if (idx < 12) {
+        return {w: 19, h: 25, x: -23 * (idx - 6), y: -21};
+    }
+    if (idx < 18) {
+        return {w: 17, h: 21, x: -23 * (idx - 12), y: -46};
+    }
+    if (idx < 23) {
+        return {w: 25, h: 25, x: -25 * (idx - 18), y: -67};
+    }
+    return {w: 19, h: 25, x: -125, y: -67};
 }
 
 // 构建编辑态信息窗 HTML
@@ -323,12 +327,11 @@ function buildEditHTML(record) {
 
 // 构建只读态信息窗 HTML（保存后展示）
 function buildReadOnlyHTML(record) {
-    var preset = ICON_PRESETS[record.iconIndex];
     var noteHtml = record.note
         ? escapeHTML(record.note)
         : '<span style="color:#bbb">无</span>';
     return '<div class="info-win">'
-        + '<div class="iw-title">' + preset.emoji + ' ' + escapeHTML(record.name) + '</div>'
+        + '<div class="iw-title">' + escapeHTML(record.name) + '</div>'
         + '<div class="iw-row">'
         + '  <span class="iw-label">地址</span>'
         + '  <span class="iw-val">' + noteHtml + '</span>'
@@ -371,7 +374,7 @@ mkrTool.addEventListener("markend", function(e) {
 });
 
 function openTool() {
-    mkrTool.setIcon(buildIcon(selectedIconIndex));
+    mkrTool.setIcon(SYS_ICONS[selectedIconIndex]);
     mkrTool.open();
 }
 
@@ -437,13 +440,13 @@ function renderMarkerList() {
     }
     var html = "";
     markerRecords.forEach(function(rec, idx) {
-        var preset = ICON_PRESETS[rec.iconIndex || 0];
         var nameHtml = rec.saved
             ? escapeHTML(rec.name)
             : '<span style="color:#bbb;font-style:italic;">待填写…</span>';
         var pt = rec.point;
+        var iconIndex = rec.iconIndex || 0;
         html += '<div class="marker-item" onclick="flyToMarker(' + idx + ')">'
-            + '  <span class="icon-badge">' + preset.emoji + '</span>'
+            + '  <span class="icon-badge">' + buildIconThumbHTML(iconIndex) + '</span>'
             + '  <div class="marker-info">'
             + '    <div class="marker-name">' + nameHtml + '</div>'
             + '    <div class="marker-coord">' + pt.lng.toFixed(4) + ', ' + pt.lat.toFixed(4) + '</div>'

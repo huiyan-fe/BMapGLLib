@@ -37,7 +37,7 @@ mkrTool.open();
 |---|---|---|
 | open() | Boolean | 开启工具；失败（已有其他工具占用）时为 false |
 | close() | - | 关闭工具，恢复默认光标 |
-| setIcon(icon) | - | 设置标注图标，开启时同步更新光标 |
+| setIcon(icon) | - | 设置标注图标，开启时同步更新跟随预览样式 |
 | getIcon() | BMapGL.Icon | 获取当前图标 |
 
 ## 事件
