@@ -405,7 +405,6 @@ if (typeof BMapGLLib._toolInUse == "undefined") {
             new BMapGL.Size(width, height),
             {
                 anchor: new BMapGL.Size(anchorX, anchorY),
-                // BMapGL 的雪碧图偏移方向与 BMap 版示例相反，这里统一转换
                 imageOffset: new BMapGL.Size(-offsetX, -offsetY),
                 imageSize: _sysIconImageSize
             }
