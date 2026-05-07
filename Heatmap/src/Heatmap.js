@@ -655,6 +655,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this.heatmap = null;
         this.latlngs = [];
         this._viewSignature = null;
+        this._zoomingActive = false;
     };
 
     HeatmapOverlay.prototype = new BMapGL.Overlay();
@@ -685,18 +686,60 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         this.heatmap = heatmapEngine.create(this.conf);
 
         var me = this;
+        function onZooming() {
+            me._zoomingActive = true;
+            me._updateOverlayVisibility();
+        }
+        function onZoomEnd() {
+            me._zoomingActive = false;
+            me._updateOverlayVisibility();
+            me._viewSignature = null;
+            me.draw({ force: true });
+        }
+        function onMoveStart() {
+            if (me._isNonPlanar()) {
+                me._movingActive = true;
+                me._updateOverlayVisibility();
+            }
+        }
+        function onMoveEnd() {
+            if (me._movingActive) {
+                me._movingActive = false;
+                me._updateOverlayVisibility();
+                me._viewSignature = null;
+                me.draw({ force: true });
+            }
+        }
         map.addEventListener("resize", function (evt) {
             var size = evt.size;
             el.style.width = size.width + "px";
             el.style.height = size.height + "px";
             me.heatmap._renderer.setDimensions(size.width, size.height);
             me._viewSignature = null;
-            me.draw();
+            me.draw({ force: true });
         });
+        if (this.conf.hideDuringMapAction !== false) {
+            try {
+                map.addEventListener("zooming", onZooming);
+            } catch (e) {
+            }
+            try {
+                map.addEventListener("zoomend", onZoomEnd);
+            } catch (e) {
+            }
+            try {
+                map.addEventListener("movestart", onMoveStart);
+            } catch (e) {
+            }
+            try {
+                map.addEventListener("moveend", onMoveEnd);
+            } catch (e) {
+            }
+        }
 
         function invalidateAndDraw() {
             me._viewSignature = null;
-            me.draw();
+            me.draw({ force: true });
         }
         ["headingchanged", "tiltchanged"].forEach(function (evtName) {
             try {
@@ -705,6 +748,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             }
         });
 
+        this._updateOverlayVisibility();
         this._div = el;
         return el;
     };
@@ -738,6 +782,16 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
     }
 
     /**
+     * 地图是否处于非平面状态（有旋转角或倾斜角）
+     */
+    HeatmapOverlay.prototype._isNonPlanar = function () {
+        var map = this._map;
+        var heading = typeof map.getHeading === "function" ? map.getHeading() : 0;
+        var tilt = typeof map.getTilt === "function" ? map.getTilt() : 0;
+        return heading !== 0 || tilt !== 0;
+    };
+
+    /**
      * 视图签名：地理范围 + 缩放 + 中心 + 朝向/倾角。旋转/倾斜后重绘。
      */
     HeatmapOverlay.prototype._getViewSignature = function (bounds) {
@@ -755,63 +809,127 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         ].join(",");
     };
 
-    HeatmapOverlay.prototype._applyLayoutToElement = function (layout) {
+    /**
+     * 与 canvas 一致对宽高四舍五入，减少与尺寸抖动相关的重复 setDimensions（会清空位图）带来的闪动
+     */
+    HeatmapOverlay.prototype._syncElementBox = function (layout) {
+        var w = Math.max(1, Math.round(layout.width));
+        var h = Math.max(1, Math.round(layout.height));
         var el = this.conf.element;
         el.style.left = layout.left + "px";
         el.style.top = layout.top + "px";
-        el.style.width = layout.width + "px";
-        el.style.height = layout.height + "px";
-        if (this.heatmap && this.heatmap._renderer && typeof this.heatmap._renderer.setDimensions === "function") {
-            this.heatmap._renderer.setDimensions(layout.width, layout.height);
+        el.style.width = w + "px";
+        el.style.height = h + "px";
+    };
+
+    /**
+     * 仅在实际像素尺寸变化时调 setDimensions，避免抖动导致每帧整画布被清空
+     */
+    HeatmapOverlay.prototype._setHeatmapCanvasToLayout = function (layout) {
+        if (!this.heatmap || !this.heatmap._renderer || typeof this.heatmap._renderer.setDimensions !== "function") {
+            return;
+        }
+        var w = Math.max(1, Math.round(layout.width));
+        var h = Math.max(1, Math.round(layout.height));
+        var r = this.heatmap._renderer;
+        if (r._width === w && r._height === h) {
+            return;
+        }
+        r.setDimensions(w, h);
+    };
+
+    HeatmapOverlay.prototype._applyLayoutToElement = function (layout) {
+        this._syncElementBox(layout);
+        this._setHeatmapCanvasToLayout(layout);
+    };
+
+    /**
+     * 当前 latlngs 在 layout 坐标系下的画布数据；setDataSet / _drawImpl 共用，避免双份循环
+     */
+    HeatmapOverlay.prototype._collectCanvasData = function (currentBounds, layout, max) {
+        var data = [];
+        var latlngs = this.latlngs;
+        var originX = layout.originX;
+        var originY = layout.originY;
+        var map = this._map;
+        for (var i = 0, n = latlngs.length; i < n; i++) {
+            var item = latlngs[i];
+            var latlng = item.latlng;
+            if (!currentBounds.containsPoint(latlng)) {
+                continue;
+            }
+            var divPixel = map.pointToOverlayPixel(latlng);
+            var screenPixel = new BMapGL.Pixel(divPixel.x - originX, divPixel.y - originY);
+            var point = this.pixelTransform(screenPixel);
+            data.push({
+                x: point.x,
+                y: point.y,
+                count: item.c
+            });
+        }
+        return { max: max, data: data };
+    };
+
+    /**
+     * 与地图「显示/关闭热力图」协调：仅缩放时隐藏（底图会整幅重绘），平移时始终显示。与 display:none（用户 hide）区分。
+     */
+    HeatmapOverlay.prototype._updateOverlayVisibility = function () {
+        var el = this.conf.element;
+        if (!el) {
+            return;
+        }
+        if (!this.conf.visible) {
+            el.style.display = "none";
+            return;
+        }
+        el.style.display = "block";
+        if ((this._zoomingActive || this._movingActive) && this.conf.hideDuringMapAction !== false) {
+            el.style.visibility = "hidden";
+        } else {
+            el.style.visibility = "visible";
         }
     };
 
-    HeatmapOverlay.prototype.draw = function () {
+    /**
+     * @param {Object} [opt]
+     * @param {boolean} [opt.force] 为 true 时无视「缩放缓存不绘制」；用于 resize/朝向/缩放结束等
+     */
+    HeatmapOverlay.prototype.draw = function (opt) {
         if (!isSupportCanvas()) {
+            return;
+        }
+        this._drawImpl(opt || {});
+    };
+
+    HeatmapOverlay.prototype._drawImpl = function (opt) {
+        opt = opt || {};
+
+        // 缩放或非平面移动过程中图层已 visibility: hidden，跳过 layout 计算与重投影；zoomend/moveend 会触发 force 重绘
+        if ((this._zoomingActive || (this._movingActive && this._isNonPlanar())) && this.conf.hideDuringMapAction !== false && !opt.force) {
             return;
         }
 
         var currentBounds = this._map.getBounds();
+        var layout = computeOverlayPixelBox(this._map, currentBounds);
+        this._syncElementBox(layout);
+
         var sig = this._getViewSignature(currentBounds);
         if (sig === this._viewSignature) {
             return;
         }
         this._viewSignature = sig;
 
-        var layout = computeOverlayPixelBox(this._map, currentBounds);
-        this._applyLayoutToElement(layout);
+        this._setHeatmapCanvasToLayout(layout);
 
-        if (this.latlngs.length > 0) {
-            this.heatmap.removeData();
-            var len = this.latlngs.length;
-            var d = {
-                max: this.heatmap._store.getData().max,
-                data: []
-            };
-
-            while (len--) {
-                var latlng = this.latlngs[len].latlng;
-                if (!currentBounds.containsPoint(latlng)) {
-                    continue;
-                }
-                var divPixel = this._map.pointToOverlayPixel(latlng);
-                var screenPixel = new BMapGL.Pixel(
-                    divPixel.x - layout.originX,
-                    divPixel.y - layout.originY
-                );
-                var point = this.pixelTransform(screenPixel);
-                d.data.push({
-                    x: point.x,
-                    y: point.y,
-                    count: this.latlngs[len].c
-                });
-            }
-
-            if (this.conf.radiusChangeByZoom) {
-                this.heatmap._store._cfgRadius = this.conf.radiusChangeByZoom(this._map.getZoom());
-            }
-            this.heatmap.setData(d);
+        if (this.latlngs.length === 0) {
+            return;
         }
+
+        if (this.conf.radiusChangeByZoom) {
+            this.heatmap._store._cfgRadius = this.conf.radiusChangeByZoom(this._map.getZoom());
+        }
+        var d = this._collectCanvasData(currentBounds, layout, this.heatmap._store.getData().max);
+        this.heatmap.setData(d);
     };
 
     HeatmapOverlay.prototype.pixelTransform = function (pixel) {
@@ -844,46 +962,26 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             return;
         }
 
-        var currentBounds = this._map.getBounds();
-        var mapData = {
-            max: this.data.max,
-            data: []
-        };
         var points = this.data.data;
-        var len = points.length;
-
-        this.latlngs = [];
-        this.heatmap.removeData();
+        var latlngs = new Array(points.length);
+        for (var i = 0, n = points.length; i < n; i++) {
+            var p = points[i];
+            latlngs[i] = {
+                latlng: new BMapGL.Point(p.lng, p.lat),
+                c: p.count
+            };
+        }
+        this.latlngs = latlngs;
 
         if (this.conf.radiusChangeByZoom) {
             this.heatmap._store._cfgRadius = this.conf.radiusChangeByZoom(this._map.getZoom());
         }
 
+        var currentBounds = this._map.getBounds();
         var layout = computeOverlayPixelBox(this._map, currentBounds);
         this._applyLayoutToElement(layout);
 
-        while (len--) {
-            var latlng = new BMapGL.Point(points[len].lng, points[len].lat);
-            this.latlngs.push({
-                latlng: latlng,
-                c: points[len].count
-            });
-            if (!currentBounds.containsPoint(latlng)) {
-                continue;
-            }
-            var divPixel = this._map.pointToOverlayPixel(latlng);
-            var screenPixel = new BMapGL.Pixel(
-                divPixel.x - layout.originX,
-                divPixel.y - layout.originY
-            );
-            var point = this.pixelTransform(screenPixel);
-            mapData.data.push({
-                x: point.x,
-                y: point.y,
-                count: points[len].count
-            });
-        }
-
+        var mapData = this._collectCanvasData(currentBounds, layout, this.data.max);
         this.heatmap.setData(mapData);
         this._viewSignature = this._getViewSignature(currentBounds);
     };
@@ -916,7 +1014,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             return;
         }
         this.conf.visible = !this.conf.visible;
-        this.conf.element.style.display = this.conf.visible ? "block" : "none";
+        this._updateOverlayVisibility();
     };
 
     HeatmapOverlay.prototype.show = function () {
@@ -924,7 +1022,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             return;
         }
         this.conf.visible = true;
-        this.conf.element.style.display = "block";
+        this._updateOverlayVisibility();
     };
 
     HeatmapOverlay.prototype.hide = function () {
@@ -932,7 +1030,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             return;
         }
         this.conf.visible = false;
-        this.conf.element.style.display = "none";
+        this._updateOverlayVisibility();
     };
 
     HeatmapOverlay.prototype.setOptions = function (opts) {
@@ -953,8 +1051,12 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
         }
     };
 
+    var _canvasSupported;
     function isSupportCanvas() {
-        var canvas = document.createElement("canvas");
-        return !!(canvas.getContext && canvas.getContext("2d"));
+        if (_canvasSupported === undefined) {
+            var canvas = document.createElement("canvas");
+            _canvasSupported = !!(canvas.getContext && canvas.getContext("2d"));
+        }
+        return _canvasSupported;
     }
 })();

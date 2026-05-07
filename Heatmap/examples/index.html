@@ -19,8 +19,8 @@
         <input type="button" onclick="closeHeatmap();" value="关闭热力图" />
     </div>
 
-    <script src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=您的密钥"></script>
-    <script src="../src/Heatmap.min.js"></script>
+    <script src="https://api.map.baidu.com/api?v=3.0&type=webgl&ak=您的密钥"></script>
+    <script src="../src/Heatmap.js"></script>
     <script type="text/javascript">
         var map = new BMapGL.Map("container", { enableMapClick: false });
         var point = new BMapGL.Point(116.418261, 39.921984);
@@ -125,7 +125,6 @@
             alert('热力图目前只支持有 canvas 的浏览器，您所使用的浏览器不能使用热力图功能~');
         }
 
-        // 创建热力图覆盖物，参数与 3.0 版本一致
         var heatmapOverlay = new BMapGLLib.HeatmapOverlay({ radius: 20 });
         map.addOverlay(heatmapOverlay);
         heatmapOverlay.setDataSet({ data: points, max: 100 });
