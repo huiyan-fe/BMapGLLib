@@ -447,10 +447,8 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
 
             //如果小于1直接移动到下一点
             if (count < 1) {
-                const t = setTimeout(() => {
-                    me._moveNext(++me.i);
-                }, 0)
-                me._setTimeoutQuene.push(t);
+                me._moveNext(++me.i);
+                return;
             }
             //两点之间匀速移动
             me._intervalFlag = setInterval(function () {
