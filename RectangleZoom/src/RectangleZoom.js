@@ -430,7 +430,12 @@ if (typeof BMapGLLib._toolInUse === "undefined") {
             var bounds = new BMapGL.Bounds(pt1, pt2);
 
             var targetCenterPt = me._map.pixelToPoint(new BMapGL.Pixel(centerX, centerY));
-            me._map.centerAndZoom(targetCenterPt, targetZoomLv);
+            // 4.0版本下centerAndZoom为兼容1.x的语义默认不带动画，必须显式开启，
+            // 否则拉框后视野是瞬间跳变的；GL版本忽略enableAnimation，行为不变
+            me._map.centerAndZoom(targetCenterPt, targetZoomLv, {
+                noAnimation: false,
+                enableAnimation: true
+            });
 
             // 结束后的轮廓渐隐动画（可选）
             me._flashBounds(bounds);

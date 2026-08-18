@@ -425,9 +425,9 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                 timer = 10,
                 step = this._opts.speed / (1000 / timer),
                 //初始坐标
-                init_pos = BMapGL.Projection.convertLL2MC(initPos),
+                init_pos = BMapGL.MercatorProjection.convertLL2MC(initPos),
                 //获取结束点的(x,y)坐标
-                target_pos = BMapGL.Projection.convertLL2MC(targetPos);
+                target_pos = BMapGL.MercatorProjection.convertLL2MC(targetPos);
             init_pos = new BMapGL.Pixel(init_pos.lng, init_pos.lat);
             target_pos = new BMapGL.Pixel(target_pos.lng, target_pos.lat);
             // 变更
@@ -465,7 +465,7 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
                     currentCount++;
                     var x = effect(init_pos.x, target_pos.x, currentCount, count),
                         y = effect(init_pos.y, target_pos.y, currentCount, count),
-                        pos = BMapGL.Projection.convertMC2LL(new BMapGL.Point(x, y));
+                        pos = BMapGL.MercatorProjection.convertMC2LL(new BMapGL.Point(x, y));
                     if (pos.lng > 180) {
                         pos.lng = pos.lng - 360;
                     }
@@ -690,9 +690,9 @@ var BMapGLLib = window.BMapGLLib = BMapGLLib || {};
             // 两个相等的坐标通过下面距离计算会得到地球周长，因此提前判断
             return [latLng1];
         }
-        var distance = BMapGL.Projection.getDistance(toRadian(latLng1.lng), toRadian(latLng1.lat),
+        var distance = BMapGL.MercatorProjection.getDistance(toRadian(latLng1.lng), toRadian(latLng1.lat),
             toRadian(latLng2.lng), toRadian(latLng2.lat));
-        var distance = BMapGL.Projection.getDistanceByLL(latLng1, latLng2);
+        var distance = BMapGL.MercatorProjection.getDistanceByLL(latLng1, latLng2);
         if (distance < 250000) {
             return [latLng1];
         }

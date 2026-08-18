@@ -309,7 +309,12 @@ if (typeof BMapGLLib._toolInUse == "undefined") {
         if (!this._followMarker) {
             this._followMarker = new BMapGL.Marker(this._map.getCenter(), {
                 icon: this._opts.icon,
-                offset: this._getFollowMarkerOffset()
+                offset: this._getFollowMarkerOffset(),
+                // 跟随图标始终压在鼠标下方，必须让它对鼠标完全透明：
+                // 否则4.0版本下Marker的DOM会吞掉click事件（GL版本不阻止冒泡，故仅4.0表现异常），
+                // 同时Marker默认不允许在其上拖拽地图，会导致工具开启后地图拖不动
+                enableClicking: false,
+                enableDraggingMap: true
             });
             this._map.addOverlay(this._followMarker);
             this._followMarker.setZIndex(1000);
@@ -318,7 +323,8 @@ if (typeof BMapGLLib._toolInUse == "undefined") {
 
         if (!this._followLabel) {
             this._followLabel = new BMapGL.Label(this._opts.followText, {
-                offset: new BMapGL.Size(20, 0)
+                offset: new BMapGL.Size(20, 0),
+                enableClicking: false
             });
         } else {
             this._followLabel.setContent(this._opts.followText);
